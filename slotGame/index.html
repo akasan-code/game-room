@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JS Slot Game</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #222;
+      font-family: sans-serif;
+      color: white;
+    }
+
+    .slot-container {
+      text-align: center;
+      background: #333;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .reels {
+      display: flex;        /* 横並びにする */
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .reel {
+      width: 100px;
+      height: 100px;
+      background: white;
+      color: black;
+      font-size: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+    }
+
+    .controls {
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: gold;
+      font-weight: bold;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .coin {
+      margin-top: 15px;
+      font-size: 24px;
+    }
+
+    #resultMessage {
+      margin-top: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      min-height: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="slot-container">
+
+    <div class="reels">
+      <div class="reel" id="reel1">🍒</div>
+      <div class="reel" id="reel2">🔔</div>
+      <div class="reel" id="reel3">7️⃣</div>
+    </div>
+
+    <div class="controls">
+      <button id="spinButton">SPIN</button>
+    </div>
+
+    <div class="coin">
+      COIN : <span id="coin">100</span>
+    </div>
+    <div id="resultMessage"></div>
+  </div>
+
+<script>
+
+    const symbols = ["🍒", "🍒", "🍒", "🍒", "🍒", "🍒", "🔔", "🔔", "7️⃣", "💎", "🍉"];
+
+    const reel1 = document.getElementById("reel1");
+    const reel2 = document.getElementById("reel2");
+    const reel3 = document.getElementById("reel3");
+
+    let reelResult1 = "";
+    let reelResult2 = "";
+    let reelResult3 = "";
+
+    const spinButton = document.getElementById("spinButton");
+    const resultMessage = document.getElementById("resultMessage");
+
+    spinButton.addEventListener("click", () => {
+
+        resultMessage.textContent = "";
+
+        const intervalId_1 = setInterval(() => {
+            reelResult1 = symbols[Math.floor(Math.random() * symbols.length)];
+            reel1.textContent = reelResult1;
+        }, 100);
+        const intervalId_2 = setInterval(() => {
+            reelResult2 = symbols[Math.floor(Math.random() * symbols.length)];
+            reel2.textContent = reelResult2;
+        }, 100);
+        const intervalId_3 = setInterval(() => {
+            reelResult3 = symbols[Math.floor(Math.random() * symbols.length)];
+            reel3.textContent = reelResult3;
+        }, 100);
+
+        setTimeout(() => {
+            clearInterval(intervalId_1);
+        }, 1500);
+        setTimeout(() => {
+            clearInterval(intervalId_2);
+        }, 2000);
+        setTimeout(() => {
+            clearInterval(intervalId_3);
+            // 左と中が一致していたら
+            if (reelResult1 === reelResult2 && Math.random() < 0.7) {
+                reelResult3 = reelResult1;
+                reel3.textContent = reelResult3;
+            }
+
+            checkResult();          /* 結果チェック */
+        }, 2500);
+
+    });
+
+    function checkResult() {
+        if (reelResult1 === reelResult2 && reelResult2 === reelResult3) {
+           resultMessage.textContent = "🎉 あたり！！";
+        } else {
+            resultMessage.textContent = "ハズレ！";
+        }
+    }
+</script>
+</body>
+</html>
