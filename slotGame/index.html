@@ -98,7 +98,7 @@
 
 <script>
 
-    const symbols = ["🍒", "🍒", "🍒", "🍒", "🍒", "🍒", "🔔", "🔔", "7️⃣", "💎", "🍉"];
+    const symbols = ["🍒", "🍒", "🍒", "🍒", "🍒", "🍒", "🔔", "🔔", "7️⃣", "💎"];
 
     const reel1 = document.getElementById("reel1");
     const reel2 = document.getElementById("reel2");
@@ -108,12 +108,18 @@
     let reelResult2 = "";
     let reelResult3 = "";
 
-    const spinButton = document.getElementById("spinButton");
     const resultMessage = document.getElementById("resultMessage");
+    const spinButton = document.getElementById("spinButton");
+    const coinDisplay = document.getElementById("coin");
+    let coin = 100;
 
     spinButton.addEventListener("click", () => {
 
         resultMessage.textContent = "";
+
+        /* コインを消費させる */
+        coin--;
+        coinDisplay.textContent = coin;
 
         const intervalId_1 = setInterval(() => {
             reelResult1 = symbols[Math.floor(Math.random() * symbols.length)];
@@ -149,7 +155,29 @@
 
     function checkResult() {
         if (reelResult1 === reelResult2 && reelResult2 === reelResult3) {
-           resultMessage.textContent = "🎉 あたり！！";
+            switch (reelResult1) {
+            case "🍒":
+                coin += 5;
+                resultMessage.textContent = "🍒 あたり！ +5枚";
+                break;
+            case "🔔":
+                coin += 20;
+                resultMessage.textContent = "🔔 BIG WIN! +20枚";
+                break;
+            case "💎":
+                coin += 50;
+                resultMessage.textContent = "💎 SUPER!! +50枚";
+                break;
+            case "7️⃣":
+                coin += 100;
+                resultMessage.textContent = "🌈 JACKPOT!! +100枚";
+                break;
+        }
+
+        // コイン表示更新
+        coinDisplay.textContent = coin;
+
+
         } else {
             resultMessage.textContent = "ハズレ！";
         }
