@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Hex Survival Prototype v0.4.2</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="day-card"><div id="day">Day 1</div><small>朝</small></div>
+    <div class="resources" id="resources"></div>
+    <button class="menu-btn">☰</button>
+  </header>
+
+  <section class="status-row">
+    <div class="status-card"><div class="status-title">🍖 空腹度 <b id="hungerText">100 / 100</b></div><div class="bar"><i id="hungerBar"></i></div></div>
+    <div class="status-card"><div class="status-title">❤️ ライフ <b id="lifeText">100 / 100</b></div><div class="bar life"><i id="lifeBar"></i></div></div>
+  </section>
+
+  <main>
+    <section class="map-panel">
+      <div class="section-head"><h2>探索マップ</h2><span>行きたいマスをタップ</span></div>
+      <div id="map" class="hex-map"></div>
+      <div class="legend"><span>🏕️ 拠点</span><span>地形表示＝探索可能</span><span>？ 未開放</span></div>
+    </section>
+
+    <section class="character-panel" id="characterPanel" role="button" tabindex="0" aria-label="キャラクター操作">
+      <div class="character-stage">
+        <div class="camp-mini">🔥</div>
+        <div id="character" class="character idle"><div class="char-head">🧑‍💼</div><div class="char-body">🧥</div><div class="char-legs">👞</div></div>
+      </div>
+      <div class="character-info">
+        <div class="character-name">疲れた会社員</div>
+        <div id="characterMood" class="character-mood">「……腹減ったな」</div>
+        <div class="character-hint">タップして食料を食べる</div>
+      </div>
+      <div class="character-hunger"><span>🍖</span><b id="characterFood">5</b><small>食料</small></div>
+    </section>
+
+    <section class="log-panel">
+      <div class="section-head"><h2>探索ログ</h2><button id="clearLog">閉じる</button></div>
+      <div id="log"></div>
+    </section>
+
+    <section class="base-panel">
+      <div class="section-head"><h2>拠点施設</h2><span>資源を使って開発</span></div>
+      <div id="facilities" class="facility-grid"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="active">🏕️<span>拠点</span></button>
+    <button>🗺️<span>マップ</span></button>
+    <button>👤<span>状態</span></button>
+    <button>📜<span>目標</span></button>
+    <button>⚙️<span>設定</span></button>
+  </nav>
+</div>
+
+<div id="exploreModal" class="modal-backdrop" hidden>
+  <div class="explore-modal" role="dialog" aria-modal="true">
+    <div class="modal-head"><div><small>探索先の確認</small><h2 id="exploreTitle">森</h2></div><button id="modalClose" class="modal-close">×</button></div>
+    <div id="explorePreview" class="explore-preview"></div>
+    <div class="preview-section"><h3>移動コスト</h3><div id="travelCost" class="preview-row"></div></div>
+    <div class="preview-section"><h3>獲得できる資源</h3><div id="resourcePreview" class="resource-preview"></div><p id="resourceNote" class="preview-note"></p></div>
+    <div class="modal-actions"><button id="cancelExplore" class="secondary-btn">やめる</button><button id="confirmExplore" class="primary-btn">ここを探索する</button></div>
+  </div>
+</div>
+
+<div id="foodModal" class="modal-backdrop" hidden>
+  <div class="food-modal" role="dialog" aria-modal="true">
+    <div class="modal-head"><div><small>食料を使う</small><h2>何を食べる？</h2></div><button id="foodClose" class="modal-close">×</button></div>
+    <p class="food-intro">食料は好きなタイミングで使えます。探索前に食べておくこともできます。</p>
+    <div id="foodChoices" class="food-choices"></div>
+    <button id="foodCancel" class="secondary-btn full-btn">やめる</button>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
