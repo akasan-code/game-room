@@ -33,6 +33,19 @@ body {
 
 
 /* =========================================================
+   ゲーム画面
+========================================================= */
+
+.game-view {
+  display: block;
+}
+
+.game-view[hidden] {
+  display: none !important;
+}
+
+
+/* =========================================================
    上部バー
 ========================================================= */
 
@@ -53,6 +66,7 @@ body {
 
 .day-card {
   background: var(--paper2);
+
   border: 2px solid #5b4a32;
   border-radius: 7px;
 
@@ -60,7 +74,8 @@ body {
 
   padding: 5px;
 
-  box-shadow: inset 0 0 0 2px #b7a477;
+  box-shadow:
+    inset 0 0 0 2px #b7a477;
 }
 
 .day-card #day {
@@ -79,6 +94,7 @@ body {
 
 .resources {
   display: flex;
+
   align-items: center;
   justify-content: space-around;
 
@@ -100,10 +116,13 @@ body {
 
 .menu-btn {
   background: var(--paper);
+
   border: 2px solid var(--line);
   border-radius: 7px;
 
   font-size: 24px;
+
+  cursor: pointer;
 }
 
 
@@ -113,9 +132,11 @@ body {
 
 .status-row {
   display: grid;
+
   grid-template-columns: 1fr 1fr;
 
   gap: 8px;
+
   padding: 8px;
 
   background: #292720;
@@ -123,6 +144,7 @@ body {
 
 .status-card {
   border: 2px solid #574936;
+
   border-radius: 6px;
 
   padding: 8px;
@@ -134,6 +156,7 @@ body {
 
 .status-title {
   font-size: 14px;
+
   margin-bottom: 5px;
 }
 
@@ -143,6 +166,7 @@ body {
 
 .status-card small {
   color: #bcae8d;
+
   font-size: 10px;
 }
 
@@ -157,6 +181,7 @@ body {
   background: #171613;
 
   border: 1px solid #0e0e0d;
+
   border-radius: 3px;
 
   overflow: hidden;
@@ -191,7 +216,8 @@ body {
 
   background: var(--paper);
 
-  box-shadow: 0 2px 0 #171510;
+  box-shadow:
+    0 2px 0 #171510;
 }
 
 .section-head {
@@ -204,7 +230,8 @@ body {
 
   border-bottom: 2px solid #796647;
 
-  background: rgba(255, 255, 255, 0.08);
+  background:
+    rgba(255, 255, 255, 0.08);
 }
 
 h2 {
@@ -215,12 +242,14 @@ h2 {
 .section-head span,
 .section-head button {
   font-size: 11px;
+
   color: #62553e;
 }
 
 .section-head button {
   background: none;
   border: 0;
+
   cursor: pointer;
 }
 
@@ -237,7 +266,9 @@ h2 {
   padding: 9px;
 
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+
+  grid-template-columns:
+    repeat(3, 1fr);
 
   gap: 7px;
 }
@@ -258,6 +289,7 @@ h2 {
 
 .facility.locked {
   background: #77715f;
+
   color: #29261f;
 }
 
@@ -267,11 +299,13 @@ h2 {
 
 .facility h3 {
   font-size: 14px;
+
   margin: 2px 0;
 }
 
 .facility p {
   font-size: 10px;
+
   margin: 3px 0 7px;
 
   min-height: 25px;
@@ -289,6 +323,7 @@ h2 {
   padding: 6px;
 
   font-family: inherit;
+
   font-weight: bold;
 }
 
@@ -321,6 +356,7 @@ h2 {
   padding: 10px 14px;
 
   border: 2px solid #6c542f;
+
   border-radius: 10px;
 
   background: #b8904d;
@@ -342,12 +378,15 @@ h2 {
 
 .explore-start-icon {
   font-size: 46px;
+
   text-align: center;
 }
 
 .explore-start-text {
   display: flex;
+
   flex-direction: column;
+
   gap: 5px;
 }
 
@@ -357,182 +396,13 @@ h2 {
 
 .explore-start-text small {
   font-size: 11px;
+
   color: #5c4a32;
 }
 
 
 /* =========================================================
-   探索マップ
-========================================================= */
-
-.hex-map {
-  position: relative;
-
-  height: 440px;
-
-  overflow: auto;
-
-  background:
-    radial-gradient(
-      circle at center,
-      #786f59 0,
-      #4a4639 45%,
-      #302f29 100%
-    );
-
-  -webkit-overflow-scrolling: touch;
-
-  touch-action: pan-x pan-y;
-}
-
-.hex {
-  position: absolute;
-
-  width: 112px;
-  height: 129px;
-
-  clip-path: polygon(
-    25% 3%,
-    75% 3%,
-    100% 50%,
-    75% 97%,
-    25% 97%,
-    0 50%
-  );
-
-  background: #57564c;
-
-  filter: drop-shadow(
-    0 2px 1px #201f1a
-  );
-
-  cursor: default;
-}
-
-.hex::before {
-  content: "";
-
-  position: absolute;
-
-  inset: 4px;
-
-  clip-path: inherit;
-
-  border: 2px solid rgba(
-    220,
-    192,
-    126,
-    0.65
-  );
-
-  background: var(
-    --tile,
-    #5f674e
-  );
-}
-
-.hex .inside {
-  position: absolute;
-
-  inset: 8px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  flex-direction: column;
-
-  font-size: 13px;
-
-  font-weight: bold;
-
-  text-shadow:
-    0 1px #eee8d5;
-
-  color: #252218;
-
-  z-index: 2;
-}
-
-.hex.unexplored {
-  --tile: #393832;
-
-  cursor: not-allowed;
-}
-
-.hex.unexplored .inside {
-  font-size: 34px;
-
-  color: #756d5b;
-
-  text-shadow: none;
-}
-
-.hex.available {
-  cursor: pointer;
-
-  animation: pulse 1.6s infinite;
-}
-
-.hex.available::after {
-  content: "";
-
-  position: absolute;
-
-  inset: 3px;
-
-  clip-path: inherit;
-
-  border: 3px solid #e5c96f;
-
-  z-index: 3;
-}
-
-.hex.base {
-  --tile: #88745a !important;
-}
-
-.hex.base .inside {
-  color: #fff1c4;
-
-  text-shadow:
-    0 1px 2px #2b2115,
-    0 0 4px #2b2115;
-}
-
-.hex.base .terrain-icon {
-  font-size: 40px;
-}
-
-.hex[data-treasure="true"] {
-  --tile: #6c5b36 !important;
-}
-
-.hex[data-treasure="true"] .inside {
-  color: #ffe9a0;
-}
-
-.hex[data-treasure="true"] .terrain-icon {
-  font-size: 40px;
-}
-
-
-@keyframes pulse {
-  50% {
-    transform: scale(1.025);
-  }
-}
-
-.terrain-icon {
-  font-size: 35px;
-
-  line-height: 1;
-}
-
-
-/* =========================================================
-   探索画面ヘルプ
+   探索ヘルプ
 ========================================================= */
 
 .explore-help {
@@ -566,6 +436,251 @@ h2 {
 
 
 /* =========================================================
+   六角形マップ
+========================================================= */
+
+.hex-map {
+  position: relative;
+
+  height: 440px;
+
+  overflow: auto;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #786f59 0,
+      #4a4639 45%,
+      #302f29 100%
+    );
+
+  -webkit-overflow-scrolling: touch;
+
+  touch-action: pan-x pan-y;
+}
+
+.hex-world {
+  position: relative;
+}
+
+
+/* =========================================================
+   六角形
+========================================================= */
+
+.hex {
+  position: absolute;
+
+  width: 112px;
+  height: 129px;
+
+  clip-path: polygon(
+    25% 3%,
+    75% 3%,
+    100% 50%,
+    75% 97%,
+    25% 97%,
+    0 50%
+  );
+
+  background: #57564c;
+
+  filter:
+    drop-shadow(
+      0 2px 1px #201f1a
+    );
+
+  cursor: default;
+}
+
+.hex::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 4px;
+
+  clip-path: inherit;
+
+  border: 2px solid
+    rgba(
+      220,
+      192,
+      126,
+      0.65
+    );
+
+  background:
+    var(
+      --tile,
+      #5f674e
+    );
+}
+
+.hex .inside {
+  position: absolute;
+
+  inset: 8px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-direction: column;
+
+  font-size: 13px;
+
+  font-weight: bold;
+
+  text-shadow:
+    0 1px #eee8d5;
+
+  color: #252218;
+
+  z-index: 2;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   未探索
+========================================================= */
+
+.hex.unexplored {
+  --tile: #393832;
+
+  cursor: default;
+}
+
+.hex.unexplored .inside {
+  font-size: 34px;
+
+  color: #756d5b;
+
+  text-shadow: none;
+}
+
+
+/* =========================================================
+   探索可能
+========================================================= */
+
+.hex.available {
+  cursor: pointer;
+
+  animation:
+    pulse 1.6s infinite;
+}
+
+.hex.available::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 3px;
+
+  clip-path: inherit;
+
+  border: 3px solid #e5c96f;
+
+  z-index: 3;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   地形カラー
+========================================================= */
+
+.hex.base {
+  --tile: #88745a !important;
+}
+
+.hex.forest {
+  --tile: #566345;
+}
+
+.hex.rock {
+  --tile: #76715e;
+}
+
+.hex.pond {
+  --tile: #54727a;
+}
+
+.hex.grass {
+  --tile: #817d52;
+}
+
+.hex.cave {
+  --tile: #4e4b45;
+}
+
+.hex.waste {
+  --tile: #75684a;
+}
+
+.hex.sea {
+  --tile: #54727a;
+}
+
+
+/* =========================================================
+   拠点
+========================================================= */
+
+.hex.base .inside {
+  color: #fff1c4;
+
+  text-shadow:
+    0 1px 2px #2b2115,
+    0 0 4px #2b2115;
+}
+
+.hex.base .terrain-icon {
+  font-size: 40px;
+}
+
+
+/* =========================================================
+   秘宝
+========================================================= */
+
+.hex[data-treasure="true"] {
+  --tile: #6c5b36 !important;
+}
+
+.hex[data-treasure="true"] .inside {
+  color: #ffe9a0;
+}
+
+.hex[data-treasure="true"] .terrain-icon {
+  font-size: 40px;
+}
+
+
+/* =========================================================
+   アニメーション
+========================================================= */
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.025);
+  }
+}
+
+.terrain-icon {
+  font-size: 35px;
+
+  line-height: 1;
+}
+
+
+/* =========================================================
    探索ログ
 ========================================================= */
 
@@ -584,7 +699,8 @@ h2 {
 }
 
 .log-item {
-  border-bottom: 1px dashed #887554;
+  border-bottom:
+    1px dashed #887554;
 }
 
 
@@ -605,6 +721,7 @@ h2 {
   display: flex;
 
   align-items: center;
+
   justify-content: center;
 
   padding: 18px;
@@ -668,11 +785,13 @@ h2 {
 
   color: #ead9ae;
 
-  border-bottom: 2px solid #715a38;
+  border-bottom:
+    2px solid #715a38;
 }
 
 .modal-head small {
   font-size: 11px;
+
   color: #bbaa86;
 }
 
@@ -716,7 +835,7 @@ h2 {
     1px solid #9c8358;
 
   background:
-    rgba(255,255,255,0.12);
+    rgba(255, 255, 255, 0.12);
 }
 
 .target-icon {
@@ -732,7 +851,8 @@ h2 {
 
   background: #7c765f;
 
-  border: 3px solid #5d4c32;
+  border:
+    3px solid #5d4c32;
 
   clip-path: polygon(
     25% 3%,
@@ -763,6 +883,7 @@ h2 {
 
 .target-info span {
   font-size: 12px;
+
   color: #685a43;
 }
 
@@ -773,7 +894,8 @@ h2 {
 .preview-section h3 {
   font-size: 14px;
 
-  margin: 0 0 8px;
+  margin:
+    0 0 8px;
 
   border-bottom:
     1px dashed #927951;
@@ -912,7 +1034,8 @@ h2 {
 .secondary-btn {
   background: #b5a37e;
 
-  border: 2px solid #6b5839;
+  border:
+    2px solid #6b5839;
 
   color: #3a3023;
 }
@@ -920,7 +1043,8 @@ h2 {
 .primary-btn {
   background: #5a472d;
 
-  border: 2px solid #342718;
+  border:
+    2px solid #342718;
 
   color: #f1dfb5;
 
@@ -930,7 +1054,8 @@ h2 {
 
 .primary-btn:active,
 .secondary-btn:active {
-  transform: translateY(1px);
+  transform:
+    translateY(1px);
 }
 
 
@@ -948,13 +1073,14 @@ h2 {
   display: flex;
 
   align-items: center;
+
   justify-content: center;
 
   z-index: 99;
 }
 
 .start-screen[hidden] {
-  display: none;
+  display: none !important;
 }
 
 .start-card {
@@ -966,7 +1092,8 @@ h2 {
 
   background: #292e23;
 
-  border: 1px solid #73795d;
+  border:
+    1px solid #73795d;
 
   border-radius: 18px;
 }
@@ -974,7 +1101,8 @@ h2 {
 .start-card h1 {
   font-size: 38px;
 
-  margin: 0 0 12px;
+  margin:
+    0 0 12px;
 
   letter-spacing: 2px;
 }
@@ -1000,6 +1128,8 @@ h2 {
   border-radius: 8px;
 
   padding: 11px 25px;
+
+  cursor: pointer;
 }
 
 
@@ -1023,6 +1153,8 @@ h2 {
   position: relative;
 
   overflow: hidden;
+
+  cursor: pointer;
 }
 
 .character #char {
@@ -1033,6 +1165,7 @@ h2 {
   display: flex;
 
   align-items: center;
+
   justify-content: center;
 }
 
@@ -1113,7 +1246,8 @@ h2 {
 }
 
 .build-row h3 {
-  margin: 0 0 4px;
+  margin:
+    0 0 4px;
 }
 
 .build-row p {
@@ -1130,10 +1264,14 @@ h2 {
   border-radius: 7px;
 
   padding: 8px;
+
+  cursor: pointer;
 }
 
 .build-row button:disabled {
   opacity: 0.35;
+
+  cursor: default;
 }
 
 
@@ -1156,7 +1294,8 @@ h2 {
 
   color: #f0e1bd;
 
-  border: 1px solid #9e8251;
+  border:
+    1px solid #9e8251;
 
   padding: 10px 14px;
 
@@ -1185,11 +1324,10 @@ h2 {
 
 
 /* =========================================================
-   モバイル・デスクトップ
+   PC
 ========================================================= */
 
 @media (min-width: 700px) {
-
   #app {
     max-width: 480px;
 
@@ -1202,9 +1340,12 @@ h2 {
   .topbar {
     position: relative;
   }
-
 }
 
+
+/* =========================================================
+   スマホ
+========================================================= */
 
 @media (max-width: 699px) {
 
