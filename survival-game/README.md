@@ -1,14 +1,13 @@
-# Hex Survival Prototype v0.4
+# HEX SURVIVAL v1
 
-Vanilla JS / HTML / CSS prototype.
+第一弾プロトタイプ。`index.html` をブラウザで開いてプレイできます。
 
-## v0.4 changes
-- Character area is always visible below the exploration map.
-- Tap the character to open the food selection UI.
-- Food is no longer consumed automatically when a new day begins.
-- Character has idle breathing animation.
-- Exploration and eating trigger simple character animations.
-- Exploration map and character UI coexist in separate areas.
-- Existing exploration confirmation, terrain visibility, rare resource preview, hunger/life, and facility development are retained.
-
-Open `index.html` directly in a browser or deploy the folder to GitHub Pages.
+- 初期資源はすべて0
+- 1探索＝1日
+- 空腹消費 = 10 + 拠点からの距離×5
+- ライフ0でゲームオーバー
+- 探索済みマスも何度でも探索可能
+- 特殊地形は森・池・岩場・洞窟それぞれ1箇所
+- 秘宝は開始時に拠点から9マス以上離れた位置へ生成
+- 秘宝マスを探索するとクリア
+- PNG等のイラストは後から差し替え可能な構成に変更予定
