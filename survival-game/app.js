@@ -1,5 +1,6 @@
 'use strict';
 
+
 /* =========================================================
    基本ユーティリティ
 ========================================================= */
@@ -36,16 +37,22 @@ const BASE_POS = {
 ========================================================= */
 
 const S = {
+
+  /* ログ */
   log: [],
 
+  /* 日数 */
   day: 1,
 
+  /* 空腹 */
   hunger: 100,
   maxHunger: 100,
 
+  /* ライフ */
   life: 100,
   maxLife: 100,
 
+  /* 資源 */
   food: 0,
   grass: 0,
   wood: 0,
@@ -55,6 +62,7 @@ const S = {
   blue: 0,
   yellow: 0,
 
+  /* 施設 */
   fac: {
     base: 0,
     kitchen: 0,
@@ -62,24 +70,32 @@ const S = {
     armor: 0
   },
 
+  /* コンパス */
   compass: false,
 
-  /* 拠点は固定 */
+  /* 拠点 */
   base: {
     q: BASE_POS.q,
     r: BASE_POS.r
   },
 
-  /* 主人公も拠点から動かさない */
+  /*
+   * 主人公も拠点に固定
+   *
+   * 今後もこの値は基本的に変更しない
+   */
   pos: {
     q: BASE_POS.q,
     r: BASE_POS.r
   },
 
+  /* マップ */
   tiles: new Map(),
 
+  /* 食材図鑑 */
   book: {},
 
+  /* 特殊地形 */
   special: {
     forest: null,
     pond: null,
@@ -87,8 +103,10 @@ const S = {
     cave: null
   },
 
+  /* 秘宝 */
   treasure: null,
 
+  /* 現在探索しようとしているマス */
   pending: null
 };
 
@@ -98,6 +116,7 @@ const S = {
 ========================================================= */
 
 const T = {
+
   grass: {
     name: '草原',
     icon: '🌿',
@@ -151,6 +170,7 @@ const T = {
     blocked: true,
     damage: 0
   }
+
 };
 
 
@@ -169,7 +189,7 @@ const foods = [
 
 
 /* =========================================================
-   その他
+   資源名
 ========================================================= */
 
 const costName = {
@@ -187,15 +207,22 @@ const costName = {
    トースト
 ========================================================= */
 
-function toast(s) {
+function toast(message) {
+
   const e = $('toast');
 
-  e.textContent = s;
+  if (!e) {
+    return;
+  }
+
+  e.textContent = message;
+
   e.classList.add('show');
 
   setTimeout(() => {
     e.classList.remove('show');
   }, 1500);
+
 }
 
 
@@ -204,28 +231,64 @@ function toast(s) {
 ========================================================= */
 
 function showModal(id) {
+
   const e = $(id);
+
+  if (!e) {
+    return;
+  }
 
   e.hidden = false;
   e.classList.add('show');
+
 }
 
 
 function closeModal(id) {
+
   const e = $(id);
+
+  if (!e) {
+    return;
+  }
 
   e.classList.remove('show');
   e.hidden = true;
+
+}
+
+
+/* =========================================================
+   画面切り替え
+========================================================= */
+
+function showBaseView() {
+
+  $('baseView').hidden = false;
+  $('exploreView').hidden = true;
+
+}
+
+
+function showExploreView() {
+
+  $('baseView').hidden = true;
+  $('exploreView').hidden = false;
+
+  renderMap();
+
 }
 
 
 /* =========================================================
    秘宝生成
-   拠点から9～15マスの範囲
+   拠点から9～15マス
 ========================================================= */
 
 function generateTreasure() {
+
   while (true) {
+
     const q = R(-MAP_RADIUS, MAP_RADIUS);
     const r = R(-MAP_RADIUS, MAP_RADIUS);
 
@@ -234,226 +297,110 @@ function generateTreasure() {
       S.base
     );
 
-    if (distance >= 9 && distance <= 15) {
-      S.treasure = {
-        q,
-        r
-      };
-
-      return;
+    if (distance < 9 || distance > 15) {
+      continue;
     }
+
+    /*
+     * 海に秘宝が生成されると
+     * 到達できなくなるので除外
+     */
+    const tile = S.tiles.get(K(q, r));
+
+    if (tile && tile.t === 'sea') {
+      continue;
+    }
+
+    S.treasure = {
+      q,
+      r
+    };
+
+    return;
+
   }
+
 }
 
 
 /* =========================================================
-   マップ生成
+   初期化
 ========================================================= */
 
 function init() {
-  generateTreasure();
 
   /*
-   * 拠点マスを先に生成
+   * 状態を初期化
    */
-  gen(S.base.q, S.base.r);
+  S.day = 1;
 
-  /*
-   * マップ全体を準備
-   *
-   * 実際の探索状態は seen:false のままなので、
-   * 生成されていてもプレイヤーからは未知マスとして見える。
-   */
-  for (let q = -MAP_RADIUS; q <= MAP_RADIUS; q++) {
-    for (let r = -MAP_RADIUS; r <= MAP_RADIUS; r++) {
-      if (D({ q, r }, S.base) > MAP_RADIUS) {
-        continue;
-      }
+  S.hunger = 100;
+  S.maxHunger = 100;
 
-      gen(q, r);
-    }
-  }
-}
+  S.life = 100;
+  S.maxLife = 100;
 
+  S.food = 0;
+  S.grass = 0;
+  S.wood = 0;
+  S.stone = 0;
+  S.fur = 0;
+  S.red = 0;
+  S.blue = 0;
+  S.yellow = 0;
 
-/* =========================================================
-   1マス生成
-========================================================= */
-
-function gen(q, r) {
-  const k = K(q, r);
-
-  if (S.tiles.has(k)) {
-    return S.tiles.get(k);
-  }
-
-  /*
-   * 拠点
-   */
-  if (q === S.base.q && r === S.base.r) {
-    const c = {
-      q,
-      r,
-      t: 'grass',
-      seen: true
-    };
-
-    S.tiles.set(k, c);
-
-    return c;
-  }
-
-  const distance = D(
-    { q, r },
-    S.base
-  );
-
-  let t = 'grass';
-
-  if (distance > 0) {
-    const opts = [];
-
-    if (!S.special.forest && distance >= 2) {
-      opts.push([
-        'forest',
-        Math.exp(-((distance - 3) ** 2) / 1.5)
-      ]);
-    }
-
-    if (!S.special.pond && distance >= 3) {
-      opts.push([
-        'pond',
-        Math.exp(-((distance - 4) ** 2) / 1.5)
-      ]);
-    }
-
-    if (!S.special.rock && distance >= 4) {
-      opts.push([
-        'rock',
-        Math.exp(-((distance - 5) ** 2) / 1.7)
-      ]);
-    }
-
-    if (!S.special.cave && distance >= 5) {
-      opts.push([
-        'cave',
-        0.7 * Math.exp(-((distance - 6) ** 2) / 2)
-      ]);
-    }
-
-    opts.sort((a, b) => b[1] - a[1]);
-
-    if (
-      opts[0] &&
-      Math.random() < opts[0][1] * 0.6
-    ) {
-      t = opts[0][0];
-
-      S.special[t] = k;
-    } else if (Math.random() < 0.12) {
-      t = 'waste';
-    } else if (
-      Math.random() < 0.05 &&
-      distance > 4
-    ) {
-      t = 'sea';
-    }
-  }
-
-  const c = {
-    q,
-    r,
-    t,
-    seen: false
+  S.fac = {
+    base: 0,
+    kitchen: 0,
+    weapon: 0,
+    armor: 0
   };
 
-  S.tiles.set(k, c);
+  S.compass = false;
 
-  return c;
-}
+  S.base = {
+    q: 0,
+    r: 0
+  };
 
+  S.pos = {
+    q: 0,
+    r: 0
+  };
 
-/* =========================================================
-   全体描画
-========================================================= */
+  S.tiles = new Map();
 
-function render() {
-  $('log').innerHTML = (S.log || [])
-    .slice(0, 6)
-    .map(x => `<div class="log-item">${x}</div>`)
-    .join('');
+  S.book = {};
 
-  $('day').textContent = S.day;
+  S.special = {
+    forest: null,
+    pond: null,
+    rock: null,
+    cave: null
+  };
 
-  $('hungerText').textContent =
-    `${S.hunger} / ${S.maxHunger}`;
+  S.treasure = null;
+  S.pending = null;
+  S.log = [];
 
-  $('lifeText').textContent =
-    `${S.life} / ${S.maxLife}`;
-
-  $('hungerBar').style.width =
-    `${S.hunger / S.maxHunger * 100}%`;
-
-  $('lifeBar').style.width =
-    `${S.life / S.maxLife * 100}%`;
-
-  $('resources').innerHTML =
-    `🪵 ${S.wood}　` +
-    `🪨 ${S.stone}　` +
-    `🍖 ${S.food}　` +
-    `🌿 ${S.grass}　` +
-    `🧥 ${S.fur}　` +
-    `🔴${S.red} ` +
-    `🔵${S.blue} ` +
-    `🟡${S.yellow}`;
-
-  renderMap();
-  renderFacilities();
-  renderBook();
-}
-
-
-/* =========================================================
-   マップ描画
-========================================================= */
-
-function renderMap() {
-  const m = $('map');
 
   /*
-   * CSSの overflow:hidden をJS側で上書きして、
-   * マップをスクロール可能にする。
+   * マップ全体を生成
+   *
+   * ただし seen:false のため、
+   * プレイヤーから見ると未知のまま。
    */
-  m.style.overflow = 'auto';
-  m.style.position = 'relative';
-  m.style.touchAction = 'pan-x pan-y';
+  for (
+    let q = -MAP_RADIUS;
+    q <= MAP_RADIUS;
+    q++
+  ) {
 
-  /*
-   * マップ全体のサイズ
-   */
-  const centerX = 900;
-  const centerY = 900;
-
-  const mapWidth = 1800;
-  const mapHeight = 1800;
-
-  /*
-   * 内部コンテナを作る
-   */
-  const world = document.createElement('div');
-
-  world.style.position = 'relative';
-  world.style.width = `${mapWidth}px`;
-  world.style.height = `${mapHeight}px`;
-
-  m.innerHTML = '';
-  m.appendChild(world);
-
-  /*
-   * マップ全体を描画
-   */
-  for (let q = -MAP_RADIUS; q <= MAP_RADIUS; q++) {
-    for (let r = -MAP_RADIUS; r <= MAP_RADIUS; r++) {
+    for (
+      let r = -MAP_RADIUS;
+      r <= MAP_RADIUS;
+      r++
+    ) {
 
       if (
         D(
@@ -464,22 +411,461 @@ function renderMap() {
         continue;
       }
 
-      const c = gen(q, r);
+      gen(q, r);
 
-      const e = document.createElement('div');
+    }
 
+  }
+
+
+  /*
+   * 拠点は最初から探索済み
+   */
+  const baseTile =
+    S.tiles.get(
+      K(S.base.q, S.base.r)
+    );
+
+  if (baseTile) {
+    baseTile.seen = true;
+  }
+
+
+  /*
+   * 秘宝を決定
+   */
+  generateTreasure();
+
+}
+
+
+/* =========================================================
+   マップ1マス生成
+========================================================= */
+
+function gen(q, r) {
+
+  const k = K(q, r);
+
+  if (S.tiles.has(k)) {
+    return S.tiles.get(k);
+  }
+
+
+  /*
+   * 拠点
+   */
+  if (
+    q === S.base.q &&
+    r === S.base.r
+  ) {
+
+    const baseTile = {
+      q,
+      r,
+      t: 'grass',
+      seen: true
+    };
+
+    S.tiles.set(k, baseTile);
+
+    return baseTile;
+  }
+
+
+  const distance = D(
+    { q, r },
+    S.base
+  );
+
+
+  let t = 'grass';
+
+
+  if (distance > 0) {
+
+    const opts = [];
+
+
+    /*
+     * 森
+     */
+    if (
+      !S.special.forest &&
+      distance >= 2
+    ) {
+
+      opts.push([
+        'forest',
+        Math.exp(
+          -((distance - 3) ** 2) / 1.5
+        )
+      ]);
+
+    }
+
+
+    /*
+     * 池
+     */
+    if (
+      !S.special.pond &&
+      distance >= 3
+    ) {
+
+      opts.push([
+        'pond',
+        Math.exp(
+          -((distance - 4) ** 2) / 1.5
+        )
+      ]);
+
+    }
+
+
+    /*
+     * 岩場
+     */
+    if (
+      !S.special.rock &&
+      distance >= 4
+    ) {
+
+      opts.push([
+        'rock',
+        Math.exp(
+          -((distance - 5) ** 2) / 1.7
+        )
+      ]);
+
+    }
+
+
+    /*
+     * 洞窟
+     */
+    if (
+      !S.special.cave &&
+      distance >= 5
+    ) {
+
+      opts.push([
+        'cave',
+        0.7 *
+        Math.exp(
+          -((distance - 6) ** 2) / 2
+        )
+      ]);
+
+    }
+
+
+    opts.sort(
+      (a, b) => b[1] - a[1]
+    );
+
+
+    /*
+     * 特殊地形
+     */
+    if (
+      opts[0] &&
+      Math.random() <
+        opts[0][1] * 0.6
+    ) {
+
+      t = opts[0][0];
+
+      S.special[t] = k;
+
+    }
+
+    /*
+     * 荒地
+     */
+    else if (
+      Math.random() < 0.12
+    ) {
+
+      t = 'waste';
+
+    }
+
+    /*
+     * 海
+     */
+    else if (
+      Math.random() < 0.05 &&
+      distance > 4
+    ) {
+
+      t = 'sea';
+
+    }
+
+  }
+
+
+  const tile = {
+    q,
+    r,
+    t,
+    seen: false
+  };
+
+  S.tiles.set(k, tile);
+
+  return tile;
+
+}
+
+
+/* =========================================================
+   「探索可能なマス」判定
+========================================================= */
+
+function isAdjacentToExplored(tile) {
+
+  /*
+   * すでに探索済みのマスを全部確認
+   */
+  for (const explored of S.tiles.values()) {
+
+    if (!explored.seen) {
+      continue;
+    }
+
+    /*
+     * 1マス隣なら探索可能
+     */
+    if (
+      D(tile, explored) === 1
+    ) {
+      return true;
+    }
+
+  }
+
+  return false;
+
+}
+
+
+/* =========================================================
+   全体描画
+========================================================= */
+
+function render() {
+
+  /*
+   * ログ
+   */
+  $('log').innerHTML =
+    (S.log || [])
+      .slice(0, 6)
+      .map(
+        x =>
+          `<div class="log-item">${x}</div>`
+      )
+      .join('');
+
+
+  /*
+   * Day
+   */
+  $('day').textContent = S.day;
+
+
+  /*
+   * 空腹
+   */
+  $('hungerText').textContent =
+    `${S.hunger} / ${S.maxHunger}`;
+
+
+  /*
+   * ライフ
+   */
+  $('lifeText').textContent =
+    `${S.life} / ${S.maxLife}`;
+
+
+  /*
+   * バー
+   */
+  $('hungerBar').style.width =
+    `${S.hunger / S.maxHunger * 100}%`;
+
+  $('lifeBar').style.width =
+    `${Math.max(0, S.life) / S.maxLife * 100}%`;
+
+
+  /*
+   * 資源表示
+   */
+  $('resources').innerHTML =
+    `🪵 ${S.wood}　` +
+    `🪨 ${S.stone}　` +
+    `🍖 ${S.food}　` +
+    `🌿 ${S.grass}　` +
+    `🧥 ${S.fur}　` +
+    `🔴${S.red} ` +
+    `🔵${S.blue} ` +
+    `🟡${S.yellow}`;
+
+
+  /*
+   * 施設
+   */
+  renderFacilities();
+
+
+  /*
+   * 図鑑
+   */
+  renderBook();
+
+
+  /*
+   * マップ
+   *
+   * 探索画面が開いている場合だけ描画
+   */
+  if (!$('exploreView').hidden) {
+    renderMap();
+  }
+
+}
+
+
+/* =========================================================
+   マップ描画
+========================================================= */
+
+function renderMap() {
+
+  const map = $('map');
+
+  if (!map) {
+    return;
+  }
+
+
+  /*
+   * マップ全体のサイズ
+   */
+  const centerX = 900;
+  const centerY = 900;
+
+  const mapWidth = 1800;
+  const mapHeight = 1800;
+
+
+  /*
+   * スクロール位置を記憶
+   *
+   * 初回は拠点中央にする
+   */
+  const previousLeft = map.scrollLeft;
+  const previousTop = map.scrollTop;
+
+  const hasScrollPosition =
+    previousLeft > 0 ||
+    previousTop > 0;
+
+
+  /*
+   * マップをリセット
+   */
+  map.innerHTML = '';
+
+
+  /*
+   * マップ本体
+   */
+  const world =
+    document.createElement('div');
+
+  world.style.position = 'relative';
+  world.style.width =
+    `${mapWidth}px`;
+
+  world.style.height =
+    `${mapHeight}px`;
+
+
+  map.appendChild(world);
+
+
+  /*
+   * マップ全体
+   */
+  for (
+    let q = -MAP_RADIUS;
+    q <= MAP_RADIUS;
+    q++
+  ) {
+
+    for (
+      let r = -MAP_RADIUS;
+      r <= MAP_RADIUS;
+      r++
+    ) {
+
+      if (
+        D(
+          { q, r },
+          S.base
+        ) > MAP_RADIUS
+      ) {
+        continue;
+      }
+
+
+      const tile =
+        S.tiles.get(
+          K(q, r)
+        );
+
+      if (!tile) {
+        continue;
+      }
+
+
+      const e =
+        document.createElement('div');
+
+
+      /*
+       * 拠点
+       */
       const isBase =
         q === S.base.q &&
         r === S.base.r;
 
+
+      /*
+       * 秘宝
+       */
       const isTreasure =
         S.compass &&
         S.treasure &&
         q === S.treasure.q &&
         r === S.treasure.r;
 
+
       /*
-       * 六角形配置
+       * 探索可能か
+       */
+      const isAvailable =
+        !isBase &&
+        tile.t !== 'sea' &&
+        !tile.seen &&
+        isAdjacentToExplored(tile);
+
+
+      /*
+       * 六角形の位置
        */
       const x =
         centerX +
@@ -490,96 +876,152 @@ function renderMap() {
         r * 70 +
         q * 35;
 
+
+      /*
+       * 基本クラス
+       */
       e.className =
         'hex ' +
         (
-          c.seen
-            ? `explored ${c.t}`
+          tile.seen
+            ? `explored ${tile.t}`
             : 'unexplored'
-        ) +
-        (
-          c.t === 'sea'
-            ? ' blocked'
-            : ''
-        ) +
-        (
-          isBase
-            ? ' base'
-            : ''
         );
 
-      /*
-       * 拠点には特別な属性
-       */
-      if (isBase) {
-        e.dataset.base = 'true';
-      }
 
       /*
-       * コンパス取得後は秘宝を表示
+       * 拠点
+       */
+      if (isBase) {
+        e.classList.add('base');
+      }
+
+
+      /*
+       * 海
+       */
+      if (tile.t === 'sea') {
+        e.classList.add('blocked');
+      }
+
+
+      /*
+       * 探索可能
+       */
+      if (isAvailable) {
+        e.classList.add('available');
+      }
+
+
+      /*
+       * 秘宝
        */
       if (isTreasure) {
         e.dataset.treasure = 'true';
       }
 
-      e.style.left = `${x - 43}px`;
-      e.style.top = `${y - 49}px`;
 
       /*
-       * 拠点・秘宝・通常地形の表示を分ける
+       * 座標
+       */
+      e.style.left =
+        `${x - 43}px`;
+
+      e.style.top =
+        `${y - 49}px`;
+
+
+      /*
+       * 表示内容
        */
       let icon = '?';
       let name = '地形';
 
+
       if (isBase) {
+
         icon = '🏕️';
         name = '拠点';
-      } else if (isTreasure) {
+
+      }
+
+      else if (isTreasure) {
+
         icon = '✨';
         name = '秘宝';
-      } else if (c.seen) {
-        icon = T[c.t].icon;
-        name = T[c.t].name;
+
       }
+
+      else if (tile.seen) {
+
+        icon = T[tile.t].icon;
+        name = T[tile.t].name;
+
+      }
+
 
       e.innerHTML = `
         <div class="inside">
-          <div class="terrain-icon">${icon}</div>
-          <div>${name}</div>
+
+          <div class="terrain-icon">
+            ${icon}
+          </div>
+
+          <div>
+            ${name}
+          </div>
+
         </div>
       `;
 
-      /*
-       * 隣接マスだけ探索可能
-       *
-       * 海と拠点は探索対象外
-       */
-      const adjacent =
-        D(c, S.base) === 1;
 
-      if (
-        !isBase &&
-        c.t !== 'sea' &&
-        adjacent
-      ) {
-        e.classList.add('available');
-        e.onclick = () => openExplore(c);
+      /*
+       * クリックイベント
+       */
+      if (isAvailable) {
+
+        e.onclick = () =>
+          openExplore(tile);
+
       }
 
+
       world.appendChild(e);
+
     }
+
   }
 
+
   /*
-   * 初回表示時は拠点が中央に来るようにする
+   * スクロール位置
+   *
+   * 初回表示は拠点を中央。
+   * すでに操作中なら位置を維持。
    */
   requestAnimationFrame(() => {
-    m.scrollLeft =
-      centerX - m.clientWidth / 2;
 
-    m.scrollTop =
-      centerY - m.clientHeight / 2;
+    if (hasScrollPosition) {
+
+      map.scrollLeft = previousLeft;
+      map.scrollTop = previousTop;
+
+    }
+
+    else {
+
+      map.scrollLeft =
+        centerX -
+        map.clientWidth / 2;
+
+      map.scrollTop =
+        centerY -
+        map.clientHeight / 2;
+
+    }
+
   });
+
 }
 
 
@@ -587,36 +1029,51 @@ function renderMap() {
    探索プレビュー
 ========================================================= */
 
-function preview(c) {
-  const d = T[c.t];
+function preview(tile) {
 
-  const a = [];
+  const d = T[tile.t];
+
+  const result = [];
+
 
   if (d.food) {
-    a.push(
+
+    result.push(
       `🍖 食料 ${d.food[0]}～${d.food[1]}`
     );
+
   }
+
 
   if (d.grass) {
-    a.push(
+
+    result.push(
       `🌿 草 ${d.grass[0]}～${d.grass[1]}`
     );
+
   }
+
 
   if (d.wood) {
-    a.push(
+
+    result.push(
       `🪵 木材 ${d.wood[0]}～${d.wood[1]}`
     );
+
   }
+
 
   if (d.stone) {
-    a.push(
+
+    result.push(
       `🪨 石材 ${d.stone[0]}～${d.stone[1]}`
     );
+
   }
 
+
   if (d.damage) {
+
     const multiplier =
       S.fac.weapon === 2
         ? 0.5
@@ -624,32 +1081,50 @@ function preview(c) {
           ? 0.8
           : 1;
 
-    a.push(
+    result.push(
       `❤️ 地形ダメージ ${
-        Math.floor(d.damage * multiplier)
+        Math.floor(
+          d.damage * multiplier
+        )
       }`
     );
+
   }
 
-  a.push(
+
+  result.push(
     `✨ レア：${d.rare[0]} ×${d.rare[1]}（10%）`
   );
 
-  return a.join('<br>');
+
+  return result.join('<br>');
+
 }
 
 
 /* =========================================================
-   探索モーダル
+   探索モーダルを開く
 ========================================================= */
 
-function openExplore(c) {
-  const distance =
-    D(c, S.base);
+function openExplore(tile) {
 
+  /*
+   * 拠点からの距離
+   */
+  const distance =
+    D(tile, S.base);
+
+
+  /*
+   * 探索コスト
+   */
   const cost =
     10 + distance * 5;
 
+
+  /*
+   * 地形ダメージ軽減
+   */
   const multiplier =
     S.fac.weapon === 2
       ? 0.5
@@ -657,23 +1132,34 @@ function openExplore(c) {
         ? 0.8
         : 1;
 
-  const dam =
+
+  const damage =
     Math.floor(
-      T[c.t].damage * multiplier
+      T[tile.t].damage *
+      multiplier
     );
 
+
   S.pending = {
-    c,
+    tile,
     cost,
-    dam
+    damage
   };
 
-  $('exploreTitle').textContent =
-    T[c.t].name;
 
+  /*
+   * タイトル
+   */
+  $('exploreTitle').textContent =
+    T[tile.t].name;
+
+
+  /*
+   * プレビュー
+   */
   $('explorePreview').innerHTML = `
     <div class="target-icon">
-      ${T[c.t].icon}
+      ${T[tile.t].icon}
     </div>
 
     <div>
@@ -681,19 +1167,32 @@ function openExplore(c) {
     </div>
   `;
 
+
+  /*
+   * 消費
+   */
   $('travelCost').innerHTML =
     `🍖 空腹 -${cost}　` +
-    `❤️ ダメージ -${dam}` +
+    `❤️ ダメージ -${damage}` +
     (
       S.hunger < cost
         ? '　⚠ 空腹不足分もライフ減少'
         : ''
     );
 
-  $('resourcePreview').innerHTML =
-    preview(c);
 
+  /*
+   * 獲得予想
+   */
+  $('resourcePreview').innerHTML =
+    preview(tile);
+
+
+  /*
+   * モーダル
+   */
   showModal('exploreModal');
+
 }
 
 
@@ -702,137 +1201,212 @@ function openExplore(c) {
 ========================================================= */
 
 function explore() {
-  const p = S.pending;
 
-  if (!p) {
+  const pending =
+    S.pending;
+
+  if (!pending) {
     return;
   }
 
-  const c = p.c;
-  const d = T[c.t];
 
+  const tile =
+    pending.tile;
+
+  const terrain =
+    T[tile.t];
+
+
+  /*
+   * モーダルを閉じる
+   */
   closeModal('exploreModal');
 
+
+  /*
+   * 探索アニメーション
+   */
   $('char').textContent = '🏃';
 
+
   setTimeout(() => {
+
     $('char').textContent = '👨‍💼';
 
+
     /*
-     * 空腹消費
+     * 空腹不足
      */
     const shortage =
       Math.max(
         0,
-        p.cost - S.hunger
+        pending.cost - S.hunger
       );
 
+
+    /*
+     * 空腹
+     */
     S.hunger =
       Math.max(
         0,
-        S.hunger - p.cost
+        S.hunger - pending.cost
       );
 
+
     /*
-     * ライフ減少
+     * ライフ
      */
     S.life -=
-      p.dam + shortage;
+      pending.damage + shortage;
+
 
     /*
      * 通常資源
      */
-    if (d.food) {
-      S.food += R(...d.food);
+    if (terrain.food) {
+
+      S.food +=
+        R(...terrain.food);
+
     }
 
-    if (d.grass) {
-      S.grass += R(...d.grass);
+    if (terrain.grass) {
+
+      S.grass +=
+        R(...terrain.grass);
+
     }
 
-    if (d.wood) {
-      S.wood += R(...d.wood);
+    if (terrain.wood) {
+
+      S.wood +=
+        R(...terrain.wood);
+
     }
 
-    if (d.stone) {
-      S.stone += R(...d.stone);
+    if (terrain.stone) {
+
+      S.stone +=
+        R(...terrain.stone);
+
     }
+
 
     /*
      * レア素材
      */
     if (
-      d.rare &&
+      terrain.rare &&
       Math.random() < 0.1
     ) {
-      const x = d.rare[0];
 
-      if (x === '毛皮') {
+      const rareName =
+        terrain.rare[0];
+
+
+      if (rareName === '毛皮') {
+
         S.fur++;
+
       }
 
-      if (x === '赤い宝石') {
+      if (rareName === '赤い宝石') {
+
         S.red++;
+
       }
 
-      if (x === '青い宝石') {
+      if (rareName === '青い宝石') {
+
         S.blue++;
+
       }
 
-      if (x === '黄色い宝石') {
+      if (rareName === '黄色い宝石') {
+
         S.yellow++;
+
       }
 
-      if (x === 'レア食料') {
-        S.food += d.rare[1];
+      if (rareName === 'レア食料') {
+
+        S.food +=
+          terrain.rare[1];
+
       }
 
-      toast(`レア素材：${x}`);
+
+      toast(
+        `レア素材：${rareName}`
+      );
+
     }
+
 
     /*
      * 食材図鑑
      */
-    const fs =
+    const foundFoods =
       foods.filter(
-        x => x[2] === T[c.t].icon
+        f =>
+          f[2] ===
+          terrain.icon
       );
 
+
     if (
-      fs.length &&
+      foundFoods.length &&
       Math.random() < 0.35
     ) {
-      const f =
-        fs[R(0, fs.length - 1)];
 
-      S.book[f[0]] = 1;
+      const found =
+        foundFoods[
+          R(
+            0,
+            foundFoods.length - 1
+          )
+        ];
+
+      S.book[found[0]] = 1;
+
     }
+
 
     /*
      * 探索済みにする
      */
-    c.seen = true;
+    tile.seen = true;
+
 
     /*
-     * 主人公は移動しない
-     * 拠点から探索するゲームなので、
-     * S.pos は変更しない。
+     * 探索ログ
      */
+    const distance =
+      D(tile, S.base);
 
     S.log.unshift(
-      `Day ${S.day}　${T[c.t].name}を探索`
+      `Day ${S.day}　` +
+      `${terrain.name}を探索 ` +
+      `(拠点から${distance}マス)`
     );
 
+
+    /*
+     * 日数
+     */
     S.day++;
+
 
     /*
      * 秘宝発見
      */
     if (
       S.treasure &&
-      c.q === S.treasure.q &&
-      c.r === S.treasure.r
+      tile.q === S.treasure.q &&
+      tile.r === S.treasure.r
     ) {
+
       alert(
         '秘宝を発見！ GAME CLEAR'
       );
@@ -840,22 +1414,41 @@ function explore() {
       location.reload();
 
       return;
+
     }
+
 
     /*
      * ゲームオーバー
      */
     if (S.life <= 0) {
-      alert('GAME OVER');
+
+      alert(
+        'GAME OVER'
+      );
 
       location.reload();
 
       return;
+
     }
 
+
+    /*
+     * 主人公は拠点から動かない
+     *
+     * ここでは S.pos を変更しない。
+     */
+
+
+    /*
+     * 再描画
+     */
     render();
 
+
   }, 3000);
+
 }
 
 
@@ -864,33 +1457,50 @@ function explore() {
 ========================================================= */
 
 function eat() {
+
   if (!S.food) {
-    toast('食料がありません');
+
+    toast(
+      '食料がありません'
+    );
+
     return;
+
   }
 
-  const n =
+
+  const amount =
     S.fac.kitchen === 2
       ? 15
       : S.fac.kitchen === 1
         ? 12
         : 10;
 
+
   S.food--;
+
 
   S.hunger =
     Math.min(
       S.maxHunger,
-      S.hunger + n
+      S.hunger + amount
     );
 
-  $('char').textContent = '🍖';
+
+  $('char').textContent =
+    '🍖';
+
 
   setTimeout(() => {
-    $('char').textContent = '👨‍💼';
+
+    $('char').textContent =
+      '👨‍💼';
+
   }, 700);
 
+
   render();
+
 }
 
 
@@ -899,9 +1509,11 @@ function eat() {
 ========================================================= */
 
 const defs = [
+
   [
     'base',
     '拠点',
+
     [
       [
         5,
@@ -914,6 +1526,7 @@ const defs = [
         '草5',
         '藁のテント'
       ],
+
       [
         10,
         10,
@@ -928,9 +1541,11 @@ const defs = [
     ]
   ],
 
+
   [
     'kitchen',
     '食堂',
+
     [
       [
         5,
@@ -943,6 +1558,7 @@ const defs = [
         '木材5',
         '焚き火'
       ],
+
       [
         10,
         0,
@@ -957,9 +1573,11 @@ const defs = [
     ]
   ],
 
+
   [
     'weapon',
     '武器',
+
     [
       [
         5,
@@ -972,6 +1590,7 @@ const defs = [
         '木材5',
         '軽減20%'
       ],
+
       [
         10,
         0,
@@ -986,9 +1605,11 @@ const defs = [
     ]
   ],
 
+
   [
     'armor',
     '防具',
+
     [
       [
         5,
@@ -1001,6 +1622,7 @@ const defs = [
         '木材5',
         '最大ライフ+20'
       ],
+
       [
         10,
         0,
@@ -1014,6 +1636,7 @@ const defs = [
       ]
     ]
   ]
+
 ];
 
 
@@ -1022,6 +1645,7 @@ const defs = [
 ========================================================= */
 
 function can(a) {
+
   return (
     S.grass >= a[0] &&
     S.wood >= a[1] &&
@@ -1031,10 +1655,12 @@ function can(a) {
     S.blue >= a[5] &&
     S.yellow >= a[6]
   );
+
 }
 
 
 function pay(a) {
+
   S.grass -= a[0];
   S.wood -= a[1];
   S.stone -= a[2];
@@ -1042,67 +1668,101 @@ function pay(a) {
   S.red -= a[4];
   S.blue -= a[5];
   S.yellow -= a[6];
+
 }
 
 
 /* =========================================================
-   建設画面
+   施設開発UI
 ========================================================= */
 
 function buildUI() {
-  let h = '';
 
-  defs.forEach(d => {
-    const lv = S.fac[d[0]];
-    const n = lv + 1;
+  let html = '';
 
-    if (n <= 2) {
-      const a = d[2][n - 1];
 
-      /*
-       * 拠点Lv1だけは例外。
-       * 初期状態でも建設可能。
-       *
-       * その他の施設は拠点Lvが必要。
-       */
-      const baseRequirement =
-        d[0] === 'base'
-          ? n <= 1
-          : n <= S.fac.base;
+  defs.forEach(def => {
 
-      const ok =
-        baseRequirement &&
-        can(a);
+    const id = def[0];
 
-      h += `
-        <div class="build-row">
-          <div>
-            <h3>${d[1]} Lv${n}</h3>
-            <p>${a[7]} / ${a[8]}</p>
-          </div>
+    const level =
+      S.fac[id];
 
-          <button
-            data-b="${d[0]}"
-            ${ok ? '' : 'disabled'}
-          >
-            建設
-          </button>
-        </div>
-      `;
+    const nextLevel =
+      level + 1;
+
+
+    if (nextLevel > 2) {
+      return;
     }
+
+
+    const cost =
+      def[2][nextLevel - 1];
+
+
+    /*
+     * 拠点Lv1だけは
+     * 初期状態から作成可能。
+     *
+     * その他は拠点レベルが必要。
+     */
+    const baseRequirement =
+      id === 'base'
+        ? nextLevel === 1
+        : nextLevel <= S.fac.base;
+
+
+    const enabled =
+      baseRequirement &&
+      can(cost);
+
+
+    html += `
+      <div class="build-row">
+
+        <div>
+
+          <h3>
+            ${def[1]} Lv${nextLevel}
+          </h3>
+
+          <p>
+            ${cost[7]} / ${cost[8]}
+          </p>
+
+        </div>
+
+        <button
+          data-b="${id}"
+          ${enabled ? '' : 'disabled'}
+        >
+          建設
+        </button>
+
+      </div>
+    `;
+
   });
+
 
   /*
    * 冷蔵庫
    */
-  h += `
+  html += `
     <div class="build-row">
+
       <div>
-        <h3>冷蔵庫</h3>
+
+        <h3>
+          冷蔵庫
+        </h3>
+
         <p>
           黄色1＋青3＋石材20 /
           空腹最大+50
         </p>
+
       </div>
 
       <button
@@ -1118,20 +1778,28 @@ function buildUI() {
       >
         建設
       </button>
+
     </div>
   `;
+
 
   /*
    * コンパス
    */
-  h += `
+  html += `
     <div class="build-row">
+
       <div>
-        <h3>コンパス</h3>
+
+        <h3>
+          コンパス
+        </h3>
+
         <p>
           黄色1＋青1＋赤1 /
           秘宝マス表示
         </p>
+
       </div>
 
       <button
@@ -1147,27 +1815,41 @@ function buildUI() {
       >
         建設
       </button>
+
     </div>
   `;
 
-  $('buildList').innerHTML = h;
+
+  $('buildList').innerHTML =
+    html;
+
 
   showModal('buildModal');
+
 
   /*
    * 通常施設
    */
   document
     .querySelectorAll('[data-b]')
-    .forEach(b => {
-      b.onclick = () =>
-        build(b.dataset.b);
+    .forEach(button => {
+
+      button.onclick = () => {
+
+        build(
+          button.dataset.b
+        );
+
+      };
+
     });
+
 
   /*
    * 冷蔵庫
    */
   $('fridge').onclick = () => {
+
     S.yellow--;
     S.blue -= 3;
     S.stone -= 20;
@@ -1175,13 +1857,17 @@ function buildUI() {
     S.maxHunger = 150;
 
     render();
+
     buildUI();
+
   };
+
 
   /*
    * コンパス
    */
   $('compass').onclick = () => {
+
     S.yellow--;
     S.blue--;
     S.red--;
@@ -1193,8 +1879,11 @@ function buildUI() {
     );
 
     render();
+
     buildUI();
+
   };
+
 }
 
 
@@ -1203,69 +1892,103 @@ function buildUI() {
 ========================================================= */
 
 function build(id) {
-  const d =
-    defs.find(x => x[0] === id);
 
-  if (!d) {
+  const def =
+    defs.find(
+      x => x[0] === id
+    );
+
+  if (!def) {
     return;
   }
 
-  const n =
-    S.fac[id] + 1;
 
-  const a =
-    d[2][n - 1];
+  const level =
+    S.fac[id];
 
-  if (!a) {
+  const nextLevel =
+    level + 1;
+
+
+  const cost =
+    def[2][nextLevel - 1];
+
+
+  if (!cost) {
     return;
   }
+
 
   /*
-   * 拠点以外は拠点Lvが必要
+   * 拠点
    */
   const baseRequirement =
     id === 'base'
-      ? n <= 1
-      : n <= S.fac.base;
+      ? nextLevel === 1
+      : nextLevel <= S.fac.base;
+
 
   if (
     !baseRequirement ||
-    !can(a)
+    !can(cost)
   ) {
     return;
   }
 
-  pay(a);
 
-  S.fac[id] = n;
+  /*
+   * 支払い
+   */
+  pay(cost);
+
+
+  /*
+   * レベルアップ
+   */
+  S.fac[id] =
+    nextLevel;
+
 
   /*
    * 防具
    */
   if (id === 'armor') {
-    S.maxLife =
-      n === 1
-        ? 120
-        : 150;
 
-    /*
-     * 最大ライフが増えたときは
-     * 現在ライフも同じ分だけ増やす。
-     */
-    S.life =
-      Math.min(
-        S.maxLife,
-        S.life +
-          (n === 1 ? 20 : 30)
-      );
+    if (nextLevel === 1) {
+
+      S.maxLife = 120;
+      S.life += 20;
+
+    }
+
+    else {
+
+      S.maxLife = 150;
+      S.life += 30;
+
+    }
+
   }
 
+
+  /*
+   * 上限を超えない
+   */
+  S.life =
+    Math.min(
+      S.life,
+      S.maxLife
+    );
+
+
   render();
+
   buildUI();
 
   toast(
-    `${d[1]} Lv${n}`
+    `${def[1]} Lv${nextLevel}`
   );
+
 }
 
 
@@ -1274,56 +1997,81 @@ function build(id) {
 ========================================================= */
 
 function renderFacilities() {
+
   $('facilities').innerHTML =
     defs
-      .map(d => `
-        <div class="facility">
-          <div class="icon">
-            ${d[1]}
-          </div>
+      .map(def => {
 
-          <h3>
-            Lv${S.fac[d[0]]}
-          </h3>
-        </div>
-      `)
+        const id = def[0];
+
+        return `
+          <div class="facility">
+
+            <div class="icon">
+              ${def[1]}
+            </div>
+
+            <h3>
+              Lv${S.fac[id]}
+            </h3>
+
+          </div>
+        `;
+
+      })
       .join('');
+
 }
 
 
 /* =========================================================
-   食材図鑑
+   食材図鑑表示
 ========================================================= */
 
 function renderBook() {
+
   $('book').innerHTML =
     foods
-      .map(f => `
-        <div
-          class="book-card ${
-            S.book[f[0]]
-              ? ''
-              : 'locked'
-          }"
-        >
-          <div class="food-art">
-            ${
-              S.book[f[0]]
-                ? f[2]
-                : '?'
-            }
-          </div>
+      .map(food => {
 
-          <div>
-            ${
-              S.book[f[0]]
-                ? f[1]
-                : '？？？'
-            }
+        const discovered =
+          !!S.book[food[0]];
+
+        return `
+          <div
+            class="book-card ${
+              discovered
+                ? ''
+                : 'locked'
+            }"
+          >
+
+            <div class="food-art">
+
+              ${
+                discovered
+                  ? food[2]
+                  : '?'
+              }
+
+            </div>
+
+            <div>
+
+              ${
+                discovered
+                  ? food[1]
+                  : '？？？'
+              }
+
+            </div>
+
           </div>
-        </div>
-      `)
+        `;
+
+      })
       .join('');
+
 }
 
 
@@ -1331,15 +2079,21 @@ function renderBook() {
    イベント
 ========================================================= */
 
+
 /*
  * START
  */
 $('start').onclick = () => {
+
   $('title').hidden = true;
   $('game').hidden = false;
 
   init();
+
+  showBaseView();
+
   render();
+
 };
 
 
@@ -1350,33 +2104,71 @@ $('eat').onclick = eat;
 
 
 /*
- * 探索
+ * 探索画面へ
  */
-$('confirmExplore').onclick = explore;
+$('exploreMode').onclick = () => {
+
+  showExploreView();
+
+};
 
 
 /*
- * 探索モーダル閉じる
+ * 拠点画面へ
  */
-$('modalClose').onclick = () =>
-  closeModal('exploreModal');
+$('backToBase').onclick = () => {
 
-$('cancelExplore').onclick = () =>
-  closeModal('exploreModal');
+  showBaseView();
+
+};
+
+
+/*
+ * 探索確定
+ */
+$('confirmExplore').onclick =
+  explore;
+
+
+/*
+ * 探索モーダルを閉じる
+ */
+$('modalClose').onclick = () => {
+
+  closeModal(
+    'exploreModal'
+  );
+
+};
+
+
+$('cancelExplore').onclick = () => {
+
+  closeModal(
+    'exploreModal'
+  );
+
+};
 
 
 /*
  * 施設開発
  */
-$('buildBtn').onclick = buildUI;
+$('buildBtn').onclick =
+  buildUI;
 
 
 /*
  * 食材図鑑
  */
 $('bookBtn').onclick = () => {
+
   renderBook();
-  showModal('bookModal');
+
+  showModal(
+    'bookModal'
+  );
+
 };
 
 
@@ -1384,20 +2176,34 @@ $('bookBtn').onclick = () => {
  * ログ消去
  */
 $('clearLog').onclick = () => {
+
   $('log').innerHTML = '';
+
 };
 
 
 /*
- * その他のモーダル閉じるボタン
+ * モーダルの×ボタン
  */
 document
   .querySelectorAll('.modalClose2')
-  .forEach(b => {
-    b.onclick = () => {
-      const modal =
-        b.closest('.modal-backdrop');
+  .forEach(button => {
 
-      closeModal(modal.id);
+    button.onclick = () => {
+
+      const modal =
+        button.closest(
+          '.modal-backdrop'
+        );
+
+      if (modal) {
+
+        closeModal(
+          modal.id
+        );
+
+      }
+
     };
+
   });
