@@ -156,6 +156,84 @@ const T = {
   }
 };
 
+/* =========================================================
+   キャラクターアニメーション
+========================================================= */
+const CHARACTER_ANIMATIONS = {
+
+  idle: [
+    'images/character_idle1.png',
+    'images/character_idle2.png',
+    'images/character_idle3.png',
+    'images/character_idle4.png',
+    'images/character_idle5.png'
+  ],
+
+  walk: [
+    'images/character_walk1.png',
+    'images/character_walk2.png',
+    'images/character_walk3.png',
+    'images/character_walk4.png',
+    'images/character_walk5.png'
+  ]
+
+};
+
+let characterAnimationTimer = null;
+
+/*
+ * キャラクターアニメーション開始
+ */
+function startCharacterAnimation(type) {
+  const char = $('char');
+
+  if (!char) {
+    return;
+  }
+
+  const frames = CHARACTER_ANIMATIONS[type];
+
+  if (!frames) {
+    return;
+  }
+
+
+  /*
+   * 既存アニメーション停止
+   */
+  if (characterAnimationTimer) {
+    clearInterval(characterAnimationTimer);
+  }
+
+  let frame = 0;
+
+  char.src = frames[frame];
+
+  /*
+   * フレーム切り替え
+   */
+  characterAnimationTimer =
+    setInterval(() => {
+
+      frame++;
+
+      if (frame >= frames.length) {
+        frame = 0;
+      }
+      char.src = frames[frame];
+    }, 150);
+}
+
+/*
+ * キャラクターアニメーション停止
+ */
+function stopCharacterAnimation() {
+  if (characterAnimationTimer) {
+    clearInterval(characterAnimationTimer);
+
+    characterAnimationTimer = null;
+  }
+}
 
 /* =========================================================
    食材図鑑
@@ -967,104 +1045,154 @@ function openExplore(tile) {
 ========================================================= */
 
 function explore() {
+
   const pending = S.pending;
 
   if (!pending) {
     return;
   }
 
+
   const tile = pending.tile;
   const terrain = T[tile.t];
 
+
+  /* =====================================================
+     探索開始
+  ===================================================== */
+
   /* モーダルを閉じる */
   closeModal('exploreModal');
+
 
   /*
    * 探索画面から拠点画面へ戻る
    */
   showBaseView();
 
+
   /*
-   * 主人公を探索中にする
+   * 主人公を探索中アニメーションにする
    */
-  const char = $('char');
-
-  char.textContent = '🏃';
-  char.classList.add('exploring');
+  startCharacterAnimation('walk');
 
 
   /*
-   * 探索アニメーション
-   *
-   * 3秒間、拠点画面で
-   * 主人公が探索中の状態になる
+   * 3秒間、探索アニメーション
    */
   setTimeout(() => {
 
+
+    /* =================================================
+       探索終了
+    ================================================= */
+
     /*
-     * 主人公を通常状態へ戻す
+     * 主人公を待機アニメーションへ戻す
      */
-    char.textContent = '👨‍💼';
-    char.classList.remove('exploring');
+    startCharacterAnimation('idle');
+
+
+    /* =================================================
+       空腹・ライフ
+    ================================================= */
 
     /*
      * 空腹不足
      */
-    const shortage = Math.max(0,pending.cost - S.hunger);
+    const shortage =
+      Math.max(
+        0,
+        pending.cost - S.hunger
+      );
+
 
     /*
      * 空腹
      */
-    S.hunger = Math.max(0,S.hunger - pending.cost);
+    S.hunger =
+      Math.max(
+        0,
+        S.hunger - pending.cost
+      );
 
 
     /*
      * ライフ
      */
-    S.life -= pending.damage + shortage;
+    S.life -=
+      pending.damage +
+      shortage;
 
 
-    /*
-     * 資源
-     */
+    /* =================================================
+       資源獲得
+    ================================================= */
+
     if (terrain.food) {
-      S.food += R(...terrain.food);
+
+      S.food +=
+        R(...terrain.food);
+
     }
+
 
     if (terrain.grass) {
-      S.grass += R(...terrain.grass);
+
+      S.grass +=
+        R(...terrain.grass);
+
     }
+
 
     if (terrain.wood) {
-      S.wood += R(...terrain.wood);
+
+      S.wood +=
+        R(...terrain.wood);
+
     }
+
 
     if (terrain.stone) {
-      S.stone += R(...terrain.stone);
+
+      S.stone +=
+        R(...terrain.stone);
+
     }
 
 
-    /*
-     * レア素材
-     */
-    if (terrain.rare && Math.random() < 0.1) {
-      const rareName = terrain.rare[0];
+    /* =================================================
+       レア素材
+    ================================================= */
+
+    if (
+      terrain.rare &&
+      Math.random() < 0.1
+    ) {
+
+      const rareName =
+        terrain.rare[0];
+
 
       if (rareName === '毛皮') {
         S.fur++;
       }
 
+
       if (rareName === '赤い宝石') {
         S.red++;
       }
+
 
       if (rareName === '青い宝石') {
         S.blue++;
       }
 
+
       if (rareName === '黄色い宝石') {
         S.yellow++;
       }
+
 
       if (rareName === 'レア食料') {
         S.food += terrain.rare[1];
@@ -1074,12 +1202,14 @@ function explore() {
       toast(
         `レア素材：${rareName}`
       );
+
     }
 
 
-    /*
-     * 食材図鑑
-     */
+    /* =================================================
+       食材図鑑
+    ================================================= */
+
     const foundFoods =
       foods.filter(
         food =>
@@ -1100,21 +1230,26 @@ function explore() {
           )
         ];
 
+
       S.book[found[0]] = 1;
+
     }
 
 
-    /*
-     * 探索済みにする
-     */
+    /* =================================================
+       探索済みにする
+    ================================================= */
+
     tile.seen = true;
 
 
-    /*
-     * 探索ログ
-     */
+    /* =================================================
+       探索ログ
+    ================================================= */
+
     const distance =
       D(tile, S.base);
+
 
     S.log.unshift(
       `Day ${S.day}　` +
@@ -1123,21 +1258,24 @@ function explore() {
     );
 
 
-    /*
-     * Day進行
-     */
+    /* =================================================
+       Day進行
+    ================================================= */
+
     S.day++;
 
 
-    /*
-     * 探索先をクリア
-     */
+    /* =================================================
+       探索先をクリア
+    ================================================= */
+
     S.pending = null;
 
 
-    /*
-     * 秘宝発見
-     */
+    /* =================================================
+       秘宝発見
+    ================================================= */
+
     if (
       S.treasure &&
       tile.q === S.treasure.q &&
@@ -1148,35 +1286,39 @@ function explore() {
         '秘宝を発見！ GAME CLEAR'
       );
 
+
       location.reload();
 
       return;
     }
 
 
-    /*
-     * ゲームオーバー
-     */
+    /* =================================================
+       ゲームオーバー
+    ================================================= */
+
     if (S.life <= 0) {
 
       alert(
         'GAME OVER'
       );
 
+
       location.reload();
 
       return;
     }
 
 
-    /*
-     * 拠点画面を更新
-     */
+    /* =================================================
+       拠点画面を更新
+    ================================================= */
+
     render();
+
 
   }, 3000);
 }
-
 
 /* =========================================================
    食べる
@@ -1715,6 +1857,8 @@ $('start').onclick = () => {
   showBaseView();
 
   render();
+
+  startCharacterAnimation('idle');
 };
 
 
