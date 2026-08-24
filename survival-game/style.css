@@ -1358,3 +1358,45 @@ h2 {
   }
 
 }
+
+/* =========================================================
+   探索可能だが未探索のマス
+========================================================= */
+
+.hex.available.unexplored {
+  opacity: 0.62;
+}
+
+.hex.available.unexplored .inside {
+  color: #c5c0ad;
+  text-shadow: 0 1px 2px #1c1b18;
+}
+
+.hex.available.unexplored .terrain-icon {
+  opacity: 0.8;
+}
+
+
+/* =========================================================
+   主人公の探索アニメーション
+========================================================= */
+
+.character.exploring #char {
+  animation: characterExplore 0.7s ease-in-out infinite;
+}
+
+@keyframes characterExplore {
+
+  0% {
+    transform: translateX(-3px);
+  }
+
+  50% {
+    transform: translateX(3px);
+  }
+
+  100% {
+    transform: translateX(-3px);
+  }
+
+}
