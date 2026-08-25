@@ -87,7 +87,7 @@ const S = {
     cave: null
   },
 
-  treasure: null,
+  gate: null,
 
   pending: null,
 
@@ -387,11 +387,13 @@ function showExploreView() {
 
 
 /* =========================================================
-   秘宝生成
+   ゲート生成
 ========================================================= */
 
-function generateTreasure() {
+function generateGate() {
+
   while (true) {
+
     const q = R(-MAP_RADIUS, MAP_RADIUS);
     const r = R(-MAP_RADIUS, MAP_RADIUS);
 
@@ -400,17 +402,31 @@ function generateTreasure() {
       S.base
     );
 
-    if (distance < 9 || distance > 15) {
+    /*
+     * 拠点から9～15マス
+     */
+    if (
+      distance < 9 ||
+      distance > MAP_RADIUS
+    ) {
       continue;
     }
 
-    const tile = S.tiles.get(K(q, r));
+    const tile = S.tiles.get(
+      K(q, r)
+    );
 
-    if (tile && tile.t === 'sea') {
+    /*
+     * 海や特殊地形には置かない
+     */
+    if (
+      !tile ||
+      tile.t !== 'grass'
+    ) {
       continue;
     }
 
-    S.treasure = {
+    S.gate = {
       q,
       r
     };
@@ -418,7 +434,6 @@ function generateTreasure() {
     return;
   }
 }
-
 
 /* =========================================================
    初期化
@@ -472,7 +487,7 @@ function init() {
     cave: null
   };
 
-  S.treasure = null;
+  S.gate = null;
   S.pending = null;
   S.log = [];
   S.mapInitialized = false;
@@ -481,22 +496,9 @@ function init() {
   /*
    * マップ全体を生成
    */
-  for (
-    let q = -MAP_RADIUS;
-    q <= MAP_RADIUS;
-    q++
-  ) {
-    for (
-      let r = -MAP_RADIUS;
-      r <= MAP_RADIUS;
-      r++
-    ) {
-      if (
-        D(
-          { q, r },
-          S.base
-        ) > MAP_RADIUS
-      ) {
+  for (let q = -MAP_RADIUS; q <= MAP_RADIUS; q++) {
+    for (let r = -MAP_RADIUS; r <= MAP_RADIUS; r++) {
+      if ( D({ q, r }, S.base) > MAP_RADIUS ) {
         continue;
       }
 
@@ -504,6 +506,11 @@ function init() {
     }
   }
 
+  /* 特殊地形を配置 */
+  generateSpecialTerrains();
+
+  /* ゲート位置決定 */
+  generateGate();
 
   /*
    * 拠点を探索済みにする
@@ -516,11 +523,6 @@ function init() {
     baseTile.seen = true;
   }
 
-
-  /*
-   * 秘宝位置決定
-   */
-  generateTreasure();
 }
 
 
@@ -528,7 +530,12 @@ function init() {
    マップ生成
 ========================================================= */
 
+/* =========================================================
+   基本マップ生成
+========================================================= */
+
 function gen(q, r) {
+
   const k = K(q, r);
 
   if (S.tiles.has(k)) {
@@ -543,6 +550,7 @@ function gen(q, r) {
     q === S.base.q &&
     r === S.base.r
   ) {
+
     const baseTile = {
       q,
       r,
@@ -561,112 +569,33 @@ function gen(q, r) {
     S.base
   );
 
+
+  /*
+   * 基本は草原
+   */
   let t = 'grass';
 
 
-  if (distance > 0) {
-    const opts = [];
+  /*
+   * 荒地
+   */
+  if (
+    Math.random() < 0.12
+  ) {
+    t = 'waste';
+  }
 
 
-    /*
-     * 森
-     */
-    if (
-      !S.special.forest &&
-      distance >= 2
-    ) {
-      opts.push([
-        'forest',
-        Math.exp(
-          -((distance - 3) ** 2) / 1.5
-        )
-      ]);
-    }
-
-
-    /*
-     * 池
-     */
-    if (
-      !S.special.pond &&
-      distance >= 3
-    ) {
-      opts.push([
-        'pond',
-        Math.exp(
-          -((distance - 4) ** 2) / 1.5
-        )
-      ]);
-    }
-
-
-    /*
-     * 岩場
-     */
-    if (
-      !S.special.rock &&
-      distance >= 4
-    ) {
-      opts.push([
-        'rock',
-        Math.exp(
-          -((distance - 5) ** 2) / 1.7
-        )
-      ]);
-    }
-
-
-    /*
-     * 洞窟
-     */
-    if (
-      !S.special.cave &&
-      distance >= 5
-    ) {
-      opts.push([
-        'cave',
-        0.7 * Math.exp(
-          -((distance - 6) ** 2) / 2
-        )
-      ]);
-    }
-
-
-    opts.sort(
-      (a, b) => b[1] - a[1]
-    );
-
-
-    /*
-     * 特殊地形
-     */
-    if (
-      opts[0] &&
-      Math.random() <
-        opts[0][1] * 0.6
-    ) {
-      t = opts[0][0];
-      S.special[t] = k;
-    }
-
-    /*
-     * 荒地
-     */
-    else if (
-      Math.random() < 0.12
-    ) {
-      t = 'waste';
-    }
-
-    /*
-     * 海
-     */
-    else if (
-      Math.random() < 0.05 &&
-      distance > 4
-    ) {
-      t = 'sea';
-    }
+  /*
+   * 海
+   *
+   * 拠点から5マス以上離れた場所だけ
+   */
+  else if (
+    Math.random() < 0.05 &&
+    distance > 4
+  ) {
+    t = 'sea';
   }
 
 
@@ -682,6 +611,241 @@ function gen(q, r) {
   return tile;
 }
 
+/* =========================================================
+   特殊地形配置
+========================================================= */
+
+/*
+ * 配置可能なマスを取得
+ */
+function getSpecialCandidates(
+  minDistance,
+  maxDistance
+) {
+
+  const candidates = [];
+
+  for (const tile of S.tiles.values()) {
+
+    const distance = D(
+      tile,
+      S.base
+    );
+
+    /*
+     * 距離範囲
+     */
+    if (
+      distance < minDistance ||
+      distance > maxDistance
+    ) {
+      continue;
+    }
+
+    /*
+     * 草原だけを対象
+     */
+    if (tile.t !== 'grass' && tile.t !== 'waste') {
+      continue;
+    }
+
+    /*
+     * 既に特殊地形が置かれている
+     */
+    if (
+      tile.special
+    ) {
+      continue;
+    }
+
+    candidates.push(tile);
+  }
+
+  return candidates;
+}
+
+/* =========================================================
+   4マス特殊地形
+========================================================= */
+
+function placeCluster(
+  terrain,
+  minDistance,
+  maxDistance
+) {
+
+  const candidates =
+    getSpecialCandidates(
+      minDistance,
+      maxDistance
+    );
+
+
+  /*
+   * 候補をランダムに並べる
+   */
+  candidates.sort(
+    () => Math.random() - 0.5
+  );
+
+
+  for (const center of candidates) {
+
+    /*
+     * 中心マス
+     */
+    const cluster = [
+      center
+    ];
+
+
+    /*
+     * 中心に隣接するマスを探す
+     */
+    const neighbors =
+      candidates
+        .filter(tile =>
+          D(tile, center) === 1
+        )
+        .sort(
+          () => Math.random() - 0.5
+        );
+
+
+    /*
+     * 4マスになるまで追加
+     */
+    for (
+      const tile of neighbors
+    ) {
+
+      if (
+        cluster.length >= 4
+      ) {
+        break;
+      }
+
+      cluster.push(tile);
+    }
+
+
+    /*
+     * 4マス揃わなければ
+     * 別の中心を試す
+     */
+    if (
+      cluster.length < 4
+    ) {
+      continue;
+    }
+
+
+    /*
+     * 配置
+     */
+    cluster.forEach(tile => {
+
+      tile.t = terrain;
+      tile.special = true;
+
+    });
+
+
+    return true;
+  }
+
+
+  return false;
+}
+
+/* =========================================================
+   1マス特殊地形
+========================================================= */
+
+function placeSingle(
+  terrain,
+  minDistance,
+  maxDistance
+) {
+
+  const candidates =
+    getSpecialCandidates(
+      minDistance,
+      maxDistance
+    );
+
+
+  if (
+    candidates.length === 0
+  ) {
+    return false;
+  }
+
+
+  const tile =
+    candidates[
+      R(
+        0,
+        candidates.length - 1
+      )
+    ];
+
+
+  tile.t = terrain;
+  tile.special = true;
+
+  return true;
+}
+
+/* =========================================================
+   特殊地形を配置
+========================================================= */
+
+function generateSpecialTerrains() {
+
+  /*
+   * 森
+   * 拠点から2～4マス
+   */
+  placeCluster(
+    'forest',
+    2,
+    4
+  );
+
+
+  /*
+   * 池
+   * 拠点から3～6マス
+   */
+  placeSingle(
+    'pond',
+    3,
+    6
+  );
+
+
+  /*
+   * 岩場
+   * 拠点から3～5マス
+   */
+  placeCluster(
+    'rock',
+    3,
+    5
+  );
+
+
+  /*
+   * 洞窟
+   * 拠点から4～6マス
+   */
+  placeSingle(
+    'cave',
+    4,
+    6
+  );
+}
 
 /* =========================================================
    探索可能マス判定
@@ -830,11 +994,11 @@ function renderMap() {
         r === S.base.r;
 
 
-      const isTreasure =
+      const isgate =
         S.compass &&
-        S.treasure &&
-        q === S.treasure.q &&
-        r === S.treasure.r;
+        S.gate &&
+        q === S.gate.q &&
+        r === S.gate.r;
 
 
       const isAvailable =
@@ -885,8 +1049,8 @@ function renderMap() {
       }
 
 
-      if (isTreasure) {
-        e.dataset.treasure = 'true';
+      if (isgate) {
+        e.dataset.gate = 'true';
       }
 
 
@@ -908,9 +1072,9 @@ function renderMap() {
         icon = '🏕️';
         name = '拠点';
       }
-      else if (isTreasure) {
-        icon = '✨';
-        name = '秘宝';
+      else if (isgate) {
+        icon = '🌀';
+        name = 'ゲート';
       }
       else if (tile.seen) {
         icon = T[tile.t].icon;
@@ -1332,17 +1496,17 @@ function explore() {
 
 
     /* =================================================
-       秘宝発見
+       ゲート発見
     ================================================= */
 
     if (
-      S.treasure &&
-      tile.q === S.treasure.q &&
-      tile.r === S.treasure.r
+      S.gate &&
+      tile.q === S.gate.q &&
+      tile.r === S.gate.r
     ) {
 
       alert(
-        '秘宝を発見！ GAME CLEAR'
+        'ゲートを発見！ GAME CLEAR'
       );
 
 
@@ -1686,7 +1850,7 @@ function buildUI() {
 
         <p>
           黄色1＋青1＋赤1 /
-          秘宝マス表示
+          ゲートマス表示
         </p>
 
       </div>
