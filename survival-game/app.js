@@ -104,7 +104,7 @@ const T = {
   grass: {
     name: '草原',
     icon: '🌿',
-    food: [1, 1],
+    food: [1, 2],
     grass: [1, 2],
     damage: 0,
     rare: ['レア食料', 4]
@@ -161,39 +161,66 @@ const T = {
 ========================================================= */
 const CHARACTER_ANIMATIONS = {
 
-  idle: [
-    'images/character_idle1.png',
-    'images/character_idle2.png',
-    'images/character_idle3.png',
-    'images/character_idle4.png',
-    'images/character_idle5.png'
-  ],
+  idle: {
+    frames: [
+      'images/character_idle1.png',
+      'images/character_idle2.png',
+      'images/character_idle3.png',
+      'images/character_idle4.png',
+      'images/character_idle5.png'
+    ],
 
-  walk: [
-    'images/character_walk1.png',
-    'images/character_walk2.png',
-    'images/character_walk3.png',
-    'images/character_walk4.png',
-    'images/character_walk5.png'
-  ]
+    // 各フレームの表示時間
+    durations: [
+      3000,  // 1枚目：じっとする
+      450,   // 2枚目
+      450,   // 3枚目
+      300,   // 4枚目
+      3000   // 5枚目：じっとする
+    ]
+  },
+
+  walk: {
+    frames: [
+      'images/character_walk1.png',
+      'images/character_walk2.png',
+      'images/character_walk3.png',
+      'images/character_walk4.png',
+      'images/character_walk5.png'
+    ],
+
+    // 移動中は今まで通り
+    durations: [
+      150,
+      150,
+      150,
+      150,
+      150
+    ]
+  }
 
 };
 
+
 let characterAnimationTimer = null;
 
-/*
- * キャラクターアニメーション開始
- */
+
+/* =========================================================
+   キャラクターアニメーション開始
+========================================================= */
+
 function startCharacterAnimation(type) {
+
   const char = $('char');
 
   if (!char) {
     return;
   }
 
-  const frames = CHARACTER_ANIMATIONS[type];
+  const animation =
+    CHARACTER_ANIMATIONS[type];
 
-  if (!frames) {
+  if (!animation) {
     return;
   }
 
@@ -201,35 +228,73 @@ function startCharacterAnimation(type) {
   /*
    * 既存アニメーション停止
    */
-  if (characterAnimationTimer) {
-    clearInterval(characterAnimationTimer);
-  }
+
+  stopCharacterAnimation();
+
 
   let frame = 0;
 
-  char.src = frames[frame];
 
   /*
-   * フレーム切り替え
+   * 最初のフレーム
    */
+
+  char.src =
+    animation.frames[frame];
+
+
+  /*
+   * 次のフレームへ進む
+   */
+
+  function nextFrame() {
+
+    frame++;
+
+    if (frame >= animation.frames.length) {
+      frame = 0;
+    }
+
+
+    char.src =
+      animation.frames[frame];
+
+
+    /*
+     * 次のフレームまでの時間
+     */
+
+    characterAnimationTimer =
+      setTimeout(
+        nextFrame,
+        animation.durations[frame]
+      );
+  }
+
+
+  /*
+   * 1枚目の表示時間
+   */
+
   characterAnimationTimer =
-    setInterval(() => {
-
-      frame++;
-
-      if (frame >= frames.length) {
-        frame = 0;
-      }
-      char.src = frames[frame];
-    }, 150);
+    setTimeout(
+      nextFrame,
+      animation.durations[frame]
+    );
 }
 
-/*
- * キャラクターアニメーション停止
- */
+
+/* =========================================================
+   キャラクターアニメーション停止
+========================================================= */
+
 function stopCharacterAnimation() {
+
   if (characterAnimationTimer) {
-    clearInterval(characterAnimationTimer);
+
+    clearTimeout(
+      characterAnimationTimer
+    );
 
     characterAnimationTimer = null;
   }
@@ -981,11 +1046,9 @@ function preview(tile) {
 ========================================================= */
 
 function openExplore(tile) {
-  const distance =
-    D(tile, S.base);
-
-  const cost =
-    10 + distance * 5;
+  const distance = D(tile, S.base);
+  // 拠点から離れる毎に消費が増える
+  const cost = 10 + distance * 1;
 
   const multiplier =
     S.fac.weapon === 2
@@ -994,11 +1057,7 @@ function openExplore(tile) {
         ? 0.8
         : 1;
 
-  const damage =
-    Math.floor(
-      T[tile.t].damage * multiplier
-    );
-
+  const damage = Math.floor(T[tile.t].damage * multiplier);
 
   S.pending = {
     tile,
