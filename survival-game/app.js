@@ -1587,438 +1587,422 @@ function eat() {
    施設定義
 ========================================================= */
 
-const defs = [
-  [
-    'base',
-    '拠点',
-    [
-      [
-        5,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        '草5',
-        '藁のテント'
-      ],
-
-      [
-        10,
-        10,
-        0,
-        0,
-        0,
-        0,
-        0,
-        '木材10＋石材10',
-        '小屋'
-      ]
+const FACILITIES = {
+  base: {
+    name: '拠点',
+    icon: '🏕️',
+    images: [
+      'images/base_lv0.png',
+      'images/base_lv1.png',
+      'images/base_lv2.png'
+    ],
+    levels: [
+      { name: '藁の寝床', cost: { grass: 5 }, effect: '拠点 Lv1' },
+      { name: '簡易小屋', cost: { wood: 10, stone: 10 }, effect: '拠点 Lv2' }
     ]
-  ],
+  },
 
-  [
-    'kitchen',
-    '食堂',
-    [
-      [
-        5,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        '木材5',
-        '焚き火'
-      ],
-
-      [
-        10,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        '石材10＋赤い宝石1',
-        '電気鍋'
-      ]
+  kitchen: {
+    name: '食堂',
+    icon: '🔥',
+    images: [
+      'images/kitchen_lv0.png',
+      'images/kitchen_lv1.png',
+      'images/kitchen_lv2.png'
+    ],
+    levels: [
+      { name: '焚き火', cost: { wood: 5 }, effect: '食事回復量 10 → 12' },
+      { name: '電気鍋', cost: { stone: 10, red: 1 }, effect: '食事回復量 12 → 15' }
     ]
-  ],
+  },
 
-  [
-    'weapon',
-    '武器',
-    [
-      [
-        5,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        '木材5',
-        '軽減20%'
-      ],
-
-      [
-        10,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        '石材10＋赤い宝石1',
-        '軽減50%'
-      ]
+  weapon: {
+    name: '武器',
+    icon: '⚔️',
+    images: [
+      'images/weapon_lv0.png',
+      'images/weapon_lv1.png',
+      'images/weapon_lv2.png'
+    ],
+    levels: [
+      { name: '木の棍棒', cost: { wood: 5 }, effect: '探索ダメージを20%軽減' },
+      { name: '石の槍', cost: { stone: 10, red: 1 }, effect: '探索ダメージを50%軽減' }
     ]
-  ],
+  },
 
-  [
-    'armor',
-    '防具',
-    [
-      [
-        5,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        '木材5',
-        '最大ライフ+20'
-      ],
-
-      [
-        10,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        '石材10＋赤い宝石1',
-        '最大ライフ+50'
-      ]
+  armor: {
+    name: '防具',
+    icon: '🛡️',
+    images: [
+      'images/armor_lv0.png',
+      'images/armor_lv1.png',
+      'images/armor_lv2.png'
+    ],
+    levels: [
+      { name: '木の盾', cost: { wood: 5 }, effect: '最大ライフ 100 → 120' },
+      { name: '石の盾', cost: { stone: 10, red: 1 }, effect: '最大ライフ 120 → 150' }
     ]
-  ]
-];
+  }
+};
 
+const RESOURCE_NAMES = {
+  grass: '草',
+  wood: '木材',
+  stone: '石材',
+  fur: '毛皮',
+  red: '赤い宝石',
+  blue: '青い宝石',
+  yellow: '黄色い宝石'
+};
 
-/* =========================================================
-   建設条件
-========================================================= */
-
-function can(a) {
-  return (
-    S.grass >= a[0] &&
-    S.wood >= a[1] &&
-    S.stone >= a[2] &&
-    S.fur >= a[3] &&
-    S.red >= a[4] &&
-    S.blue >= a[5] &&
-    S.yellow >= a[6]
-  );
+function canPayCost(cost) {
+  return Object.entries(cost).every(([key, amount]) => S[key] >= amount);
 }
 
-
-function pay(a) {
-  S.grass -= a[0];
-  S.wood -= a[1];
-  S.stone -= a[2];
-  S.fur -= a[3];
-  S.red -= a[4];
-  S.blue -= a[5];
-  S.yellow -= a[6];
+function payCost(cost) {
+  Object.entries(cost).forEach(([key, amount]) => {
+    S[key] -= amount;
+  });
 }
 
+function costText(cost) {
+  return Object.entries(cost)
+    .map(([key, amount]) => `${RESOURCE_NAMES[key]} ×${amount}`)
+    .join('　');
+}
+
+function imageWithFallback(src, alt, fallback) {
+  return `
+    <div class="facility-art-wrap">
+      <img
+        class="facility-image"
+        src="${src}"
+        alt="${alt}"
+        onerror="this.hidden=true;this.nextElementSibling.hidden=false;"
+      >
+      <div class="facility-fallback" hidden>${fallback}</div>
+    </div>
+  `;
+}
 
 /* =========================================================
-   施設UI
+   施設確認モーダル
 ========================================================= */
 
-function buildUI() {
-  let html = '';
+function openFacilityModal(id) {
+  const facility = FACILITIES[id];
+  if (!facility) return;
 
+  const currentLevel = S.fac[id];
+  const nextLevel = currentLevel + 1;
 
-  defs.forEach(def => {
-    const id = def[0];
-    const level = S.fac[id];
-    const nextLevel = level + 1;
+  $('facilityTitle').textContent = facility.name;
 
-
-    if (nextLevel > 2) {
-      return;
-    }
-
-
-    const cost =
-      def[2][nextLevel - 1];
-
-
-    /*
-     * 拠点Lv1は最初から作成可能。
-     * その他は拠点レベルが条件。
-     */
-    const baseRequirement =
-      id === 'base'
-        ? nextLevel === 1
-        : nextLevel <= S.fac.base;
-
-
-    const enabled =
-      baseRequirement &&
-      can(cost);
-
-
-    html += `
-      <div class="build-row">
-
-        <div>
-
-          <h3>
-            ${def[1]} Lv${nextLevel}
-          </h3>
-
-          <p>
-            ${cost[7]} / ${cost[8]}
-          </p>
-
-        </div>
-
-        <button
-          data-b="${id}"
-          ${enabled ? '' : 'disabled'}
-        >
-          建設
-        </button>
-
+  if (nextLevel > facility.levels.length) {
+    $('facilityDetail').innerHTML = `
+      ${imageWithFallback(facility.images[currentLevel], facility.name, facility.icon)}
+      <div class="facility-modal-copy">
+        <strong>${facility.name} Lv${currentLevel}</strong>
+        <p>最大レベルです。</p>
       </div>
     `;
-  });
+    $('facilityUpgradeBtn').hidden = true;
+    showModal('facilityModal');
+    return;
+  }
 
+  const next = facility.levels[nextLevel - 1];
+  const baseRequirement = id === 'base' || nextLevel <= S.fac.base;
+  const affordable = canPayCost(next.cost);
 
-  /*
-   * 冷蔵庫
-   */
-  html += `
-    <div class="build-row">
-
+  $('facilityDetail').innerHTML = `
+    <div class="facility-upgrade-preview">
       <div>
-
-        <h3>冷蔵庫</h3>
-
-        <p>
-          黄色1＋青3＋石材20 /
-          空腹最大+50
-        </p>
-
+        <small>現在</small>
+        ${imageWithFallback(facility.images[currentLevel], `${facility.name} Lv${currentLevel}`, facility.icon)}
+        <strong>Lv${currentLevel}</strong>
       </div>
+      <div class="facility-arrow">→</div>
+      <div>
+        <small>レベルアップ後</small>
+        ${imageWithFallback(facility.images[nextLevel], `${facility.name} Lv${nextLevel}`, facility.icon)}
+        <strong>Lv${nextLevel}　${next.name}</strong>
+      </div>
+    </div>
 
-      <button
-        id="fridge"
-        ${
-          S.maxHunger > 100 ||
-          S.yellow < 1 ||
-          S.blue < 3 ||
-          S.stone < 20
-            ? 'disabled'
-            : ''
-        }
-      >
-        建設
-      </button>
-
+    <div class="facility-modal-copy">
+      <p><b>必要素材</b><br>${costText(next.cost)}</p>
+      <p><b>効果</b><br>${next.effect}</p>
+      ${!baseRequirement ? `<p class="facility-warning">先に拠点を Lv${nextLevel} にしてください。</p>` : ''}
+      ${baseRequirement && !affordable ? '<p class="facility-warning">素材が足りません。</p>' : ''}
     </div>
   `;
 
+  const button = $('facilityUpgradeBtn');
+  button.textContent = 'レベルアップ';
+  button.hidden = false;
+  button.disabled = !baseRequirement || !affordable;
+  button.onclick = () => upgradeFacility(id);
 
-  /*
-   * コンパス
-   */
-  html += `
-    <div class="build-row">
-
-      <div>
-
-        <h3>コンパス</h3>
-
-        <p>
-          黄色1＋青1＋赤1 /
-          ゲートマス表示
-        </p>
-
-      </div>
-
-      <button
-        id="compass"
-        ${
-          S.compass ||
-          S.yellow < 1 ||
-          S.blue < 1 ||
-          S.red < 1
-            ? 'disabled'
-            : ''
-        }
-      >
-        建設
-      </button>
-
-    </div>
-  `;
-
-
-  $('buildList').innerHTML = html;
-
-  showModal('buildModal');
-
-
-  document
-    .querySelectorAll('[data-b]')
-    .forEach(button => {
-      button.onclick = () =>
-        build(button.dataset.b);
-    });
-
-
-  /*
-   * 冷蔵庫
-   */
-  $('fridge').onclick = () => {
-    S.yellow--;
-    S.blue -= 3;
-    S.stone -= 20;
-
-    S.maxHunger = 150;
-
-    render();
-    buildUI();
-  };
-
-
-  /*
-   * コンパス
-   */
-  $('compass').onclick = () => {
-    S.yellow--;
-    S.blue--;
-    S.red--;
-
-    S.compass = true;
-
-    toast(
-      '秘宝マスが分かるようになった'
-    );
-
-    render();
-    buildUI();
-  };
+  showModal('facilityModal');
 }
 
+function upgradeFacility(id) {
+  const facility = FACILITIES[id];
+  if (!facility) return;
 
-/* =========================================================
-   建設実行
-========================================================= */
+  const nextLevel = S.fac[id] + 1;
+  const next = facility.levels[nextLevel - 1];
+  if (!next) return;
 
-function build(id) {
-  const def =
-    defs.find(x => x[0] === id);
+  const baseRequirement = id === 'base' || nextLevel <= S.fac.base;
+  if (!baseRequirement || !canPayCost(next.cost)) return;
 
-  if (!def) {
-    return;
-  }
-
-
-  const nextLevel =
-    S.fac[id] + 1;
-
-  const cost =
-    def[2][nextLevel - 1];
-
-
-  if (!cost) {
-    return;
-  }
-
-
-  const baseRequirement =
-    id === 'base'
-      ? nextLevel === 1
-      : nextLevel <= S.fac.base;
-
-
-  if (
-    !baseRequirement ||
-    !can(cost)
-  ) {
-    return;
-  }
-
-
-  pay(cost);
-
+  payCost(next.cost);
   S.fac[id] = nextLevel;
 
-
-  /*
-   * 防具
-   */
   if (id === 'armor') {
     if (nextLevel === 1) {
       S.maxLife = 120;
       S.life += 20;
-    }
-
-    else {
+    } else if (nextLevel === 2) {
       S.maxLife = 150;
       S.life += 30;
     }
-
-    S.life =
-      Math.min(
-        S.life,
-        S.maxLife
-      );
+    S.life = Math.min(S.life, S.maxLife);
   }
 
-
+  closeModal('facilityModal');
   render();
-  buildUI();
-
-  toast(
-    `${def[1]} Lv${nextLevel}`
-  );
+  toast(`${facility.name} Lv${nextLevel}：${next.name}`);
 }
 
+function openSpecialFacilityModal(type) {
+  const isFridge = type === 'fridge';
+  const built = isFridge ? S.maxHunger > 100 : S.compass;
+  const name = isFridge ? '冷蔵庫' : 'コンパス';
+  const icon = isFridge ? '🧊' : '🧭';
+  const cost = isFridge
+    ? { yellow: 1, blue: 3, stone: 20 }
+    : { yellow: 1, blue: 1, red: 1 };
+  const effect = isFridge ? '空腹最大値 +50' : 'ゲートの位置が分かる';
+
+  $('facilityTitle').textContent = name;
+  $('facilityDetail').innerHTML = `
+    <div class="special-facility-preview">${icon}</div>
+    <div class="facility-modal-copy">
+      <strong>${name}</strong>
+      ${built
+        ? '<p>建設済みです。</p>'
+        : `<p><b>必要素材</b><br>${costText(cost)}</p><p><b>効果</b><br>${effect}</p>${!canPayCost(cost) ? '<p class="facility-warning">素材が足りません。</p>' : ''}`}
+    </div>
+  `;
+
+  const button = $('facilityUpgradeBtn');
+  button.hidden = built;
+  button.disabled = built || !canPayCost(cost);
+  button.textContent = '建設する';
+  button.onclick = () => {
+    if (!canPayCost(cost)) return;
+    payCost(cost);
+    if (isFridge) {
+      S.maxHunger = 150;
+    } else {
+      S.compass = true;
+    }
+    closeModal('facilityModal');
+    render();
+    toast(`${name}を建設した`);
+  };
+
+  showModal('facilityModal');
+}
 
 /* =========================================================
    施設表示
 ========================================================= */
 
 function renderFacilities() {
-  $('facilities').innerHTML =
-    defs
-      .map(def => `
-        <div class="facility">
 
-          <div class="icon">
-            ${def[1]}
-          </div>
+  const facilities = $('facilities');
 
-          <h3>
-            Lv${S.fac[def[0]]}
-          </h3>
+  if (!facilities) {
+    return;
+  }
 
-        </div>
-      `)
+  /*
+   * この配列の順番で施設を表示する
+   *
+   * 1段目：拠点・食堂・冷蔵庫
+   * 2段目：武器・防具・コンパス
+   */
+  const facilityOrder = [
+    'base',
+    'kitchen',
+    'fridge',
+    'weapon',
+    'armor',
+    'compass'
+  ];
+
+
+  facilities.innerHTML =
+    facilityOrder
+      .map(id => {
+
+        /*
+         * 冷蔵庫
+         */
+        if (id === 'fridge') {
+
+          return `
+            <button
+              class="facility"
+              data-special-facility="fridge"
+            >
+              <div class="facility-image-wrap">
+                <div class="facility-fallback">
+                  🧊
+                </div>
+              </div>
+
+              <div class="facility-name">
+                冷蔵庫
+              </div>
+
+              <div class="facility-level">
+                ${
+                  S.maxHunger > 100
+                    ? '建設済'
+                    : '未建設'
+                }
+              </div>
+            </button>
+          `;
+        }
+
+
+        /*
+         * コンパス
+         */
+        if (id === 'compass') {
+
+          return `
+            <button
+              class="facility"
+              data-special-facility="compass"
+            >
+              <div class="facility-image-wrap">
+                <div class="facility-fallback">
+                  🧭
+                </div>
+              </div>
+
+              <div class="facility-name">
+                コンパス
+              </div>
+
+              <div class="facility-level">
+                ${
+                  S.compass
+                    ? '建設済'
+                    : '未建設'
+                }
+              </div>
+            </button>
+          `;
+        }
+
+
+        /*
+         * 通常施設
+         */
+        const facility =
+          FACILITIES[id];
+
+        if (!facility) {
+          return '';
+        }
+
+        const level =
+          S.fac[id];
+
+        const image =
+          facility.images[level];
+
+
+        return `
+          <button
+            class="facility"
+            data-facility="${id}"
+          >
+
+            <div class="facility-image-wrap">
+
+              <img
+                class="facility-image"
+                src="${image}"
+                alt="${facility.name}"
+                onerror="
+                  this.style.display='none';
+                  this.nextElementSibling.style.display='flex';
+                "
+              >
+
+              <div
+                class="facility-fallback"
+                style="display:none"
+              >
+                ${facility.icon}
+              </div>
+
+            </div>
+
+            <div class="facility-name">
+              ${facility.name}
+            </div>
+
+            <div class="facility-level">
+              Lv${level}
+            </div>
+
+          </button>
+        `;
+      })
       .join('');
-}
 
+
+  /*
+   * 通常施設クリック
+   */
+  document
+    .querySelectorAll('[data-facility]')
+    .forEach(button => {
+
+      button.onclick = () => {
+        openFacilityModal(
+          button.dataset.facility
+        );
+      };
+
+    });
+
+
+  /*
+   * 冷蔵庫・コンパスクリック
+   */
+  document
+    .querySelectorAll('[data-special-facility]')
+    .forEach(button => {
+
+      button.onclick = () => {
+        openSpecialFacilityModal(
+          button.dataset.specialFacility
+        );
+      };
+
+    });
+}
 
 /* =========================================================
    食材図鑑
@@ -2127,12 +2111,6 @@ $('cancelExplore').onclick = () => {
 
 
 /*
- * 施設開発
- */
-$('buildBtn').onclick = buildUI;
-
-
-/*
  * 食材図鑑
  */
 $('bookBtn').onclick = () => {
@@ -2148,6 +2126,11 @@ $('clearLog').onclick = () => {
   $('log').innerHTML = '';
 };
 
+
+
+/* 施設確認モーダル */
+$('facilityClose').onclick = () => closeModal('facilityModal');
+$('facilityCancel').onclick = () => closeModal('facilityModal');
 
 /*
  * モーダル閉じる

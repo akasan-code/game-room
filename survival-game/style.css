@@ -1370,3 +1370,127 @@ h2 {
 .hex.available.unexplored .terrain-icon {
   opacity: 0.8;
 }
+
+/* =========================================================
+   施設カード・施設確認UI
+========================================================= */
+
+.section-note {
+  font-size: 11px;
+  color: #62553e;
+}
+
+.facility-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.facility {
+  width: 100%;
+  min-width: 0;
+  min-height: 150px;
+  border: 2px solid #786545;
+  background: #d3c09a;
+  color: var(--ink);
+  padding: 7px;
+  text-align: center;
+  font-family: inherit;
+  cursor: pointer;
+  appearance: none;
+}
+
+.facility:active {
+  transform: translateY(1px);
+}
+
+.facility-art-wrap {
+  height: 98px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.facility-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.facility-fallback {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.facility-name {
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.facility-level {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #66553d;
+}
+
+.facility-detail {
+  padding: 16px;
+}
+
+.facility-upgrade-preview {
+  display: grid;
+  grid-template-columns: 1fr 34px 1fr;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.facility-upgrade-preview > div:not(.facility-arrow) {
+  min-width: 0;
+}
+
+.facility-upgrade-preview small,
+.facility-upgrade-preview strong {
+  display: block;
+}
+
+.facility-upgrade-preview .facility-art-wrap {
+  height: 150px;
+  margin: 6px 0;
+  border: 1px solid #927951;
+  background: rgba(255,255,255,.12);
+}
+
+.facility-arrow {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.facility-modal-copy {
+  margin-top: 14px;
+  padding: 12px;
+  background: #d7c59e;
+  border: 1px solid #8c754d;
+  line-height: 1.6;
+}
+
+.facility-modal-copy p {
+  margin: 7px 0;
+}
+
+.facility-warning {
+  color: #8a3027;
+  font-weight: bold;
+}
+
+.special-facility-preview {
+  text-align: center;
+  font-size: 72px;
+  padding: 12px;
+}
+
+#facilityUpgradeBtn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}

@@ -144,9 +144,7 @@
               拠点施設
             </h2>
 
-            <button id="buildBtn">
-              🔨 開発
-            </button>
+            <span class="section-note">施設を選んで開発</span>
 
           </div>
 
@@ -350,11 +348,11 @@
 
 
   <!-- =====================================================
-       施設開発モーダル
+       施設確認モーダル
   ====================================================== -->
 
   <div
-    id="buildModal"
+    id="facilityModal"
     class="modal-backdrop"
     hidden
   >
@@ -363,19 +361,27 @@
 
       <div class="modal-head">
 
-        <h2>
-          施設開発
-        </h2>
+        <h2 id="facilityTitle">施設</h2>
 
         <button
-          class="modalClose2 modal-close"
+          id="facilityClose"
+          class="modal-close"
         >
           ×
         </button>
 
       </div>
 
-      <div id="buildList"></div>
+      <div id="facilityDetail" class="facility-detail"></div>
+
+      <div class="modal-actions">
+        <button id="facilityCancel" class="secondary-btn">
+          キャンセル
+        </button>
+        <button id="facilityUpgradeBtn" class="primary-btn">
+          レベルアップ
+        </button>
+      </div>
 
     </div>
 
