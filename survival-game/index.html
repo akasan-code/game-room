@@ -101,11 +101,34 @@
       </div>
 
       <div id="characterArea" class="character-area">
-        <button id="eat" class="character">
-          <img id="char" src="images/character_idle1.png" alt="クリックで食べる">
-          <div id="discoveryMark" class="discovery-mark" hidden>!</div>
-          <small>クリックで食べる</small>
+
+        <button
+          id="eat"
+          class="eat-button"
+          type="button"
+          aria-label="食べる"
+        >
+          🍖
         </button>
+
+        <div class="character-display">
+
+          <img
+            id="char"
+            src="images/character_idle1.png"
+            alt="主人公"
+          >
+
+          <div
+            id="discoveryMark"
+            class="discovery-mark"
+            hidden
+          >
+            !
+          </div>
+
+        </div>
+
       </div>
 
     </section>
