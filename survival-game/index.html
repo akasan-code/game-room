@@ -21,7 +21,7 @@
       <h1>HEX SURVIVAL</h1>
 
       <p>
-        秘宝を探して、生き延びろ。
+        ゲートを探して、生き延びろ。
       </p>
 
       <button
@@ -74,51 +74,63 @@
          キャラクター・ステータス
     ==================================================== -->
 
-    <section class="status-row">
+<section class="status-area">
 
-      <button id="eat" class="character">
-        <img id="char" src="images/character_idle1.png" alt="クリックで食べる">
-        <small>クリックで食べる</small>
-      </button>
+  <!-- 空腹・ライフ -->
 
+  <div class="status-row">
 
-      <div class="status-card">
+    <div class="status-card">
 
-        <div class="status-title">
-          🍖 空腹度
-          <b id="hungerText"></b>
-        </div>
-
-        <div class="bar">
-          <i id="hungerBar"></i>
-        </div>
-
-        <small>
-          探索すると減少
-        </small>
-
+      <div class="status-title">
+        🍖 空腹度
+        <b id="hungerText"></b>
       </div>
 
-
-      <div class="status-card">
-
-        <div class="status-title">
-          ❤️ ライフ
-          <b id="lifeText"></b>
-        </div>
-
-        <div class="bar life">
-          <i id="lifeBar"></i>
-        </div>
-
-        <small>
-          0でゲームオーバー
-        </small>
-
+      <div class="bar">
+        <i id="hungerBar"></i>
       </div>
 
-    </section>
+    </div>
 
+
+    <div class="status-card">
+
+      <div class="status-title">
+        ❤️ ライフ
+        <b id="lifeText"></b>
+      </div>
+
+      <div class="bar life">
+        <i id="lifeBar"></i>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- キャラクター -->
+
+  <div class="character-area">
+
+    <button id="eat" class="character">
+
+      <img
+        id="char"
+        src="images/character_idle1.png"
+        alt="クリックで食べる"
+      >
+
+      <small>
+        クリックで食べる
+      </small>
+
+    </button>
+
+  </div>
+
+</section>
 
     <!-- ===================================================
          メイン
