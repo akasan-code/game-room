@@ -1558,11 +1558,15 @@ async function playExploreAnimation(terrainId, result) {
 /* =========================================================
    探索実行
 ========================================================= */
-
 async function explore() {
+
+  /*
+   * 二重実行防止
+   */
   if (S.isExploring) {
     return;
   }
+
 
   const pending = S.pending;
 
@@ -1570,88 +1574,347 @@ async function explore() {
     return;
   }
 
+
   S.isExploring = true;
+
 
   const tile = pending.tile;
   const terrain = T[tile.t];
-  const result = createExploreResult(tile);
+
+
+  /* =====================================================
+     探索結果を先に決定
+  ===================================================== */
+
+  const result =
+    createExploreResult(tile);
+
+
+  /* =====================================================
+     探索開始
+  ===================================================== */
 
   closeModal('exploreModal');
+
   showBaseView();
 
-  try {
-    await playExploreAnimation(
-      tile.t,
-      result
+
+  /*
+   * 歩行・レア発見演出
+   */
+  await playExploreAnimation(
+    tile.t,
+    result
+  );
+
+
+  /* =====================================================
+     空腹・ライフ
+  ===================================================== */
+
+  const shortage =
+    Math.max(
+      0,
+      pending.cost - S.hunger
     );
 
-    const shortage =
-      Math.max(
-        0,
-        pending.cost - S.hunger
-      );
 
-    S.hunger =
-      Math.max(
-        0,
-        S.hunger - pending.cost
-      );
-
-    S.life -=
-      pending.damage +
-      shortage;
-
-    applyExploreResult(result);
-
-    if (result.rare) {
-      toast(
-        `発見：${result.rare.name}`
-      );
-    }
-
-    tile.seen = true;
-
-    const distance =
-      D(tile, S.base);
-
-    S.log.unshift(
-      `Day ${S.day}　` +
-      `${terrain.name}を探索 ` +
-      `(拠点から${distance}マス)`
+  S.hunger =
+    Math.max(
+      0,
+      S.hunger - pending.cost
     );
 
-    S.day++;
-    S.pending = null;
 
-    resetExploreAnimation();
+  S.life -=
+    pending.damage +
+    shortage;
 
-    if (
+
+  /* =====================================================
+     獲得結果反映
+  ===================================================== */
+
+  applyExploreResult(
+    result
+  );
+
+
+  /* =====================================================
+     探索済み
+  ===================================================== */
+
+  tile.seen = true;
+
+
+  /* =====================================================
+     ログ
+  ===================================================== */
+
+  const distance =
+    D(
+      tile,
+      S.base
+    );
+
+
+  S.log.unshift(
+    `Day ${S.day}　` +
+    `${terrain.name}を探索 ` +
+    `(拠点から${distance}マス)`
+  );
+
+
+  /* =====================================================
+     Day進行
+  ===================================================== */
+
+  S.day++;
+
+
+  /* =====================================================
+     今回の探索先をクリア
+  ===================================================== */
+
+  S.pending = null;
+
+
+  /* =====================================================
+     ゲート・ゲームオーバー判定を保存
+  ===================================================== */
+
+  S.pendingGameClear =
+    !!(
       S.gate &&
       tile.q === S.gate.q &&
       tile.r === S.gate.r
-    ) {
-      alert(
-        'ゲートを発見！ GAME CLEAR'
-      );
+    );
 
-      location.reload();
-      return;
-    }
 
-    if (S.life <= 0) {
-      alert(
-        'GAME OVER'
-      );
+  S.pendingGameOver =
+    S.life <= 0;
 
-      location.reload();
-      return;
-    }
 
-    render();
+  /* =====================================================
+     画面更新
+  ===================================================== */
+
+  render();
+
+
+  /* =====================================================
+     結果表示
+  ===================================================== */
+
+  /*
+   * ここでは探索演出をリセットしない。
+   *
+   * キャラクターは歩いた先で停止。
+   * S.isExploring も true のまま。
+   *
+   * OKボタンを押したときに終了処理する。
+   */
+  showExploreResult(
+    result
+  );
+
+}
+
+/* =========================================================
+   探索結果表示
+========================================================= */
+function showExploreResult(result) {
+
+  const detail =
+    $('exploreResultDetail');
+
+
+  if (!detail) {
+    return;
   }
-  finally {
-    S.isExploring = false;
+
+
+  const items = [];
+
+
+  /* =====================================================
+     通常資源
+  ===================================================== */
+
+  if (result.food > 0) {
+
+    items.push({
+      icon: '🍖',
+      name: '食料',
+      amount: result.food,
+      rare: false
+    });
+
   }
+
+
+  if (result.grass > 0) {
+
+    items.push({
+      icon: '🌿',
+      name: '草',
+      amount: result.grass,
+      rare: false
+    });
+
+  }
+
+
+  if (result.wood > 0) {
+
+    items.push({
+      icon: '🪵',
+      name: '木材',
+      amount: result.wood,
+      rare: false
+    });
+
+  }
+
+
+  if (result.stone > 0) {
+
+    items.push({
+      icon: '🪨',
+      name: '石材',
+      amount: result.stone,
+      rare: false
+    });
+
+  }
+
+
+  /* =====================================================
+     レア
+  ===================================================== */
+
+  if (result.rare) {
+
+    const rareIcons = {
+
+      '毛皮': '🧥',
+
+      '赤い宝石': '🔴',
+
+      '青い宝石': '🔵',
+
+      '黄色い宝石': '🟡',
+
+      'レア食料': '🍖'
+
+    };
+
+
+    items.push({
+
+      icon:
+        rareIcons[
+          result.rare.name
+        ] || '✨',
+
+      name:
+        result.rare.name,
+
+      amount:
+        result.rare.amount,
+
+      rare: true
+
+    });
+
+  }
+
+
+  /* =====================================================
+     食材図鑑発見
+  ===================================================== */
+
+  if (result.discoveredFood) {
+
+    items.push({
+
+      icon: '📖',
+
+      name:
+        `新しい食材：${result.discoveredFood[1]}`,
+
+      amount: null,
+
+      rare: true
+
+    });
+
+  }
+
+
+  /* =====================================================
+     HTML生成
+  ===================================================== */
+
+  if (items.length === 0) {
+
+    detail.innerHTML = `
+      <div class="explore-result-empty">
+        今回は何も見つからなかった……
+      </div>
+    `;
+
+  }
+
+  else {
+
+    detail.innerHTML = `
+      <div class="explore-result-list">
+
+        ${
+          items
+            .map(item => {
+
+              return `
+                <div
+                  class="
+                    explore-result-item
+                    ${item.rare ? 'rare' : ''}
+                  "
+                >
+
+                  <span>
+                    ${item.icon}
+                    ${item.name}
+                  </span>
+
+                  ${
+                    item.amount !== null
+                      ? `
+                        <strong>
+                          ×${item.amount}
+                        </strong>
+                      `
+                      : ''
+                  }
+
+                </div>
+              `;
+
+            })
+            .join('')
+        }
+
+      </div>
+    `;
+
+  }
+
+
+  showModal(
+    'exploreResultModal'
+  );
+
 }
 
 /* =========================================================
@@ -2262,3 +2525,82 @@ document
       }
     };
   });
+
+  /* =========================================================
+   探索結果 OK
+========================================================= */
+$('exploreResultOk').onclick = () => {
+
+  /*
+   * 結果モーダルを閉じる
+   */
+  closeModal(
+    'exploreResultModal'
+  );
+
+
+  /*
+   * 探索演出をリセット
+   *
+   * ・キャラを通常位置へ
+   * ・発見マーク削除
+   * ・背景リセット
+   * ・待機アニメーション再開
+   */
+  resetExploreAnimation();
+
+
+  /*
+   * 探索ロック解除
+   */
+  S.isExploring = false;
+
+
+  /*
+   * 拠点画面へ
+   */
+  showBaseView();
+
+
+  /*
+   * 最新状態を表示
+   */
+  render();
+
+
+  /* =====================================================
+     ゲームクリア
+  ===================================================== */
+
+  if (S.pendingGameClear) {
+
+    S.pendingGameClear = false;
+
+    alert(
+      'ゲートを発見！ GAME CLEAR'
+    );
+
+    location.reload();
+
+    return;
+  }
+
+
+  /* =====================================================
+     ゲームオーバー
+  ===================================================== */
+
+  if (S.pendingGameOver) {
+
+    S.pendingGameOver = false;
+
+    alert(
+      'GAME OVER'
+    );
+
+    location.reload();
+
+    return;
+  }
+
+};

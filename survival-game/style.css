@@ -1607,3 +1607,48 @@ h2 {
   margin-top: 1px;
   font-size: 10px;
 }
+
+/* =========================================================
+   探索結果
+========================================================= */
+.explore-result-detail {
+  padding: 18px 16px;
+}
+
+.explore-result-list {
+  display: grid;
+  gap: 8px;
+}
+
+.explore-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 10px 12px;
+
+  background: #d7c59e;
+  border: 1px solid #8c754d;
+
+  font-size: 14px;
+}
+
+.explore-result-item strong {
+  font-size: 17px;
+}
+
+.explore-result-item.rare {
+  font-weight: bold;
+  border-width: 2px;
+}
+
+.explore-result-empty {
+  padding: 18px;
+  text-align: center;
+  color: #685a43;
+}
+
+.result-actions {
+  grid-template-columns: 1fr;
+}
