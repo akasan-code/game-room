@@ -91,6 +91,8 @@ const S = {
 
   pending: null,
 
+  isExploring: false,
+
   // 探索画面を初めて開いたか
   mapInitialized: false
 };
@@ -189,16 +191,42 @@ const CHARACTER_ANIMATIONS = {
       'images/character_walk5.png'
     ],
 
-    // 移動中は今まで通り
     durations: [
-      150,
-      150,
-      150,
-      150,
-      150
+      300,
+      300,
+      300,
+      300,
+      300
+    ]
+  },
+
+  discover: {
+    // 専用差分ができるまでは待機画像を使用
+    frames: [
+      'images/character_idle1.png'
+    ],
+
+    durations: [
+      550
     ]
   }
 
+};
+
+
+/* =========================================================
+   探索背景
+========================================================= */
+
+const EXPLORATION_BACKGROUNDS = {
+  grass: 'images/bg/explore_grass.png',
+  forest: 'images/bg/explore_forest.png',
+  pond: 'images/bg/explore_pond.png',
+  rock: 'images/bg/explore_rock.png',
+
+  // 専用背景がない地形は草原へフォールバック
+  cave: 'images/bg/explore_grass.png',
+  waste: 'images/bg/explore_grass.png'
 };
 
 
@@ -489,6 +517,7 @@ function init() {
 
   S.gate = null;
   S.pending = null;
+  S.isExploring = false;
   S.log = [];
   S.mapInitialized = false;
 
@@ -832,20 +861,14 @@ function placeSpecialRepeated(
     attempts++;
   }
 
-
-  /*
-   * 念のため、指定数まで置けなかった場合を確認
-   */
   if (placed < count) {
-
     console.warn(
       `${terrain} の生成数が不足しています。` +
       `予定: ${count} / 実際: ${placed}`
     );
-
   }
-
 }
+
 /* =========================================================
    特殊地形を配置
 ========================================================= */
@@ -865,6 +888,7 @@ function generateSpecialTerrains() {
     4
   );
 
+
   /*
    * 岩場
    * 4マスセット × 2箇所
@@ -877,6 +901,7 @@ function generateSpecialTerrains() {
     3,
     5
   );
+
 
   /*
    * 池
@@ -891,6 +916,7 @@ function generateSpecialTerrains() {
     6
   );
 
+
   /*
    * 洞窟
    * 1マス × 4箇所
@@ -903,7 +929,6 @@ function generateSpecialTerrains() {
     4,
     6
   );
-
 }
 
 /* =========================================================
@@ -1269,6 +1294,10 @@ function preview(tile) {
 ========================================================= */
 
 function openExplore(tile) {
+  if (S.isExploring) {
+    return;
+  }
+
   const distance = D(tile, S.base);
   // 拠点から離れる毎に消費が増える
   const cost = 10 + distance * 1;
@@ -1323,10 +1352,217 @@ function openExplore(tile) {
 
 
 /* =========================================================
+   探索演出ユーティリティ
+========================================================= */
+
+function wait(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+
+
+function setExplorationBackground(terrainId) {
+  const area = $('characterArea');
+
+  if (!area) {
+    return;
+  }
+
+  const background =
+    EXPLORATION_BACKGROUNDS[terrainId] ||
+    EXPLORATION_BACKGROUNDS.grass;
+
+  area.style.backgroundImage =
+    `url("${background}")`;
+}
+
+
+function resetCharacterPosition() {
+  const area = $('characterArea');
+  const char = $('char');
+
+  if (!area || !char) {
+    return;
+  }
+
+  char.style.transition = 'none';
+  area.classList.remove('walking');
+
+  void char.offsetWidth;
+
+  char.style.transition = '';
+}
+
+
+function resetExploreAnimation() {
+  const area = $('characterArea');
+  const discoveryMark = $('discoveryMark');
+
+  if (discoveryMark) {
+    discoveryMark.hidden = true;
+  }
+
+  resetCharacterPosition();
+
+  if (area) {
+    area.style.backgroundImage = '';
+  }
+
+  startCharacterAnimation('idle');
+}
+
+
+/* =========================================================
+   探索結果決定
+========================================================= */
+
+function createExploreResult(tile) {
+  const terrain = T[tile.t];
+
+  const result = {
+    terrainId: tile.t,
+    food: 0,
+    grass: 0,
+    wood: 0,
+    stone: 0,
+    rare: null,
+    discoveredFood: null,
+    isRare: false
+  };
+
+  if (terrain.food) {
+    result.food = R(...terrain.food);
+  }
+
+  if (terrain.grass) {
+    result.grass = R(...terrain.grass);
+  }
+
+  if (terrain.wood) {
+    result.wood = R(...terrain.wood);
+  }
+
+  if (terrain.stone) {
+    result.stone = R(...terrain.stone);
+  }
+
+  if (
+    terrain.rare &&
+    Math.random() < 0.1
+  ) {
+    result.rare = {
+      name: terrain.rare[0],
+      amount: terrain.rare[1],
+      rare: true
+    };
+
+    result.isRare = true;
+  }
+
+  const foundFoods =
+    foods.filter(
+      food =>
+        food[2] === terrain.icon
+    );
+
+  if (
+    foundFoods.length &&
+    Math.random() < 0.35
+  ) {
+    result.discoveredFood =
+      foundFoods[
+        R(0, foundFoods.length - 1)
+      ];
+  }
+
+  return result;
+}
+
+
+/* =========================================================
+   探索結果反映
+========================================================= */
+
+function applyExploreResult(result) {
+  S.food += result.food;
+  S.grass += result.grass;
+  S.wood += result.wood;
+  S.stone += result.stone;
+
+  if (result.rare) {
+    const rareName = result.rare.name;
+    const amount = result.rare.amount;
+
+    if (rareName === '毛皮') {
+      S.fur += amount;
+    }
+
+    if (rareName === '赤い宝石') {
+      S.red += amount;
+    }
+
+    if (rareName === '青い宝石') {
+      S.blue += amount;
+    }
+
+    if (rareName === '黄色い宝石') {
+      S.yellow += amount;
+    }
+
+    if (rareName === 'レア食料') {
+      S.food += amount;
+    }
+  }
+
+  if (result.discoveredFood) {
+    S.book[result.discoveredFood[0]] = 1;
+  }
+}
+
+
+/* =========================================================
+   探索アニメーション
+========================================================= */
+
+async function playExploreAnimation(terrainId, result) {
+  const area = $('characterArea');
+  const discoveryMark = $('discoveryMark');
+
+  setExplorationBackground(terrainId);
+
+  stopCharacterAnimation();
+  startCharacterAnimation('walk');
+
+  if (area) {
+    area.classList.add('walking');
+  }
+
+  await wait(3000);
+
+  stopCharacterAnimation();
+  await wait(150);
+
+  if (result.isRare) {
+    startCharacterAnimation('discover');
+
+    if (discoveryMark) {
+      discoveryMark.hidden = false;
+    }
+
+    await wait(550);
+  }
+}
+
+
+/* =========================================================
    探索実行
 ========================================================= */
 
-function explore() {
+async function explore() {
+  if (S.isExploring) {
+    return;
+  }
 
   const pending = S.pending;
 
@@ -1334,204 +1570,49 @@ function explore() {
     return;
   }
 
+  S.isExploring = true;
 
   const tile = pending.tile;
   const terrain = T[tile.t];
+  const result = createExploreResult(tile);
 
-
-  /* =====================================================
-     探索開始
-  ===================================================== */
-
-  /* モーダルを閉じる */
   closeModal('exploreModal');
-
-
-  /*
-   * 探索画面から拠点画面へ戻る
-   */
   showBaseView();
 
+  try {
+    await playExploreAnimation(
+      tile.t,
+      result
+    );
 
-  /*
-   * 主人公を探索中アニメーションにする
-   */
-  startCharacterAnimation('walk');
-
-
-  /*
-   * 3秒間、探索アニメーション
-   */
-  setTimeout(() => {
-
-
-    /* =================================================
-       探索終了
-    ================================================= */
-
-    /*
-     * 主人公を待機アニメーションへ戻す
-     */
-    startCharacterAnimation('idle');
-
-
-    /* =================================================
-       空腹・ライフ
-    ================================================= */
-
-    /*
-     * 空腹不足
-     */
     const shortage =
       Math.max(
         0,
         pending.cost - S.hunger
       );
 
-
-    /*
-     * 空腹
-     */
     S.hunger =
       Math.max(
         0,
         S.hunger - pending.cost
       );
 
-
-    /*
-     * ライフ
-     */
     S.life -=
       pending.damage +
       shortage;
 
+    applyExploreResult(result);
 
-    /* =================================================
-       資源獲得
-    ================================================= */
-
-    if (terrain.food) {
-
-      S.food +=
-        R(...terrain.food);
-
-    }
-
-
-    if (terrain.grass) {
-
-      S.grass +=
-        R(...terrain.grass);
-
-    }
-
-
-    if (terrain.wood) {
-
-      S.wood +=
-        R(...terrain.wood);
-
-    }
-
-
-    if (terrain.stone) {
-
-      S.stone +=
-        R(...terrain.stone);
-
-    }
-
-
-    /* =================================================
-       レア素材
-    ================================================= */
-
-    if (
-      terrain.rare &&
-      Math.random() < 0.1
-    ) {
-
-      const rareName =
-        terrain.rare[0];
-
-
-      if (rareName === '毛皮') {
-        S.fur++;
-      }
-
-
-      if (rareName === '赤い宝石') {
-        S.red++;
-      }
-
-
-      if (rareName === '青い宝石') {
-        S.blue++;
-      }
-
-
-      if (rareName === '黄色い宝石') {
-        S.yellow++;
-      }
-
-
-      if (rareName === 'レア食料') {
-        S.food += terrain.rare[1];
-      }
-
-
+    if (result.rare) {
       toast(
-        `レア素材：${rareName}`
+        `発見：${result.rare.name}`
       );
-
     }
-
-
-    /* =================================================
-       食材図鑑
-    ================================================= */
-
-    const foundFoods =
-      foods.filter(
-        food =>
-          food[2] === terrain.icon
-      );
-
-
-    if (
-      foundFoods.length &&
-      Math.random() < 0.35
-    ) {
-
-      const found =
-        foundFoods[
-          R(
-            0,
-            foundFoods.length - 1
-          )
-        ];
-
-
-      S.book[found[0]] = 1;
-
-    }
-
-
-    /* =================================================
-       探索済みにする
-    ================================================= */
 
     tile.seen = true;
 
-
-    /* =================================================
-       探索ログ
-    ================================================= */
-
     const distance =
       D(tile, S.base);
-
 
     S.log.unshift(
       `Day ${S.day}　` +
@@ -1539,67 +1620,38 @@ function explore() {
       `(拠点から${distance}マス)`
     );
 
-
-    /* =================================================
-       Day進行
-    ================================================= */
-
     S.day++;
-
-
-    /* =================================================
-       探索先をクリア
-    ================================================= */
-
     S.pending = null;
 
-
-    /* =================================================
-       ゲート発見
-    ================================================= */
+    resetExploreAnimation();
 
     if (
       S.gate &&
       tile.q === S.gate.q &&
       tile.r === S.gate.r
     ) {
-
       alert(
         'ゲートを発見！ GAME CLEAR'
       );
 
-
       location.reload();
-
       return;
     }
 
-
-    /* =================================================
-       ゲームオーバー
-    ================================================= */
-
     if (S.life <= 0) {
-
       alert(
         'GAME OVER'
       );
 
-
       location.reload();
-
       return;
     }
 
-
-    /* =================================================
-       拠点画面を更新
-    ================================================= */
-
     render();
-
-
-  }, 3000);
+  }
+  finally {
+    S.isExploring = false;
+  }
 }
 
 /* =========================================================
@@ -2138,6 +2190,10 @@ $('eat').onclick = eat;
  * 探索画面へ
  */
 $('exploreMode').onclick = () => {
+  if (S.isExploring) {
+    return;
+  }
+
   showExploreView();
 };
 
