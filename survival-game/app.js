@@ -798,6 +798,55 @@ function placeSingle(
 }
 
 /* =========================================================
+   特殊地形を指定数だけ配置
+========================================================= */
+
+function placeSpecialRepeated(
+  placer,
+  terrain,
+  count,
+  minDistance,
+  maxDistance,
+  maxAttempts = 50
+) {
+
+  let placed = 0;
+  let attempts = 0;
+
+  while (
+    placed < count &&
+    attempts < maxAttempts
+  ) {
+
+    const success =
+      placer(
+        terrain,
+        minDistance,
+        maxDistance
+      );
+
+    if (success) {
+      placed++;
+    }
+
+    attempts++;
+  }
+
+
+  /*
+   * 念のため、指定数まで置けなかった場合を確認
+   */
+  if (placed < count) {
+
+    console.warn(
+      `${terrain} の生成数が不足しています。` +
+      `予定: ${count} / 実際: ${placed}`
+    );
+
+  }
+
+}
+/* =========================================================
    特殊地形を配置
 ========================================================= */
 
@@ -805,46 +854,56 @@ function generateSpecialTerrains() {
 
   /*
    * 森
+   * 4マスセット × 2箇所
    * 拠点から2～4マス
    */
-  placeCluster(
+  placeSpecialRepeated(
+    placeCluster,
     'forest',
+    2,
     2,
     4
   );
 
-
-  /*
-   * 池
-   * 拠点から3～6マス
-   */
-  placeSingle(
-    'pond',
-    3,
-    6
-  );
-
-
   /*
    * 岩場
+   * 4マスセット × 2箇所
    * 拠点から3～5マス
    */
-  placeCluster(
+  placeSpecialRepeated(
+    placeCluster,
     'rock',
+    2,
     3,
     5
   );
 
+  /*
+   * 池
+   * 1マス × 4箇所
+   * 拠点から3～6マス
+   */
+  placeSpecialRepeated(
+    placeSingle,
+    'pond',
+    4,
+    3,
+    6
+  );
 
   /*
    * 洞窟
+   * 1マス × 4箇所
    * 拠点から4～6マス
    */
-  placeSingle(
+  placeSpecialRepeated(
+    placeSingle,
     'cave',
+    4,
     4,
     6
   );
+
 }
 
 /* =========================================================
