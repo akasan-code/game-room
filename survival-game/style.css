@@ -1474,7 +1474,11 @@ h2 {
   margin: 0 8px 8px;
   overflow: hidden;
   border-radius: 10px;
-  background: #1b2018 center / cover no-repeat;
+  background:
+    #1b2018
+    url("images/bg/base_idle.png")
+    center / cover
+    no-repeat;
 }
 
 /* 食べるボタン */
