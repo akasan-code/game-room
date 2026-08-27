@@ -1993,8 +1993,8 @@ const FACILITIES = {
       'images/base_lv2.png'
     ],
     levels: [
-      { name: '藁の寝床', cost: { grass: 5 }, effect: '1日ごとにライフ +１' },
-      { name: '簡易小屋', cost: { grass: 10, wood: 5, stone: 2}, effect: '1日ごとにライフ +２' }
+      { name: '藁の寝床', cost: { grass: 5 }, effect: '1日ごとにライフ +1' },
+      { name: '簡易小屋', cost: { grass: 10, wood: 5, stone: 2}, effect: '1日ごとにライフ +2' }
     ]
   },
 
@@ -2008,7 +2008,7 @@ const FACILITIES = {
     ],
     levels: [
       { name: '焚き火', cost: { wood: 5 }, effect: '食事回復量 10 → 12' },
-      { name: '電気鍋', cost: { stone: 10, red: 1 }, effect: '食事回復量 12 → 15' }
+      { name: '電気鍋', cost: { stone: 5, red: 1 }, effect: '食事回復量 12 → 15' }
     ]
   },
 
@@ -2022,7 +2022,7 @@ const FACILITIES = {
     ],
     levels: [
       { name: '木の棍棒', cost: { wood: 5 }, effect: '探索ダメージを20%軽減' },
-      { name: '石の槍', cost: { stone: 10, red: 1 }, effect: '探索ダメージを50%軽減' }
+      { name: '石の槍', cost: { stone: 5, fur: 1 }, effect: '探索ダメージを50%軽減' }
     ]
   },
 
@@ -2036,7 +2036,7 @@ const FACILITIES = {
     ],
     levels: [
       { name: '木の盾', cost: { wood: 5 }, effect: '最大ライフ 100 → 120' },
-      { name: '石の盾', cost: { stone: 10, red: 1 }, effect: '最大ライフ 120 → 150' }
+      { name: '石の盾', cost: { stone: 5, fur: 1 }, effect: '最大ライフ 120 → 150' }
     ]
   }
 };
@@ -2080,6 +2080,32 @@ function imageWithFallback(src, alt, fallback) {
     </div>
   `;
 }
+
+const SPECIAL_FACILITIES = {
+  fridge: {
+    name: '冷蔵庫',
+    icon: '🧊',
+    image: 'images/goods_fridge.png',
+    cost: {
+      yellow: 1,
+      blue: 2,
+      stone: 10
+    },
+    effect: '空腹最大値 +50'
+  },
+
+  compass: {
+    name: 'コンパス',
+    icon: '🧭',
+    image: 'images/goods_compass.png',
+    cost: {
+      yellow: 1,
+      blue: 1,
+      red: 1
+    },
+    effect: 'ゲートの位置が分かる'
+  }
+};
 
 /* =========================================================
    施設確認モーダル
@@ -2178,14 +2204,19 @@ function openSpecialFacilityModal(type) {
   const built = isFridge ? S.maxHunger > 100 : S.compass;
   const name = isFridge ? '冷蔵庫' : 'コンパス';
   const icon = isFridge ? '🧊' : '🧭';
+  const image = isFridge ? 'images/goods_fridge.png' : 'images/goods_compass.png';
   const cost = isFridge
-    ? { yellow: 1, blue: 3, stone: 20 }
+    ? { yellow: 1, blue: 2, stone: 10 }
     : { yellow: 1, blue: 1, red: 1 };
   const effect = isFridge ? '空腹最大値 +50' : 'ゲートの位置が分かる';
 
   $('facilityTitle').textContent = name;
   $('facilityDetail').innerHTML = `
-    <div class="special-facility-preview">${icon}</div>
+    ${imageWithFallback(
+      image,
+      name,
+      icon
+    )}
     <div class="facility-modal-copy">
       <strong>${name}</strong>
       ${built
@@ -2247,25 +2278,21 @@ function renderFacilities() {
       .map(id => {
 
         /*
-         * 冷蔵庫
-         */
+        * 冷蔵庫
+        */
         if (id === 'fridge') {
 
           return `
-            <button
-              class="facility"
-              data-special-facility="fridge"
-            >
+            <button class="facility" data-special-facility="fridge">
               <div class="facility-image-wrap">
-                <div class="facility-fallback">
+                <img class="facility-image" src="images/goods_fridge.png" alt="冷蔵庫"
+                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                <div class="facility-fallback" style="display:none">
                   🧊
                 </div>
               </div>
-
-              <div class="facility-name">
-                冷蔵庫
-              </div>
-
+              <div class="facility-name">冷蔵庫</div>
               <div class="facility-level">
                 ${
                   S.maxHunger > 100
@@ -2277,27 +2304,23 @@ function renderFacilities() {
           `;
         }
 
-
         /*
-         * コンパス
-         */
+        * コンパス
+        */
         if (id === 'compass') {
 
           return `
-            <button
-              class="facility"
-              data-special-facility="compass"
-            >
+            <button class="facility" data-special-facility="compass">
               <div class="facility-image-wrap">
-                <div class="facility-fallback">
+                <img class="facility-image" src="images/goods_compass.png" alt="コンパス"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                <div class="facility-fallback" style="display:none">
                   🧭
                 </div>
               </div>
 
-              <div class="facility-name">
-                コンパス
-              </div>
-
+              <div class="facility-name">コンパス</div>
               <div class="facility-level">
                 ${
                   S.compass
@@ -2308,7 +2331,6 @@ function renderFacilities() {
             </button>
           `;
         }
-
 
         /*
          * 通常施設
