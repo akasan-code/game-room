@@ -515,6 +515,7 @@ h2 {
       --tile,
       #5f674e
     );
+  z-index: 0;
 }
 
 .hex .inside {
@@ -1639,4 +1640,77 @@ h2 {
 
 .result-actions {
   grid-template-columns: 1fr;
+}
+
+/* =========================================================
+   マップ地形画像
+========================================================= */
+
+.terrain-layer {
+  position: absolute;
+
+  inset: 4px;
+
+  overflow: hidden;
+
+  clip-path: polygon(
+    25% 3%,
+    75% 3%,
+    100% 50%,
+    75% 97%,
+    25% 97%,
+    0 50%
+  );
+
+  z-index: 1;
+
+  pointer-events: none;
+}
+
+
+.terrain-layer img {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  object-position: center;
+
+  display: block;
+
+  z-index: 1;
+}
+
+
+/*
+ * 地形名
+ */
+
+.terrain-label {
+  z-index: 2;
+
+  justify-content: flex-end !important;
+
+  padding-bottom: 14px;
+
+  color: #f0e6cc !important;
+
+  text-shadow:
+    0 1px 2px #111,
+    0 0 3px #111 !important;
+}
+
+
+/*
+ * 探索可能な未探索マス
+ */
+
+.hex.available .terrain-layer {
+  filter:
+    brightness(0.48)
+    saturate(0.75);
 }

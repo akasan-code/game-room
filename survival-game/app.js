@@ -159,6 +159,54 @@ const T = {
 };
 
 /* =========================================================
+   マップ地形画像
+========================================================= */
+
+const TERRAIN_IMAGES = {
+
+  grass: [
+    'images/map/grass_1.png',
+    'images/map/grass_2.png',
+    'images/map/grass_3.png',
+    'images/map/grass_4.png'
+  ],
+
+  forest: [
+    'images/map/forest_1.png',
+    'images/map/forest_2.png'
+  ],
+
+  rock: [
+    'images/map/rock_1.png',
+    'images/map/rock_2.png',
+    'images/map/rock_3.png',
+    'images/map/rock_4.png'
+  ],
+
+  pond: [
+    'images/map/pond_1.png',
+    'images/map/pond_2.png',
+    'images/map/pond_3.png',
+    'images/map/pond_4.png'
+  ],
+
+  cave: [
+    'images/map/cave_1.png',
+    'images/map/cave_2.png',
+    'images/map/cave_3.png',
+    'images/map/cave_4.png'
+  ],
+
+  waste: [
+    'images/map/waste_1.png',
+    'images/map/waste_2.png',
+    'images/map/waste_3.png',
+    'images/map/waste_4.png'
+  ]
+
+};
+
+/* =========================================================
    キャラクターアニメーション
 ========================================================= */
 const CHARACTER_ANIMATIONS = {
@@ -579,17 +627,23 @@ function gen(q, r) {
     q === S.base.q &&
     r === S.base.r
   ) {
+    const baseImages = TERRAIN_IMAGES.grass || [];
 
     const baseTile = {
       q,
       r,
       t: 'grass',
-      seen: true
+      seen: true,
+      imageIndex:
+        baseImages.length > 0
+          ? R(0, baseImages.length - 1)
+          : 0
     };
 
     S.tiles.set(k, baseTile);
 
     return baseTile;
+
   }
 
 
@@ -627,12 +681,16 @@ function gen(q, r) {
     t = 'sea';
   }
 
+  // マップイラストを1つ選ぶ
+  const terrainImages = TERRAIN_IMAGES[t] || [];
+  const imageIndex = terrainImages.length > 0 ? R(0, terrainImages.length - 1) : 0;
 
   const tile = {
     q,
     r,
     t,
-    seen: false
+    seen: false,
+    imageIndex
   };
 
   S.tiles.set(k, tile);
@@ -1023,11 +1081,11 @@ function renderMap() {
   /*
    * マップ全体
    */
-  const centerX = 900;
-  const centerY = 900;
+  const centerX = 1800;
+  const centerY = 1800;
 
-  const mapWidth = 1800;
-  const mapHeight = 1800;
+  const mapWidth = 3600;
+  const mapHeight = 3600;
 
 
   map.innerHTML = '';
@@ -1098,8 +1156,8 @@ function renderMap() {
 
       const y =
         centerY +
-        r * 70 +
-        q * 35;
+        r * 110 +
+        q * 55;
 
 
       const e =
@@ -1148,42 +1206,113 @@ function renderMap() {
         `${y - 49}px`;
 
 
-      /* * 表示  */
-      let icon = '?';
-      let name = '地形';
+      /* =====================================================
+        マス表示
+      ===================================================== */
 
+      let content = '';
+
+
+      /*
+      * 拠点
+      */
       if (isBase) {
-        icon = '🏕️';
-        name = '拠点';
+
+        content = `
+          <div class="inside">
+
+            <div class="terrain-icon">
+              🏕️
+            </div>
+
+            <div>
+              拠点
+            </div>
+
+          </div>
+        `;
+
       }
+
+
+      /*
+      * ゲート
+      */
       else if (isgate) {
-        icon = '🌀';
-        name = 'ゲート';
-      }
-      else if (tile.seen) {
-        icon = T[tile.t].icon;
-        name = T[tile.t].name;
-      }
-      else if (isAvailable) {
-        // 探索可能だが、まだ未探索
-        icon = T[tile.t].icon;
-        name = T[tile.t].name;
-      }
 
-      e.innerHTML = `
-        <div class="inside">
+        content = `
+          <div class="inside">
 
-          <div class="terrain-icon">
-            ${icon}
+            <div class="terrain-icon">
+              🌀
+            </div>
+
+            <div>
+              ゲート
+            </div>
+
           </div>
+        `;
 
-          <div>
-            ${name}
+      }
+
+
+      /*
+      * 探索済み
+      * または
+      * 次に探索可能な未探索マス
+      */
+      else if (
+        tile.seen ||
+        isAvailable
+      ) {
+
+        const terrainImages = TERRAIN_IMAGES[tile.t] || [];
+        const safeImageIndex =
+          terrainImages.length > 0
+            ? (tile.imageIndex || 0) % terrainImages.length
+            : 0;
+
+        const terrainImage =
+          terrainImages[safeImageIndex];
+
+        content = `
+          <div class="terrain-layer">
+
+            ${terrainImage ? `
+               <img src="${terrainImage}" alt="${T[tile.t].name}" onerror="this.style.display='none';">
+                `
+                : ''
+            }
           </div>
+          <div class="inside terrain-label">${T[tile.t].name}</div>
+        `;
+      }
 
-        </div>
-      `;
 
+      /*
+      * まだ探索できない未探索マス
+      *
+      * ここは今は変更しない
+      */
+      else {
+        content = `
+          <div class="inside">
+
+            <div class="terrain-icon">
+              ?
+            </div>
+
+            <div>
+              地形
+            </div>
+
+          </div>
+        `;
+
+      }
+      // html描写
+      e.innerHTML = content;
 
       /*
        * 探索可能マス
