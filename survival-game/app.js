@@ -1156,8 +1156,8 @@ function renderMap() {
 
       const y =
         centerY +
-        r * 110 +
-        q * 55;
+        r * 108 +
+        q * 54;
 
 
       const e =
