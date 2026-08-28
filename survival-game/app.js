@@ -139,6 +139,8 @@ const T = {
   cave: {
     name: '洞窟',
     icon: '🕳️',
+    red: [1, 1],
+    blue: [1, 1],
     damage: 20,
     rare: ['黄色い宝石', 1]
   },
@@ -1353,6 +1355,21 @@ function preview(tile) {
     );
   }
 
+  if (d.red) {
+    result.push(
+      d.red[0] === d.red[1]
+        ? `🔴 赤い宝石 ×${d.red[0]}`
+        : `🔴 赤い宝石 ${d.red[0]}～${d.red[1]}`
+    );
+  }
+
+  if (d.blue) {
+    result.push(
+      d.blue[0] === d.blue[1]
+        ? `🔵 青い宝石 ×${d.blue[0]}`
+        : `🔵 青い宝石 ${d.blue[0]}～${d.blue[1]}`
+    );
+  }
 
   if (d.damage) {
     const multiplier =
@@ -1518,6 +1535,8 @@ function createExploreResult(tile) {
     grass: 0,
     wood: 0,
     stone: 0,
+    red: 0,
+    blue: 0,
     rare: null,
     discoveredFood: null,
     isRare: false
@@ -1537,6 +1556,14 @@ function createExploreResult(tile) {
 
   if (terrain.stone) {
     result.stone = R(...terrain.stone);
+  }
+
+  if (terrain.red) {
+    result.red = R(...terrain.red);
+  }
+
+  if (terrain.blue) {
+    result.blue = R(...terrain.blue);
   }
 
   if (
@@ -1581,8 +1608,10 @@ function applyExploreResult(result) {
   S.grass += result.grass;
   S.wood += result.wood;
   S.stone += result.stone;
+  S.red += result.red;
+  S.blue += result.blue;
 
-  if (result.rare) {
+if (result.rare) {
     const rareName = result.rare.name;
     const amount = result.rare.amount;
 
@@ -1876,6 +1905,28 @@ function showExploreResult(result) {
 
   }
 
+  if (result.red > 0) {
+
+    items.push({
+      icon: '🔴',
+      name: '赤い宝石',
+      amount: result.red,
+      rare: false
+    });
+
+  }
+
+
+  if (result.blue > 0) {
+
+    items.push({
+      icon: '🔵',
+      name: '青い宝石',
+      amount: result.blue,
+      rare: false
+    });
+
+  }
 
   /* =====================================================
      レア
