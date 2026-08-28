@@ -1292,24 +1292,13 @@ function renderMap() {
 
       /*
       * まだ探索できない未探索マス
-      *
-      * ここは今は変更しない
       */
       else {
+        e.classList.add('blocked');
+
         content = `
-          <div class="inside">
-
-            <div class="terrain-icon">
-              ?
-            </div>
-
-            <div>
-              地形
-            </div>
-
-          </div>
+          <div class="fog-layer"></div>
         `;
-
       }
       // html描写
       e.innerHTML = content;

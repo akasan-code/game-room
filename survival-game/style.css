@@ -546,11 +546,12 @@ h2 {
 }
 
 .hex.unexplored .inside {
-  font-size: 34px;
+  font-size: 12px;
 
-  color: #756d5b;
+  color: #c5c0ad;
 
-  text-shadow: none;
+  text-shadow:
+    0 1px 2px #1c1b18;
 }
 
 
@@ -564,23 +565,6 @@ h2 {
   animation:
     pulse 1.6s infinite;
 }
-
-.hex.available::after {
-  content: "";
-
-  position: absolute;
-
-  inset: 3px;
-
-  clip-path: inherit;
-
-  border: 3px solid #e5c96f;
-
-  z-index: 3;
-
-  pointer-events: none;
-}
-
 
 /* =========================================================
    地形カラー
@@ -1677,11 +1661,11 @@ h2 {
  */
 
 .terrain-label {
-  z-index: 2;
-
   justify-content: flex-end !important;
 
-  padding-bottom: 14px;
+  padding-bottom: 10px;
+
+  font-size: 12px !important;
 
   color: #f0e6cc !important;
 
@@ -1689,7 +1673,6 @@ h2 {
     0 1px 2px #111,
     0 0 3px #111 !important;
 }
-
 
 /*
  * 探索可能な未探索マス
@@ -1699,4 +1682,68 @@ h2 {
   filter:
     brightness(0.48)
     saturate(0.75);
+}
+/* =========================================================
+   探索可能マス：半透明の霧
+========================================================= */
+.hex.available::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  clip-path: polygon(
+    25% 0%,
+    75% 0%,
+    100% 50%,
+    75% 100%,
+    25% 100%,
+    0% 50%
+  );
+
+  background:
+    radial-gradient(
+      circle at 42% 38%,
+      rgba(58, 68, 62, 0.30) 0%,
+      rgba(30, 38, 34, 0.48) 55%,
+      rgba(16, 21, 19, 0.62) 100%
+    );
+
+  z-index: 3;
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   未解放マス：濃霧
+========================================================= */
+
+.hex.blocked {
+  cursor: default;
+}
+
+.hex.blocked .fog-layer {
+  position: absolute;
+  inset: 0;
+
+  clip-path: polygon(
+    25% 0%,
+    75% 0%,
+    100% 50%,
+    75% 100%,
+    25% 100%,
+    0% 50%
+  );
+
+  z-index: 4;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle at 42% 38%,
+      rgba(65, 75, 68, 0.92) 0%,
+      rgba(34, 42, 38, 0.96) 48%,
+      rgba(14, 18, 17, 0.99) 100%
+    );
 }
