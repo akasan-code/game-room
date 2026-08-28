@@ -74,46 +74,60 @@
          キャラクター・ステータス
     ==================================================== -->
 
-    <section class="status-row">
+    <section class="status-area">
 
-      <button id="eat" class="character">
-        <img id="char" src="images/character_idle1.png" alt="クリックで食べる">
-        <small>クリックで食べる</small>
-      </button>
+      <div class="status-row">
 
-
-      <div class="status-card">
-
-        <div class="status-title">
-          🍖 空腹度
-          <b id="hungerText"></b>
+        <div class="status-card">
+          <div class="status-title">
+            🍖 空腹度
+            <b id="hungerText"></b>
+          </div>
+          <div class="bar">
+            <i id="hungerBar"></i>
+          </div>
         </div>
 
-        <div class="bar">
-          <i id="hungerBar"></i>
+        <div class="status-card">
+          <div class="status-title">
+            ❤️ ライフ
+            <b id="lifeText"></b>
+          </div>
+          <div class="bar life">
+            <i id="lifeBar"></i>
+          </div>
         </div>
-
-        <small>
-          探索すると減少
-        </small>
 
       </div>
 
+      <div id="characterArea" class="character-area">
 
-      <div class="status-card">
+        <button
+          id="eat"
+          class="eat-button"
+          type="button"
+          aria-label="食べる"
+        >
+          🍖
+        </button>
 
-        <div class="status-title">
-          ❤️ ライフ
-          <b id="lifeText"></b>
+        <div class="character-display">
+
+          <img
+            id="char"
+            src="images/character_idle1.png"
+            alt="主人公"
+          >
+
+          <div
+            id="discoveryMark"
+            class="discovery-mark"
+            hidden
+          >
+            !
+          </div>
+
         </div>
-
-        <div class="bar life">
-          <i id="lifeBar"></i>
-        </div>
-
-        <small>
-          0でゲームオーバー
-        </small>
 
       </div>
 
@@ -144,9 +158,7 @@
               拠点施設
             </h2>
 
-            <button id="buildBtn">
-              🔨 開発
-            </button>
+            <span class="section-note">施設を選んで開発</span>
 
           </div>
 
@@ -350,11 +362,11 @@
 
 
   <!-- =====================================================
-       施設開発モーダル
+       施設確認モーダル
   ====================================================== -->
 
   <div
-    id="buildModal"
+    id="facilityModal"
     class="modal-backdrop"
     hidden
   >
@@ -363,19 +375,27 @@
 
       <div class="modal-head">
 
-        <h2>
-          施設開発
-        </h2>
+        <h2 id="facilityTitle">施設</h2>
 
         <button
-          class="modalClose2 modal-close"
+          id="facilityClose"
+          class="modal-close"
         >
           ×
         </button>
 
       </div>
 
-      <div id="buildList"></div>
+      <div id="facilityDetail" class="facility-detail"></div>
+
+      <div class="modal-actions">
+        <button id="facilityCancel" class="secondary-btn">
+          キャンセル
+        </button>
+        <button id="facilityUpgradeBtn" class="primary-btn">
+          レベルアップ
+        </button>
+      </div>
 
     </div>
 
@@ -417,6 +437,41 @@
 
   </div>
 
+<!-- =====================================================
+     探索結果モーダル
+====================================================== -->
+  <div
+    id="exploreResultModal"
+    class="modal-backdrop"
+    hidden
+  >
+    <div class="explore-modal">
+
+      <div class="modal-head">
+        <div>
+          <small>探索終了</small>
+          <h2>見つけたもの</h2>
+        </div>
+      </div>
+
+      <div
+        id="exploreResultDetail"
+        class="explore-result-detail"
+      ></div>
+
+      <div class="modal-actions result-actions">
+
+        <button
+          id="exploreResultOk"
+          class="primary-btn"
+        >
+          OK
+        </button>
+
+      </div>
+
+    </div>
+  </div>
 
   <!-- トースト -->
 

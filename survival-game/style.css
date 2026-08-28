@@ -515,6 +515,7 @@ h2 {
       --tile,
       #5f674e
     );
+  z-index: 0;
 }
 
 .hex .inside {
@@ -1134,53 +1135,6 @@ h2 {
 
 
 /* =========================================================
-   キャラクター
-========================================================= */
-
-.character {
-  width: 105px;
-
-  min-width: 105px;
-
-  border: 0;
-
-  border-radius: 12px;
-
-  background: #1b2018;
-
-  color: #eee;
-
-  position: relative;
-
-  overflow: hidden;
-
-  cursor: pointer;
-}
-
-.character #char {
-    width: 100%;
-    height: 88px;
-    object-fit: contain;
-    display: block;
-  }
-
-.character small {
-  position: absolute;
-
-  bottom: 0;
-
-  left: 0;
-  right: 0;
-
-  background: #0009;
-
-  font-size: 10px;
-
-  padding: 3px;
-}
-
-
-/* =========================================================
    図鑑
 ========================================================= */
 
@@ -1369,4 +1323,394 @@ h2 {
 
 .hex.available.unexplored .terrain-icon {
   opacity: 0.8;
+}
+
+/* =========================================================
+   施設カード・施設確認UI
+========================================================= */
+
+.section-note {
+  font-size: 11px;
+  color: #62553e;
+}
+
+.facility-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.facility {
+  width: 100%;
+  min-width: 0;
+  min-height: 150px;
+  border: 2px solid #786545;
+  background: #d3c09a;
+  color: var(--ink);
+  padding: 7px;
+  text-align: center;
+  font-family: inherit;
+  cursor: pointer;
+  appearance: none;
+}
+
+.facility:active {
+  transform: translateY(1px);
+}
+
+.facility-art-wrap {
+  height: 98px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.facility-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.facility-fallback {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.facility-name {
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.facility-level {
+  margin-top: 2px;
+  font-size: 11px;
+  color: #66553d;
+}
+
+.facility-detail {
+  padding: 16px;
+}
+
+.facility-upgrade-preview {
+  display: grid;
+  grid-template-columns: 1fr 34px 1fr;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.facility-upgrade-preview > div:not(.facility-arrow) {
+  min-width: 0;
+}
+
+.facility-upgrade-preview small,
+.facility-upgrade-preview strong {
+  display: block;
+}
+
+.facility-upgrade-preview .facility-art-wrap {
+  height: 150px;
+  margin: 6px 0;
+  border: 1px solid #927951;
+  background: rgba(255,255,255,.12);
+}
+
+.facility-arrow {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.facility-modal-copy {
+  margin-top: 14px;
+  padding: 12px;
+  background: #d7c59e;
+  border: 1px solid #8c754d;
+  line-height: 1.6;
+}
+
+.facility-modal-copy p {
+  margin: 7px 0;
+}
+
+.facility-warning {
+  color: #8a3027;
+  font-weight: bold;
+}
+
+.special-facility-preview {
+  text-align: center;
+  font-size: 72px;
+  padding: 12px;
+}
+
+#facilityUpgradeBtn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+/* =========================================================
+   2026-08 探索演出・ステータス配置 調整
+========================================================= */
+
+.status-area {
+  background: #292720;
+  padding-bottom: 8px;
+}
+
+.status-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 8px;
+  background: transparent;
+}
+
+.status-card small {
+  display: none;
+}
+
+.character-area {
+  position: relative;
+  height: 170px;
+  margin: 0 8px 8px;
+  overflow: hidden;
+  border-radius: 10px;
+  background:
+    #1b2018
+    url("images/bg/base_idle.png")
+    center / cover
+    no-repeat;
+}
+
+/* 食べるボタン */
+.eat-button {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  width: 54px;
+  height: 54px;
+  transform: translateY(-50%);
+  z-index: 10;
+  border: 2px solid #6c542f;
+  border-radius: 50%;
+  background: #b8904d;
+  color: #241b11;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow:
+    inset 0 0 0 1px #d8b76f,
+    0 2px 0 #3e301e;
+}
+
+.eat-button:active {
+  transform:
+    translateY(-50%)
+    translateY(1px);
+}
+
+/* キャラクター表示領域 */
+.character-display {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* キャラクター本体 */
+.character-display #char {
+  position: absolute;
+  width: 42%;
+  height: 145px;
+  left: 18%;
+  bottom: 18px;
+  object-fit: contain;
+  display: block;
+  transition: left 3.0s linear;
+}
+
+/* 探索時の移動先 */
+.character-area.walking #char {
+  left: 55%;
+}
+
+.discovery-mark {
+  position: absolute;
+  left: 68%;
+  top: 12px;
+  font-size: 42px;
+  font-weight: bold;
+  color: #f3d66b;
+  text-shadow: 0 2px 2px #21190d;
+  z-index: 5;
+  animation: discovery-pop 0.45s ease;
+}
+
+.discovery-mark[hidden] {
+  display: none;
+}
+
+@keyframes discovery-pop {
+  0% {
+    transform: translateY(8px) scale(0.4);
+    opacity: 0;
+  }
+
+  60% {
+    transform: translateY(-4px) scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* 施設カードを少し圧縮 */
+.facility-grid {
+  padding: 6px;
+  gap: 5px;
+}
+
+.facility {
+  min-height: 132px;
+  padding: 5px;
+}
+
+.facility-image-wrap,
+.facility-art-wrap {
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.facility-name {
+  margin-top: 3px;
+  font-size: 13px;
+}
+
+.facility-level {
+  margin-top: 1px;
+  font-size: 10px;
+}
+
+/* =========================================================
+   探索結果
+========================================================= */
+.explore-result-detail {
+  padding: 18px 16px;
+}
+
+.explore-result-list {
+  display: grid;
+  gap: 8px;
+}
+
+.explore-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding: 10px 12px;
+
+  background: #d7c59e;
+  border: 1px solid #8c754d;
+
+  font-size: 14px;
+}
+
+.explore-result-item strong {
+  font-size: 17px;
+}
+
+.explore-result-item.rare {
+  font-weight: bold;
+  border-width: 2px;
+}
+
+.explore-result-empty {
+  padding: 18px;
+  text-align: center;
+  color: #685a43;
+}
+
+.result-actions {
+  grid-template-columns: 1fr;
+}
+
+/* =========================================================
+   マップ地形画像
+========================================================= */
+
+.terrain-layer {
+  position: absolute;
+
+  inset: 4px;
+
+  overflow: hidden;
+
+  clip-path: polygon(
+    25% 3%,
+    75% 3%,
+    100% 50%,
+    75% 97%,
+    25% 97%,
+    0 50%
+  );
+
+  z-index: 1;
+
+  pointer-events: none;
+}
+
+
+.terrain-layer img {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  object-position: center;
+
+  display: block;
+
+  z-index: 1;
+}
+
+
+/*
+ * 地形名
+ */
+
+.terrain-label {
+  z-index: 2;
+
+  justify-content: flex-end !important;
+
+  padding-bottom: 14px;
+
+  color: #f0e6cc !important;
+
+  text-shadow:
+    0 1px 2px #111,
+    0 0 3px #111 !important;
+}
+
+
+/*
+ * 探索可能な未探索マス
+ */
+
+.hex.available .terrain-layer {
+  filter:
+    brightness(0.48)
+    saturate(0.75);
 }
