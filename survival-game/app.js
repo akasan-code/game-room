@@ -89,6 +89,15 @@ const S = {
 
   gate: null,
 
+  // ゲートを一度探索したか
+  gateDiscovered: false,
+
+  // 初回確定報酬の黄色宝石を受け取ったか
+  gateRewardClaimed: false,
+
+  // コンパスでゲートを起動したか
+  gateActivated: false,
+
   pending: null,
 
   isExploring: false,
@@ -474,11 +483,11 @@ function generateGate() {
     );
 
     /*
-     * 拠点から9～15マス
+     * 拠点から7～9マス
      */
     if (
-      distance < 9 ||
-      distance > MAP_RADIUS
+      distance < 7 ||
+      distance > 9
     ) {
       continue;
     }
@@ -559,6 +568,10 @@ function init() {
   };
 
   S.gate = null;
+  S.gateDiscovered = false;
+  S.gateRewardClaimed = false;
+  S.gateActivated = false;
+
   S.pending = null;
   S.isExploring = false;
   S.log = [];
@@ -1117,18 +1130,22 @@ function renderMap() {
         q === S.base.q &&
         r === S.base.r;
 
-
-      const isgate =
-        S.compass &&
-        S.gate &&
-        q === S.gate.q &&
-        r === S.gate.r;
-
-
       const isAvailable =
         !isBase &&
         !tile.seen &&
         isAdjacentToExplored(tile);
+
+      const isGatePosition =
+        S.gate &&
+        q === S.gate.q &&
+        r === S.gate.r;
+
+      const isgate =
+        isGatePosition &&
+        (
+          tile.seen ||
+          isAvailable
+        );
 
 
       const x =
@@ -1217,21 +1234,22 @@ function renderMap() {
       else if (isgate) {
 
         content = `
-          <div class="inside">
+          <div class="terrain-layer gate-layer">
 
-            <div class="terrain-icon">
-              🌀
-            </div>
+            <img
+              src="images/map/gate.png"
+              alt="ゲート"
+              onerror="this.style.display='none';"
+            >
 
-            <div>
-              ゲート
-            </div>
+          </div>
 
+          <div class="inside terrain-label gate-label">
+            ゲート
           </div>
         `;
 
       }
-
 
       /*
       * 探索済み
@@ -1288,6 +1306,21 @@ function renderMap() {
           () => openExplore(tile)
         );
       }
+      else if (
+        S.gateDiscovered &&
+        !S.gateActivated &&
+        S.gate &&
+        tile.q === S.gate.q &&
+        tile.r === S.gate.r
+      ) {
+        e.style.cursor = 'pointer';
+
+        e.addEventListener(
+          'click',
+          () => openGateControl(tile)
+        );
+      }
+
 
 
       world.appendChild(e);
@@ -1407,6 +1440,20 @@ function openExplore(tile) {
     return;
   }
 
+
+  /*
+   * 通常探索ボタンへ戻す
+   */
+  const confirmButton =
+    $('confirmExplore');
+
+  confirmButton.textContent =
+    'ここを探索する';
+
+  confirmButton.disabled =
+    false;
+
+
   const distance = D(tile, S.base);
   // 拠点から離れる毎に消費が増える
   const cost = 10 + distance * 1;
@@ -1459,6 +1506,144 @@ function openExplore(tile) {
   showModal('exploreModal');
 }
 
+/* =========================================================
+   発見済みゲート操作
+========================================================= */
+function openGateControl(tile) {
+
+  if (
+    S.isExploring ||
+    S.gateActivated ||
+    !S.gateDiscovered
+  ) {
+    return;
+  }
+
+
+  S.pending = {
+    mode: 'gateActivate',
+    tile
+  };
+
+
+  $('exploreTitle').textContent =
+    'ゲート';
+
+
+  $('explorePreview').innerHTML = `
+    <div class="target-icon">
+      🌀
+    </div>
+
+    <div>
+      ゲート発見済み・未起動
+    </div>
+  `;
+
+
+  if (S.compass) {
+
+    $('travelCost').innerHTML =
+      '🧭 コンパスが強く反応している。';
+
+    $('resourcePreview').innerHTML =
+      'ゲートを起動できそうだ。';
+
+  }
+
+  else {
+
+    $('travelCost').innerHTML =
+      'ゲートは反応しない。';
+
+    $('resourcePreview').innerHTML =
+      '🧭 起動にはコンパスが必要なようだ。';
+
+  }
+
+
+  const button =
+    $('confirmExplore');
+
+  button.textContent =
+    'ゲートを起動する';
+
+  button.disabled =
+    !S.compass;
+
+
+  showModal(
+    'exploreModal'
+  );
+}
+
+/* =========================================================
+   ゲート起動
+========================================================= */
+
+function activateGate() {
+
+  /*
+   * 二重起動防止
+   */
+  if (
+    S.isExploring ||
+    S.gateActivated
+  ) {
+    return;
+  }
+
+
+  /*
+   * ゲート未発見なら起動不可
+   */
+  if (!S.gateDiscovered) {
+    return;
+  }
+
+
+  /*
+   * コンパス必須
+   */
+  if (!S.compass) {
+
+    toast(
+      'ゲートの起動にはコンパスが必要です'
+    );
+
+    return;
+  }
+
+
+  /*
+   * 起動処理
+   */
+  S.isExploring = true;
+
+  S.gateActivated = true;
+
+  S.pending = null;
+
+
+  closeModal(
+    'exploreModal'
+  );
+
+
+  /*
+   * コンパスは消費しない
+   */
+
+
+  /*
+   * クリア
+   */
+  alert(
+    'ゲートが起動した！ GAME CLEAR'
+  );
+
+  location.reload();
+}
 
 /* =========================================================
    探索演出ユーティリティ
@@ -1539,7 +1724,8 @@ function createExploreResult(tile) {
     blue: 0,
     rare: null,
     discoveredFood: null,
-    isRare: false
+    isRare: false,
+    gateReward: false
   };
 
   if (terrain.food) {
@@ -1595,6 +1781,15 @@ function createExploreResult(tile) {
       ];
   }
 
+  if (
+    S.gate &&
+    tile.q === S.gate.q &&
+    tile.r === S.gate.r &&
+    !S.gateRewardClaimed
+  ) {
+    result.gateReward = true;
+  }
+
   return result;
 }
 
@@ -1636,9 +1831,18 @@ if (result.rare) {
     }
   }
 
+  if (
+    result.gateReward &&
+    !S.gateRewardClaimed
+  ) {
+    S.yellow += 1;
+    S.gateRewardClaimed = true;
+  }
+
   if (result.discoveredFood) {
     S.book[result.discoveredFood[0]] = 1;
   }
+
 }
 
 
@@ -1696,8 +1900,20 @@ async function explore() {
   }
 
 
-  S.isExploring = true;
+  /*
+   * ゲート起動
+   */
+  if (
+    pending.mode === 'gateActivate'
+  ) {
 
+    activateGate();
+
+    return;
+  }
+
+
+  S.isExploring = true;
 
   const tile = pending.tile;
   const terrain = T[tile.t];
@@ -1760,7 +1976,12 @@ async function explore() {
 
   tile.seen = true;
 
-
+  /*
+  // ゲートの探索だったら初回フラグを立てる
+  if (S.gate && tile.q === S.gate.q && tile.r === S.gate.r) {
+    S.gateDiscovered = true;
+  }
+*/
   /* =====================================================
      ログ
   ===================================================== */
@@ -1799,13 +2020,44 @@ async function explore() {
   /* =====================================================
      ゲート・ゲームオーバー判定を保存
   ===================================================== */
-
-  S.pendingGameClear =
+  const exploredGate =
     !!(
       S.gate &&
       tile.q === S.gate.q &&
       tile.r === S.gate.r
     );
+
+
+  if (exploredGate) {
+
+    S.gateDiscovered = true;
+
+    /*
+    * コンパス所持時だけ、その場でゲート起動
+    */
+    if (
+      S.compass &&
+      !S.gateActivated
+    ) {
+
+      S.gateActivated = true;
+      S.pendingGameClear = true;
+
+    }
+
+    else {
+
+      S.pendingGameClear = false;
+
+    }
+
+  }
+
+  else {
+
+    S.pendingGameClear = false;
+
+  }
 
 
   S.pendingGameOver =
@@ -1931,7 +2183,6 @@ function showExploreResult(result) {
   /* =====================================================
      レア
   ===================================================== */
-
   if (result.rare) {
 
     const rareIcons = {
@@ -1966,8 +2217,20 @@ function showExploreResult(result) {
 
     });
 
+    
   }
 
+  /* =====================================================
+     ゲートでの発見物
+  ===================================================== */
+  if (result.gateReward) {
+    items.push({
+      icon: '🟡',
+      name: '黄色い宝石',
+      amount: 1,
+      rare: true
+    });
+  }
 
   /* =====================================================
      食材図鑑発見
@@ -2764,7 +3027,7 @@ $('exploreResultOk').onclick = () => {
     S.pendingGameClear = false;
 
     alert(
-      'ゲートを発見！ GAME CLEAR'
+      'ゲートが起動した！ GAME CLEAR'
     );
 
     location.reload();
