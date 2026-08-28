@@ -149,13 +149,6 @@ const T = {
     damage: 0,
     rare: ['レア食料', 2]
   },
-
-  sea: {
-    name: '海',
-    icon: '🌊',
-    blocked: true,
-    damage: 0
-  }
 };
 
 /* =========================================================
@@ -668,19 +661,6 @@ function gen(q, r) {
     t = 'waste';
   }
 
-
-  /*
-   * 海
-   *
-   * 拠点から5マス以上離れた場所だけ
-   */
-  else if (
-    Math.random() < 0.05 &&
-    distance > 4
-  ) {
-    t = 'sea';
-  }
-
   // マップイラストを1つ選ぶ
   const terrainImages = TERRAIN_IMAGES[t] || [];
   const imageIndex = terrainImages.length > 0 ? R(0, terrainImages.length - 1) : 0;
@@ -1146,7 +1126,6 @@ function renderMap() {
       const isAvailable =
         !isBase &&
         !tile.seen &&
-        tile.t !== 'sea' &&
         isAdjacentToExplored(tile);
 
 
@@ -1174,11 +1153,6 @@ function renderMap() {
             ? `explored ${tile.t}`
             : 'unexplored'
         );
-
-
-      if (tile.t === 'sea') {
-        e.classList.add('blocked');
-      }
 
 
       if (isBase) {
