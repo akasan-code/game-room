@@ -1792,3 +1792,30 @@ h2 {
 .hex.dark .inside {
   display: none;
 }
+
+/* =========================================================
+   探検看板ボタン
+========================================================= */
+.explore-sign-button {
+  position: absolute;
+  right: 12px;
+  bottom: 14px;
+
+  width: 120px;
+  height: 80px;
+
+  border: none;
+  padding: 0;
+
+  background:
+    url("images/ui/explore_sign.png")
+    center / contain no-repeat;
+
+  cursor: pointer;
+
+  z-index: 10;
+}
+
+.explore-sign-button:active {
+  transform: translateY(2px);
+}
