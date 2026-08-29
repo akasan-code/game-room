@@ -1116,6 +1116,8 @@ function render() {
 
   $('day').textContent = S.day;
 
+  $('food').textContent = S.food;
+  
   $('hungerText').textContent =
     `${S.hunger} / ${S.maxHunger}`;
 
