@@ -537,6 +537,74 @@ function generateGate() {
   }
 }
 
+/* マップの外縁を作る　*/
+function generateDarkTiles() {
+
+  for (const tile of S.tiles.values()) {
+    /*
+     * 拠点からの距離
+     */
+    const distance = D(
+      tile,
+      S.base
+    );
+
+
+    /*
+     * 距離10未満は暗闇にしない
+     */
+    if (distance < 10) {
+      continue;
+    }
+
+
+    /*
+     * ゲートは暗闇にしない
+     */
+    if (tile.t === 'gate') {
+      continue;
+    }
+
+
+    /*
+     * 外側ほど暗闇になりやすくする
+     */
+    let darkChance = 0;
+
+    if (distance === 10) {
+      darkChance = 0.40;
+    }
+
+    else if (distance === 11) {
+      darkChance = 0.50;
+    }
+
+    else if (distance === 12) {
+      darkChance = 0.70;
+    }
+
+    else if (distance === 13) {
+      darkChance = 0.90;
+    }
+
+    else {
+      darkChance = 1.00;
+    }
+
+
+    /*
+     * 暗闇化
+     */
+    if (
+      Math.random() < darkChance
+    ) {
+      tile.isDark = true;
+    }
+
+  }
+
+}
+
 /* =========================================================
    初期化
 ========================================================= */
@@ -619,6 +687,9 @@ function init() {
   /* ゲート位置決定 */
   generateGate();
 
+ /* マップの外縁を決定 */
+  generateDarkTiles();
+
   /*
    * 拠点を探索済みにする
    */
@@ -664,6 +735,7 @@ function gen(q, r) {
       r,
       t: 'grass',
       seen: true,
+      isDark: false,
       imageIndex:
         baseImages.length > 0
           ? R(0, baseImages.length - 1)
@@ -707,6 +779,7 @@ function gen(q, r) {
     r,
     t,
     seen: false,
+    isDark: false,
     imageIndex
   };
 
@@ -1155,6 +1228,11 @@ function renderMap() {
       const isAvailable =
         !isBase &&
         !tile.seen &&
+        !tile.isDark &&
+        isAdjacentToExplored(tile);
+
+      const isDarkRevealed =
+        tile.isDark &&
         isAdjacentToExplored(tile);
 
       const isgate =
@@ -1199,6 +1277,9 @@ function renderMap() {
         e.classList.add('available');
       }
 
+      if (isDarkRevealed) {
+        e.classList.add('dark');
+      }
 
       if (isgate) {
         e.dataset.gate = 'true';
@@ -1241,6 +1322,9 @@ function renderMap() {
           </div>
         `;
 
+      }
+      else if (isDarkRevealed) {
+        content = '';
       }
 
       /*
