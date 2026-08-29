@@ -2960,14 +2960,6 @@ $('eat').onclick = eat;
 /*
  * 探索画面へ
  */
-$('exploreMode').onclick = () => {
-  if (S.isExploring) {
-    return;
-  }
-
-  showExploreView();
-};
-
 $('exploreSign').onclick = () => {
   if (S.isExploring) {
     return;
