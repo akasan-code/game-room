@@ -1806,13 +1806,20 @@ h2 {
 
   border: none;
   padding: 0;
+  margin: 0;
 
-  background:
-    url("images/ui/explore_sign.png")
-    center / contain no-repeat;
+  /* スマホのbutton標準表示を消す */
+  appearance: none;
+  -webkit-appearance: none;
+
+  /* 背景画像を明示的に指定 */
+  background-color: transparent;
+  background-image: url("images/UI/explore_sign.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 
   cursor: pointer;
-
   z-index: 10;
 }
 
