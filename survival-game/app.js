@@ -1133,7 +1133,6 @@ function render() {
   $('resources').innerHTML =
     `🪵 ${S.wood}　` +
     `🪨 ${S.stone}　` +
-    `🍖 ${S.food}　` +
     `🌿 ${S.grass}　` +
     `🧥 ${S.fur}　` +
     `🔴${S.red} ` +

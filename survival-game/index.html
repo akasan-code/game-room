@@ -102,14 +102,24 @@
 
       <div id="characterArea" class="character-area">
 
-        <button
-          id="eat"
-          class="eat-button"
-          type="button"
-          aria-label="食べる"
-        >
-          🍖
-        </button>
+        <div class="eat-control">
+
+          <button
+            id="eat"
+            class="eat-button"
+            type="button"
+            aria-label="食べる"
+          >
+            <img
+              src="images/UI/eat.png"
+              alt=""
+            >
+          </button>
+
+          <div class="eat-food-count">
+            🍖 <span id="food">0</span>
+          </div>
+        </div>
 
         <div class="character-display">
 
@@ -344,7 +354,7 @@
         ></div>
 
         <p class="preview-note">
-          レア素材は10%で入手。
+          レア素材は20%で入手。
         </p>
 
       </div>
