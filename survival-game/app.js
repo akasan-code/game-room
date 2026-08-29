@@ -2969,6 +2969,13 @@ $('exploreMode').onclick = () => {
   showExploreView();
 };
 
+$('exploreSign').onclick = () => {
+  if (S.isExploring) {
+    return;
+  }
+
+  showExploreView();
+};
 
 /*
  * 拠点画面へ
