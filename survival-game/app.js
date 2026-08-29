@@ -232,17 +232,17 @@ const CHARACTER_ANIMATIONS = {
       'images/character_idle1.png',
       'images/character_idle2.png',
       'images/character_idle3.png',
+      'images/character_idle5.png',
       'images/character_idle4.png',
-      'images/character_idle5.png'
     ],
 
     // 各フレームの表示時間
     durations: [
-      3000,  // 1枚目：じっとする
+      6000,  // 1枚目：じっとする
       450,   // 2枚目
       450,   // 3枚目
-      300,   // 4枚目
-      3000   // 5枚目：じっとする
+      8000,  // 5枚目：じっとする
+      800,   // 4枚目：斜め上をみる
     ]
   },
 
