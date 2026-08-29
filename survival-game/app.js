@@ -118,7 +118,7 @@ const T = {
     food: [1, 2],
     grass: [1, 2],
     damage: 0,
-    rare: ['レア食料', 4]
+    rare: ['食料', 4]
   },
 
   forest: {
@@ -158,8 +158,16 @@ const T = {
     name: '荒地',
     icon: '🏜️',
     damage: 0,
-    rare: ['レア食料', 2]
+    rare: ['食料', 2]
   },
+
+  gate: {
+    name: 'ゲート',
+    icon: '🌀',
+    damage: 0,
+    rare: ['黄色い宝石', 1]
+  },
+
 };
 
 /* =========================================================
@@ -206,7 +214,11 @@ const TERRAIN_IMAGES = {
     'images/map/waste_2.png',
     'images/map/waste_3.png',
     'images/map/waste_4.png'
-  ]
+  ],
+
+  gate: [
+    'images/map/gate.png'
+  ]  
 
 };
 
@@ -278,7 +290,8 @@ const EXPLORATION_BACKGROUNDS = {
 
   // 専用背景がない地形は草原へフォールバック
   cave: 'images/bg/explore_grass.png',
-  waste: 'images/bg/explore_grass.png'
+  waste: 'images/bg/explore_grass.png',
+  gate: 'images/bg/explore_grass.png'
 };
 
 
@@ -497,7 +510,7 @@ function generateGate() {
     );
 
     /*
-     * 海や特殊地形には置かない
+     * 特殊地形には置かない
      */
     if (
       !tile ||
@@ -510,6 +523,15 @@ function generateGate() {
       q,
       r
     };
+
+    /*
+    * 選ばれたマスをゲート地形に変更
+    */
+    tile.t = 'gate';
+    tile.special = true;
+    /*
+    * ゲート画像は1種類なのでindexは0で固定　*/
+    tile.imageIndex = 0;
 
     return;
   }
@@ -1135,18 +1157,12 @@ function renderMap() {
         !tile.seen &&
         isAdjacentToExplored(tile);
 
-      const isGatePosition =
-        S.gate &&
-        q === S.gate.q &&
-        r === S.gate.r;
-
       const isgate =
-        isGatePosition &&
+        tile.t === 'gate' &&
         (
           tile.seen ||
           isAvailable
         );
-
 
       const x =
         centerX +
@@ -1227,30 +1243,6 @@ function renderMap() {
 
       }
 
-
-      /*
-      * ゲート
-      */
-      else if (isgate) {
-
-        content = `
-          <div class="terrain-layer gate-layer">
-
-            <img
-              src="images/map/gate.png"
-              alt="ゲート"
-              onerror="this.style.display='none';"
-            >
-
-          </div>
-
-          <div class="inside terrain-label gate-label">
-            ゲート
-          </div>
-        `;
-
-      }
-
       /*
       * 探索済み
       * または
@@ -1309,9 +1301,7 @@ function renderMap() {
       else if (
         S.gateDiscovered &&
         !S.gateActivated &&
-        S.gate &&
-        tile.q === S.gate.q &&
-        tile.r === S.gate.r
+        tile.t === 'gate'
       ) {
         e.style.cursor = 'pointer';
 
@@ -1320,7 +1310,6 @@ function renderMap() {
           () => openGateControl(tile)
         );
       }
-
 
 
       world.appendChild(e);
@@ -1423,7 +1412,7 @@ function preview(tile) {
 
 
   result.push(
-    `✨ レア：${d.rare[0]} ×${d.rare[1]}（10%）`
+    `✨ レア：${d.rare[0]} ×${d.rare[1]}`
   );
 
 
@@ -1754,7 +1743,7 @@ function createExploreResult(tile) {
 
   if (
     terrain.rare &&
-    Math.random() < 0.1
+    Math.random() < 0.2
   ) {
     result.rare = {
       name: terrain.rare[0],
@@ -1782,9 +1771,7 @@ function createExploreResult(tile) {
   }
 
   if (
-    S.gate &&
-    tile.q === S.gate.q &&
-    tile.r === S.gate.r &&
+    tile.t === 'gate' &&
     !S.gateRewardClaimed
   ) {
     result.gateReward = true;
@@ -1976,12 +1963,6 @@ async function explore() {
 
   tile.seen = true;
 
-  /*
-  // ゲートの探索だったら初回フラグを立てる
-  if (S.gate && tile.q === S.gate.q && tile.r === S.gate.r) {
-    S.gateDiscovered = true;
-  }
-*/
   /* =====================================================
      ログ
   ===================================================== */
@@ -2020,13 +2001,7 @@ async function explore() {
   /* =====================================================
      ゲート・ゲームオーバー判定を保存
   ===================================================== */
-  const exploredGate =
-    !!(
-      S.gate &&
-      tile.q === S.gate.q &&
-      tile.r === S.gate.r
-    );
-
+  const exploredGate = tile.t === 'gate';
 
   if (exploredGate) {
 
