@@ -462,6 +462,7 @@ function closeModal(id) {
 function showBaseView() {
   $('baseView').hidden = false;
   $('exploreView').hidden = true;
+  $('exploreSign').hidden = false;
 
   $('exploreView').classList.remove('active');
   $('baseView').classList.add('active');
@@ -471,7 +472,8 @@ function showBaseView() {
 function showExploreView() {
   $('baseView').hidden = true;
   $('exploreView').hidden = false;
-
+  $('exploreSign').hidden = true;
+  
   $('baseView').classList.remove('active');
   $('exploreView').classList.add('active');
 
@@ -1117,7 +1119,7 @@ function render() {
   $('day').textContent = S.day;
 
   $('food').textContent = S.food;
-  
+
   $('hungerText').textContent =
     `${S.hunger} / ${S.maxHunger}`;
 
@@ -2003,6 +2005,10 @@ async function explore() {
   closeModal('exploreModal');
   showBaseView();
 
+  /*
+  * 移動中は探検看板を隠す
+  */
+  $('exploreSign').hidden = true;
 
   /*
    * 歩行・レア発見演出
