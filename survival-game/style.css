@@ -1465,7 +1465,7 @@ h2 {
 /* 食料数 */
 .eat-food-count {
   margin-top: -2px;
-  min-width: 54px;
+  min-width: 60px;
   padding: 3px 7px;
   border-radius: 12px;
   background: rgba(20, 18, 14, 0.78);
@@ -1478,8 +1478,25 @@ h2 {
   text-align: center;
   white-space: nowrap;
 
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
   text-shadow:
     0 1px 2px #000;
+}
+.eat-food-count img {
+  width: 26px;
+  height: 26px;
+
+  object-fit: contain;
+  display: block;
+}
+.eat-food-count span {
+  display: block;
+  flex-shrink: 0;
 }
 
 /* キャラクター表示領域 */
@@ -1831,4 +1848,42 @@ h2 {
 
 .explore-sign-button:active {
   transform: translateY(2px);
+}
+
+/* =========================================================
+   上部のアイコン
+========================================================= */
+.resources {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 3px;
+
+  color: #eee;
+  font-size: 12px;
+}
+
+.resource-item {
+  display: flex;
+  align-items: center;
+
+  gap: 1px;
+
+  white-space: nowrap;
+}
+
+.resource-item img {
+  width: 22px;
+  height: 22px;
+
+  object-fit: contain;
+  display: block;
+}
+
+.resource-item span {
+  min-width: 10px;
+
+  text-align: center;
+  font-weight: bold;
 }

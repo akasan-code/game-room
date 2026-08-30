@@ -1134,15 +1134,42 @@ function render() {
     `${Math.max(0, S.life) / S.maxLife * 100}%`;
 
 
-  $('resources').innerHTML =
-    `🪵 ${S.wood}　` +
-    `🪨 ${S.stone}　` +
-    `🌿 ${S.grass}　` +
-    `🧥 ${S.fur}　` +
-    `🔴${S.red} ` +
-    `🔵${S.blue} ` +
-    `🟡${S.yellow}`;
+  $('resources').innerHTML = `
+    <div class="resource-item">
+      <img src="images/UI/materials_grass.png" alt="草">
+      <span>${S.grass}</span>
+    </div>
 
+    <div class="resource-item">
+      <img src="images/UI/materials_wood.png" alt="木材">
+      <span>${S.wood}</span>
+    </div>
+
+    <div class="resource-item">
+      <img src="images/UI/materials_stone.png" alt="石材">
+      <span>${S.stone}</span>
+    </div>
+
+    <div class="resource-item">
+      <img src="images/UI/materials_fur.png" alt="毛皮">
+      <span>${S.fur}</span>
+    </div>
+
+    <div class="resource-item">
+      <img src="images/UI/materials_gem_red.png" alt="赤い宝石">
+      <span>${S.red}</span>
+    </div>
+
+    <div class="resource-item">
+      <img src="images/UI/materials_gem_blue.png" alt="青い宝石">
+      <span>${S.blue}</span>
+    </div>
+
+    <div class="resource-item">
+      <img src="images/UI/materials_gem_yellow.png" alt="黄色い宝石">
+      <span>${S.yellow}</span>
+    </div>
+  `;
 
   renderFacilities();
   renderBook();
