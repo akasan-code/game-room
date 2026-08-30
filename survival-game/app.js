@@ -1464,76 +1464,179 @@ function renderMap() {
 
 function preview(tile) {
   const d = T[tile.t];
-  const result = [];
 
+  const normalItems = [];
+  const rareItems = [];
+
+
+  /*
+   * 通常素材
+   */
 
   if (d.food) {
-    result.push(
-      `🍖 食料 ${d.food[0]}～${d.food[1]}`
-    );
+    normalItems.push(`
+      <div class="resource-inline">
+        <img
+          src="images/UI/materials_food.png"
+          alt="食料"
+        >
+        <span>
+          ${d.food[0]}～${d.food[1]}
+        </span>
+      </div>
+    `);
   }
+
 
   if (d.grass) {
-    result.push(
-      `🌿 草 ${d.grass[0]}～${d.grass[1]}`
-    );
+    normalItems.push(`
+      <div class="resource-inline">
+        <img
+          src="images/UI/materials_grass.png"
+          alt="草"
+        >
+        <span>
+          ${d.grass[0]}～${d.grass[1]}
+        </span>
+      </div>
+    `);
   }
+
 
   if (d.wood) {
-    result.push(
-      `🪵 木材 ${d.wood[0]}～${d.wood[1]}`
-    );
+    normalItems.push(`
+      <div class="resource-inline">
+        <img
+          src="images/UI/materials_wood.png"
+          alt="木材"
+        >
+        <span>
+          ${d.wood[0]}～${d.wood[1]}
+        </span>
+      </div>
+    `);
   }
+
 
   if (d.stone) {
-    result.push(
-      `🪨 石材 ${d.stone[0]}～${d.stone[1]}`
-    );
+    normalItems.push(`
+      <div class="resource-inline">
+        <img
+          src="images/UI/materials_stone.png"
+          alt="石材"
+        >
+        <span>
+          ${d.stone[0]}～${d.stone[1]}
+        </span>
+      </div>
+    `);
   }
+
 
   if (d.red) {
-    result.push(
-      d.red[0] === d.red[1]
-        ? `🔴 赤い宝石 ×${d.red[0]}`
-        : `🔴 赤い宝石 ${d.red[0]}～${d.red[1]}`
-    );
+    normalItems.push(`
+      <div class="resource-inline">
+        <img
+          src="images/UI/materials_gem_red.png"
+          alt="赤い宝石"
+        >
+        <span>
+          ${
+            d.red[0] === d.red[1]
+              ? `×${d.red[0]}`
+              : `${d.red[0]}～${d.red[1]}`
+          }
+        </span>
+      </div>
+    `);
   }
+
 
   if (d.blue) {
-    result.push(
-      d.blue[0] === d.blue[1]
-        ? `🔵 青い宝石 ×${d.blue[0]}`
-        : `🔵 青い宝石 ${d.blue[0]}～${d.blue[1]}`
-    );
-  }
-
-  if (d.damage) {
-    const multiplier =
-      S.fac.weapon === 2
-        ? 0.5
-        : S.fac.weapon === 1
-          ? 0.8
-          : 1;
-
-    result.push(
-      `❤️ 地形ダメージ ${
-        Math.floor(
-          d.damage * multiplier
-        )
-      }`
-    );
+    normalItems.push(`
+      <div class="resource-inline">
+        <img
+          src="images/UI/materials_gem_blue.png"
+          alt="青い宝石"
+        >
+        <span>
+          ${
+            d.blue[0] === d.blue[1]
+              ? `×${d.blue[0]}`
+              : `${d.blue[0]}～${d.blue[1]}`
+          }
+        </span>
+      </div>
+    `);
   }
 
 
-  result.push(
-    `✨ レア：${d.rare[0]} ×${d.rare[1]}`
-  );
+  /*
+   * レア素材
+   */
+
+  if (d.rare) {
+    let rareImage = '';
+
+    if (
+      d.rare[0] === '食料' ||
+      d.rare[0] === 'レア食料'
+    ) {
+      rareImage =
+        'images/UI/materials_food.png';
+    }
+
+    else if (
+      d.rare[0] === '毛皮'
+    ) {
+      rareImage =
+        'images/UI/materials_fur.png';
+    }
+
+    else if (
+      d.rare[0] === '赤い宝石'
+    ) {
+      rareImage =
+        'images/UI/materials_gem_red.png';
+    }
+
+    else if (
+      d.rare[0] === '青い宝石'
+    ) {
+      rareImage =
+        'images/UI/materials_gem_blue.png';
+    }
+
+    else if (
+      d.rare[0] === '黄色い宝石'
+    ) {
+      rareImage =
+        'images/UI/materials_gem_yellow.png';
+    }
 
 
-  return result.join('<br>');
+    rareItems.push(`
+      <div class="resource-inline rare-resource">
+        <img
+          src="${rareImage}"
+          alt="${d.rare[0]}"
+        >
+        <span>?</span>
+      </div>
+    `);
+  }
+
+
+  return `
+    <div class="resource-preview-normal">
+      ${normalItems.join('')}
+    </div>
+
+    <div class="resource-preview-rare">
+      ${rareItems.join('')}
+    </div>
+  `;
 }
-
-
 /* =========================================================
    探索モーダル
 ========================================================= */
@@ -1577,30 +1680,75 @@ function openExplore(tile) {
   };
 
 
-  $('exploreTitle').textContent =
-    T[tile.t].name;
+  $('exploreTitle').textContent = '';
 
+  const terrainImages =
+    TERRAIN_IMAGES[tile.t] || [];
+
+  const safeImageIndex =
+    terrainImages.length > 0
+      ? (tile.imageIndex || 0) % terrainImages.length
+      : 0;
+
+  const terrainImage =
+    terrainImages[safeImageIndex];
 
   $('explorePreview').innerHTML = `
     <div class="target-icon">
-      ${T[tile.t].icon}
+
+      ${
+        terrainImage
+          ? `
+            <img
+              src="${terrainImage}"
+              alt="${T[tile.t].name}"
+            >
+          `
+          : T[tile.t].icon
+      }
+
     </div>
 
-    <div>
-      拠点から ${distance} マス
+    <div class="target-info">
+
+      <strong>
+        ${T[tile.t].name}
+      </strong>
+
+      <span>
+        拠点から ${distance} マス
+      </span>
+    </div>
+
+    <div class="target-costs">
+      <span class="target-cost-item">
+        <img
+          src="images/UI/hunger.png"
+          alt="食料"
+        >
+         -${cost}
+      </span>
+
+              ${
+          S.hunger < cost
+            ? `
+              <small>
+                ⚠ 空腹不足分もライフ減少
+              </small>
+            `
+            : ''
+        }
+
+      <span class="target-cost-item">
+        <img
+          src="images/UI/life.png"
+          alt="ライフ"
+        >
+         -${damage}
+      </span>
+
     </div>
   `;
-
-
-  $('travelCost').innerHTML =
-    `🍖 空腹 -${cost}　` +
-    `❤️ ダメージ -${damage}` +
-    (
-      S.hunger < cost
-        ? '　⚠ 空腹不足分もライフ減少'
-        : ''
-    );
-
 
   $('resourcePreview').innerHTML =
     preview(tile);
@@ -1646,24 +1794,21 @@ function openGateControl(tile) {
 
   if (S.compass) {
 
-    $('travelCost').innerHTML =
-      '🧭 コンパスが強く反応している。';
-
-    $('resourcePreview').innerHTML =
-      'ゲートを起動できそうだ。';
+    $('resourcePreview').innerHTML = `
+      🧭 コンパスが強く反応している。<br>
+      ゲートを起動できそうだ。
+    `;
 
   }
 
   else {
 
-    $('travelCost').innerHTML =
-      'ゲートは反応しない。';
-
-    $('resourcePreview').innerHTML =
-      '🧭 起動にはコンパスが必要なようだ。';
+    $('resourcePreview').innerHTML = `
+      ゲートは反応しない。<br>
+      🧭 起動にはコンパスが必要なようだ。
+    `;
 
   }
-
 
   const button =
     $('confirmExplore');
@@ -1927,7 +2072,7 @@ if (result.rare) {
       S.yellow += amount;
     }
 
-    if (rareName === 'レア食料') {
+    if (rareName === '食料') {
       S.food += amount;
     }
   }
@@ -2288,7 +2433,7 @@ function showExploreResult(result) {
 
       '黄色い宝石': '🟡',
 
-      'レア食料': '🍖'
+      '食料': '🍖'
 
     };
 

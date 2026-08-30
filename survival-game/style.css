@@ -863,49 +863,46 @@ h2 {
 }
 
 .resource-preview {
-  display: grid;
-
-  grid-template-columns:
-    repeat(2, 1fr);
-
-  gap: 7px;
+  display: block;
 }
 
-.resource-chip {
-  display: grid;
+.resource-preview-normal,
+.resource-preview-rare {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 
-  grid-template-columns:
-    32px 1fr;
+  gap: 14px;
+}
 
-  grid-template-rows:
-    auto auto;
+.resource-preview-rare {
+  margin-top: 10px;
+}
 
+.resource-inline {
+  display: flex;
   align-items: center;
 
-  padding: 8px;
-
-  background: #d7c59e;
-
-  border:
-    1px solid #8c754d;
+  gap: 4px;
 }
 
-.resource-chip span {
-  grid-row: 1 / span 2;
+.resource-inline img {
+  width: 30px;
+  height: 30px;
 
-  font-size: 24px;
-
-  text-align: center;
+  object-fit: contain;
+  display: block;
 }
 
-.resource-chip b {
-  font-size: 12px;
+.resource-inline span {
+  font-size: 14px;
+  font-weight: bold;
+
+  white-space: nowrap;
 }
 
-.resource-chip small {
-  font-size: 10px;
-
-  color: #6d5d42;
+.rare-resource span {
+  font-size: 18px;
 }
 
 .preview-note {
@@ -1886,4 +1883,31 @@ h2 {
 
   text-align: center;
   font-weight: bold;
+}
+
+/* =========================================================
+   探索モーダルのアイコン
+========================================================= */
+.target-icon img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+  display: block;
+}
+
+.target-cost-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.target-cost-item img {
+  width: 30px;
+  height: 30px;
+
+  object-fit: contain;
+  display: block;
+
+  flex-shrink: 0;
 }
