@@ -2351,7 +2351,7 @@ function showExploreResult(result) {
   if (result.food > 0) {
 
     items.push({
-      icon: '🍖',
+      image: 'images/UI/materials_food.png',
       name: '食料',
       amount: result.food,
       rare: false
@@ -2363,7 +2363,7 @@ function showExploreResult(result) {
   if (result.grass > 0) {
 
     items.push({
-      icon: '🌿',
+      image: 'images/UI/materials_grass.png',
       name: '草',
       amount: result.grass,
       rare: false
@@ -2375,7 +2375,7 @@ function showExploreResult(result) {
   if (result.wood > 0) {
 
     items.push({
-      icon: '🪵',
+      image: 'images/UI/materials_wood.png',
       name: '木材',
       amount: result.wood,
       rare: false
@@ -2387,7 +2387,7 @@ function showExploreResult(result) {
   if (result.stone > 0) {
 
     items.push({
-      icon: '🪨',
+      image: 'images/UI/materials_stone.png',
       name: '石材',
       amount: result.stone,
       rare: false
@@ -2395,10 +2395,11 @@ function showExploreResult(result) {
 
   }
 
+
   if (result.red > 0) {
 
     items.push({
-      icon: '🔴',
+      image: 'images/UI/materials_gem_red.png',
       name: '赤い宝石',
       amount: result.red,
       rare: false
@@ -2410,7 +2411,7 @@ function showExploreResult(result) {
   if (result.blue > 0) {
 
     items.push({
-      icon: '🔵',
+      image: 'images/UI/materials_gem_blue.png',
       name: '青い宝石',
       amount: result.blue,
       rare: false
@@ -2418,32 +2419,42 @@ function showExploreResult(result) {
 
   }
 
+
   /* =====================================================
-     レア
+     レア素材
   ===================================================== */
+
   if (result.rare) {
 
-    const rareIcons = {
+    const rareImages = {
 
-      '毛皮': '🧥',
+      '食料':
+        'images/UI/materials_food.png',
 
-      '赤い宝石': '🔴',
+      'レア食料':
+        'images/UI/materials_food.png',
 
-      '青い宝石': '🔵',
+      '毛皮':
+        'images/UI/materials_fur.png',
 
-      '黄色い宝石': '🟡',
+      '赤い宝石':
+        'images/UI/materials_gem_red.png',
 
-      '食料': '🍖'
+      '青い宝石':
+        'images/UI/materials_gem_blue.png',
+
+      '黄色い宝石':
+        'images/UI/materials_gem_yellow.png'
 
     };
 
 
     items.push({
 
-      icon:
-        rareIcons[
+      image:
+        rareImages[
           result.rare.name
-        ] || '✨',
+        ] || '',
 
       name:
         result.rare.name,
@@ -2455,20 +2466,33 @@ function showExploreResult(result) {
 
     });
 
-    
   }
 
+
   /* =====================================================
-     ゲートでの発見物
+     ゲート初回報酬
   ===================================================== */
+
   if (result.gateReward) {
+
     items.push({
-      icon: '🟡',
-      name: '黄色い宝石',
-      amount: 1,
-      rare: true
+
+      image:
+        'images/UI/materials_gem_yellow.png',
+
+      name:
+        '黄色い宝石',
+
+      amount:
+        1,
+
+      rare:
+        true
+
     });
+
   }
+
 
   /* =====================================================
      食材図鑑発見
@@ -2478,14 +2502,19 @@ function showExploreResult(result) {
 
     items.push({
 
-      icon: '📖',
+      image: null,
 
       name:
         `新しい食材：${result.discoveredFood[1]}`,
 
-      amount: null,
+      amount:
+        null,
 
-      rare: true
+      rare:
+        true,
+
+      discovery:
+        true
 
     });
 
@@ -2523,9 +2552,29 @@ function showExploreResult(result) {
                   "
                 >
 
-                  <span>
-                    ${item.icon}
-                    ${item.name}
+                  <span class="result-resource">
+
+                    ${
+                      item.discovery
+                        ? `
+                          <span class="result-book-icon">
+                            📖
+                          </span>
+                        `
+                        : item.image
+                          ? `
+                            <img
+                              src="${item.image}"
+                              alt="${item.name}"
+                            >
+                          `
+                          : ''
+                    }
+
+                    <span>
+                      ${item.name}
+                    </span>
+
                   </span>
 
                   ${
