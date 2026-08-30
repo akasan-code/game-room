@@ -394,8 +394,109 @@ function stopCharacterAnimation() {
 }
 
 /* =========================================================
-   食材図鑑
+   食材図鑑マスタ
 ========================================================= */
+const FOOD_MASTER = [
+
+  {
+    id: 'butterfly_berry',
+    name: '蝶ベリー',
+    image: 'images/foods/butterfly_berry.png',
+    background: 'images/foods/flame.png',
+    terrain: 'grass',
+    flavor: 'とっても素敵なベリー',
+    weight: 70
+  },
+  {
+    id: 'bolt_mushroom',
+    name: '稲妻キノコ',
+    image: 'images/foods/bolt_mushroom.png',
+    background: 'images/foods/flame.png',
+    terrain: 'grass',
+    flavor: '食べるとビリビリするけど、毒じゃないよ…ね？',
+    weight: 15
+  },
+  {
+    id: 'bread_grass',
+    name: '小麦パン',
+    image: 'images/foods/bread_grass.png',
+    background: 'images/foods/flame.png',
+    terrain: 'grass',
+    flavor: '焼かなくても良いなんて便利だわ',
+    weight: 5
+  },
+  {
+    id: 'bunny_chicken',
+    name: 'ウサニワトリ',
+    image: 'images/foods/bunny_chicken.png',
+    background: 'images/foods/flame.png',
+    terrain: 'grass',
+    flavor: 'これはトリ肉？ウサギ肉？',
+    weight: 5
+  },
+  {
+    id: 'honey_gummi',
+    name: 'ハニーグミ',
+    image: 'images/foods/honey_gummi.png',
+    background: 'images/foods/flame.png',
+    terrain: 'grass',
+    flavor: 'この世界でグミが食べられるなんて思わなかったわ',
+    weight: 3
+  },
+  {
+    id: 'moon_apple',
+    name: '月見リンゴ',
+    image: 'images/foods/moon_apple.png',
+    background: 'images/foods/flame.png',
+    terrain: 'grass',
+    flavor: '美味しすぎて月へ飛ばされそう',
+    weight: 2
+  },
+
+  {
+    id: 'bottle_fish',
+    name: '瓶詰め魚',
+    image: 'images/foods/bottle_fish.png',
+    background: 'images/foods/flame.png',
+    terrain: 'pond',
+    flavor: 'よかった…私、魚は触れなかったの',
+    weight: 50
+  },
+  {
+    id: 'egg',
+    name: '何かのタマゴ',
+    image: 'images/foods/egg.png',
+    background: 'images/foods/flame.png',
+    terrain: 'pond',
+    flavor: 'タマゴ…よね？…',
+    weight: 30
+  },
+  {
+    id: 'vegetable_ice',
+    name: 'ベジタブルアイス',
+    image: 'images/foods/vegetable_ice.png',
+    background: 'images/foods/flame.png',
+    terrain: 'pond',
+    flavor: 'なんだか得した気分♪',
+    weight: 20
+  },
+
+];
+
+
+/* =========================================================
+   食材発見率
+========================================================= */
+const FOOD_DISCOVERY_RATE = {
+
+  grass: 0.35,
+  forest: 0.35,
+  rock: 0.35,
+  pond: 0.35,
+  cave: 0.35,
+  waste: 0.35
+
+};
 
 const foods = [
   ['fish', 'さかながぐつ', '💧'],
