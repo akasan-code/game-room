@@ -1249,6 +1249,16 @@ h2 {
   color: #34261b;
 }
 
+.food-book-location {
+  margin-top: 3px;
+
+  text-align: center;
+
+  font-size: 12px;
+  font-weight: bold;
+
+  color: #6a5844;
+}
 
 /* =========================================================
    フレーバーテキスト
