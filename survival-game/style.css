@@ -800,6 +800,33 @@ h2 {
     0 50%
   );
 
+  /* =========================================================
+   探索モーダルのアイコン
+========================================================= */
+.target-icon img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+  display: block;
+}
+
+.target-cost-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.target-cost-item img {
+  width: 30px;
+  height: 30px;
+
+  object-fit: contain;
+  display: block;
+
+  flex-shrink: 0;
+}
+
   filter: none;
 }
 
@@ -1072,27 +1099,191 @@ h2 {
   max-width: 680px;
 }
 
-.book-grid {
+/* =========================================================
+   食材図鑑
+========================================================= */
+
+#book {
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  grid-template-columns:
-    repeat(3, 1fr);
+  gap: 12px;
 
-  gap: 8px;
+  padding: 6px;
 }
 
+
+/* 図鑑カード */
 .book-card {
-  background: #1c2118;
+  position: relative;
 
-  padding: 10px;
+  padding: 8px;
 
-  border-radius: 8px;
+  border: 2px solid rgba(71, 55, 38, 0.75);
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #efe1bc 0%,
+      #dbc58f 100%
+    );
+
+  box-shadow:
+    inset 0 0 12px rgba(70, 45, 20, 0.2),
+    0 2px 5px rgba(0, 0, 0, 0.25);
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   食材画像部分
+========================================================= */
+
+.food-art {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.food-book-image {
+  position: relative;
+
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  overflow: hidden;
+
+  border-radius: 7px;
+}
+
+
+/* 背景画像 */
+.food-book-background {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+
+/* 食材本体 */
+.food-book-main {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 82%;
+  height: 82%;
+
+  transform:
+    translate(-50%, -50%);
+
+  object-fit: contain;
+
+  display: block;
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   食材名
+========================================================= */
+
+.food-book-name {
+  margin-top: 7px;
 
   text-align: center;
+
+  font-size: 15px;
+  font-weight: bold;
+
+  color: #34261b;
 }
 
-.book-card .food-art {
-  font-size: 42px;
+
+/* =========================================================
+   フレーバーテキスト
+========================================================= */
+
+.food-flavor {
+  margin:
+    7px 3px
+    2px;
+
+  padding-top: 6px;
+
+  border-top:
+    1px dashed
+    rgba(80, 57, 35, 0.4);
+
+  font-family: "Yomogi", cursive;
+
+  font-size: 14px;
+  line-height: 1.7;
+
+  color: #51402f;
+
+  transform:
+    rotate(-0.3deg);
+}
+
+
+/* =========================================================
+   未発見
+========================================================= */
+
+.book-card.locked {
+  background:
+    linear-gradient(
+      180deg,
+      #777168,
+      #4f4b46
+    );
+
+  opacity: 1;
+}
+/* 未発見食材をシルエット化 */
+.book-card.locked .food-book-main {
+  filter: brightness(0);
+  opacity: 0.82;
+}
+
+.food-book-unknown {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 46px;
+  font-weight: bold;
+
+  color: rgba(255, 255, 255, 0.4);
+
+  background:
+    rgba(20, 20, 20, 0.25);
+
+  border-radius: 7px;
+}
+
+
+.book-card.locked .food-book-name {
+  color:
+    rgba(255, 255, 255, 0.55);
 }
 
 .locked {
@@ -1925,29 +2116,3 @@ h2 {
   font-weight: bold;
 }
 
-/* =========================================================
-   探索モーダルのアイコン
-========================================================= */
-.target-icon img {
-  width: 100%;
-  height: 100%;
-
-  object-fit: contain;
-  display: block;
-}
-
-.target-cost-item {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.target-cost-item img {
-  width: 30px;
-  height: 30px;
-
-  object-fit: contain;
-  display: block;
-
-  flex-shrink: 0;
-}

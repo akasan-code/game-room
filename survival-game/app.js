@@ -404,7 +404,7 @@ const FOOD_MASTER = [
     image: 'images/foods/butterfly_berry.png',
     background: 'images/foods/flame.png',
     terrain: 'grass',
-    flavor: 'とっても素敵なベリー',
+    flavor: '蝶みたいに綺麗なベリー……おいしそうね',
     weight: 70
   },
   {
@@ -413,7 +413,7 @@ const FOOD_MASTER = [
     image: 'images/foods/bolt_mushroom.png',
     background: 'images/foods/flame.png',
     terrain: 'grass',
-    flavor: '食べるとビリビリするけど、毒じゃないよ…ね？',
+    flavor: '食べるとビリビリするけど、毒じゃないよ……ね？',
     weight: 15
   },
   {
@@ -422,7 +422,7 @@ const FOOD_MASTER = [
     image: 'images/foods/bread_grass.png',
     background: 'images/foods/flame.png',
     terrain: 'grass',
-    flavor: '焼かなくても良いなんて便利だわ',
+    flavor: '採れたてって、焼きたてと同じ意味だったのね',
     weight: 5
   },
   {
@@ -431,7 +431,7 @@ const FOOD_MASTER = [
     image: 'images/foods/bunny_chicken.png',
     background: 'images/foods/flame.png',
     terrain: 'grass',
-    flavor: 'これはトリ肉？ウサギ肉？',
+    flavor: 'これはトリ肉……ウサギ肉……どっちになるのかしら？',
     weight: 5
   },
   {
@@ -440,7 +440,7 @@ const FOOD_MASTER = [
     image: 'images/foods/honey_gummi.png',
     background: 'images/foods/flame.png',
     terrain: 'grass',
-    flavor: 'この世界でグミが食べられるなんて思わなかったわ',
+    flavor: 'この世界でグミが食べられるなんて、思わなかったわ',
     weight: 3
   },
   {
@@ -449,7 +449,7 @@ const FOOD_MASTER = [
     image: 'images/foods/moon_apple.png',
     background: 'images/foods/flame.png',
     terrain: 'grass',
-    flavor: '美味しすぎて月へ飛ばされそう',
+    flavor: '月って、こんな味なのかしら',
     weight: 2
   },
 
@@ -459,7 +459,7 @@ const FOOD_MASTER = [
     image: 'images/foods/bottle_fish.png',
     background: 'images/foods/flame.png',
     terrain: 'pond',
-    flavor: 'よかった…私、魚は触れなかったの',
+    flavor: 'よかった……私、魚は触れなかったの',
     weight: 50
   },
   {
@@ -468,7 +468,7 @@ const FOOD_MASTER = [
     image: 'images/foods/egg.png',
     background: 'images/foods/flame.png',
     terrain: 'pond',
-    flavor: 'タマゴ…よね？…',
+    flavor: '…… 生まれる前に食べないとね',
     weight: 30
   },
   {
@@ -483,6 +483,14 @@ const FOOD_MASTER = [
 
 ];
 
+const FOOD_TERRAIN_NAMES = {
+  grass: '草原',
+  forest: '森',
+  rock: '岩場',
+  pond: '池',
+  cave: '洞窟',
+  waste: '荒地'
+};
 
 /* =========================================================
    食材発見率
@@ -492,21 +500,34 @@ const FOOD_DISCOVERY_RATE = {
   grass: 0.35,
   forest: 0.35,
   rock: 0.35,
-  pond: 0.35,
+  pond: 0.60,
   cave: 0.35,
   waste: 0.35
 
 };
 
-const foods = [
-  ['fish', 'さかながぐつ', '💧'],
-  ['otamame', 'おたまじゃくし豆', '🫘'],
-  ['umashika', 'ウマシカ', '🌲'],
-  ['kutsu', 'くつかぼちゃ', '🌿'],
-  ['benri', '荒地ベンリ菜', '🏜️'],
-  ['denki', '電気きのこ', '🕳️']
-];
+/* =========================================================
+   食材 weight 抽選
+========================================================= */
+function pickWeightedFood(foods) {
 
+  if (!foods.length) {
+    return null;
+  }
+
+  const totalWeight = foods.reduce((sum, food) => sum + food.weight, 0);
+
+  let roll = Math.random() * totalWeight;
+
+  for (const food of foods) {
+    roll -= food.weight;
+    if (roll < 0) {
+      return food;
+    }
+  }
+
+  return foods[foods.length - 1];
+}
 
 /* =========================================================
    トースト
@@ -2114,26 +2135,25 @@ function createExploreResult(tile) {
     result.isRare = true;
   }
 
-  const foundFoods =
-    foods.filter(
-      food =>
-        food[2] === terrain.icon
+  /* =====================================================
+    食材図鑑 発見判定
+  ===================================================== */
+  const undiscoveredFoods =
+    FOOD_MASTER.filter(food =>
+      // 今回の地形で発見できる?
+      food.terrain === tile.t &&
+
+      // まだ図鑑登録されていない
+      !S.book[food.id]
     );
 
-  if (
-    foundFoods.length &&
-    Math.random() < 0.35
-  ) {
-    result.discoveredFood =
-      foundFoods[
-        R(0, foundFoods.length - 1)
-      ];
+  const discoveryRate = FOOD_DISCOVERY_RATE[tile.t] || 0;
+
+  if (undiscoveredFoods.length > 0 && Math.random() < discoveryRate) {
+    result.discoveredFood = pickWeightedFood(undiscoveredFoods);
   }
 
-  if (
-    tile.t === 'gate' &&
-    !S.gateRewardClaimed
-  ) {
+  if (tile.t === 'gate' && !S.gateRewardClaimed) {
     result.gateReward = true;
   }
 
@@ -2187,7 +2207,7 @@ if (result.rare) {
   }
 
   if (result.discoveredFood) {
-    S.book[result.discoveredFood[0]] = 1;
+    S.book[result.discoveredFood.id] = 1;
   }
 
 }
@@ -2215,7 +2235,7 @@ async function playExploreAnimation(terrainId, result) {
   stopCharacterAnimation();
   await wait(150);
 
-  if (result.isRare) {
+  if (result.isRare || result.discoveredFood) {
     startCharacterAnimation('discover');
 
     if (discoveryMark) {
@@ -2600,27 +2620,14 @@ function showExploreResult(result) {
   ===================================================== */
 
   if (result.discoveredFood) {
-
     items.push({
-
-      image: null,
-
-      name:
-        `新しい食材：${result.discoveredFood[1]}`,
-
-      amount:
-        null,
-
-      rare:
-        true,
-
-      discovery:
-        true
-
+      image: result.discoveredFood.image,
+      name: `新しい食材：${result.discoveredFood.name}`,
+      amount: null,
+      rare: true,
+      discovery: true
     });
-
   }
-
 
   /* =====================================================
      HTML生成
@@ -2656,22 +2663,15 @@ function showExploreResult(result) {
                   <span class="result-resource">
 
                     ${
-                      item.discovery
+                      item.image
                         ? `
-                          <span class="result-book-icon">
-                            📖
-                          </span>
+                          <img
+                            src="${item.image}"
+                            alt="${item.name}"
+                          >
                         `
-                        : item.image
-                          ? `
-                            <img
-                              src="${item.image}"
-                              alt="${item.name}"
-                            >
-                          `
-                          : ''
+                        : ''
                     }
-
                     <span>
                       ${item.name}
                     </span>
@@ -3219,45 +3219,74 @@ function renderFacilities() {
 /* =========================================================
    食材図鑑
 ========================================================= */
-
 function renderBook() {
+
   $('book').innerHTML =
-    foods
+    FOOD_MASTER
       .map(food => {
+
         const discovered =
-          !!S.book[food[0]];
+          !!S.book[food.id];
+
 
         return `
           <div
-            class="book-card ${
-              discovered
-                ? ''
-                : 'locked'
-            }"
+            class="
+              book-card
+              ${discovered ? '' : 'locked'}
+            "
           >
 
             <div class="food-art">
-              ${
-                discovered
-                  ? food[2]
-                  : '?'
-              }
+
+              <div class="food-book-image">
+
+                <img
+                  class="food-book-background"
+                  src="${food.background}"
+                  alt=""
+                >
+
+                <img
+                  class="food-book-main"
+                  src="${food.image}"
+                  alt="${discovered ? food.name : '未発見'}"
+                >
+
+              </div>
+
             </div>
 
-            <div>
+
+            <div class="food-book-name">
               ${
                 discovered
-                  ? food[1]
+                  ? food.name
                   : '？？？'
               }
             </div>
 
+            <div class="food-book-location">
+              見つかる場所：${FOOD_TERRAIN_NAMES[food.terrain] || '不明'}
+            </div>
+
+            ${
+              discovered
+                ? `
+                  <p class="food-flavor">
+                    ${food.flavor}
+                  </p>
+                `
+                : ''
+            }
+
           </div>
         `;
+
       })
       .join('');
-}
 
+}
 
 /* =========================================================
    イベント
