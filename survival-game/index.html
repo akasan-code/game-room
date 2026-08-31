@@ -84,12 +84,14 @@
     ==================================================== -->
 
     <section class="status-area">
-
+      <!-- 空腹度とライフエリア-->
       <div class="status-row">
-
         <div class="status-card">
           <div class="status-title">
-            🍖 空腹度
+            <div class="status-label">
+              <img class="status-icon" src="images/UI/hunger.png" alt="空腹度">
+              <span>空腹度</span>
+            </div>
             <b id="hungerText"></b>
           </div>
           <div class="bar">
@@ -99,14 +101,16 @@
 
         <div class="status-card">
           <div class="status-title">
-            ❤️ ライフ
+            <div class="status-label">
+              <img class="status-icon" src="images/UI/life.png" alt="ライフ">
+              <span>ライフ</span>
+            </div>
             <b id="lifeText"></b>
           </div>
           <div class="bar life">
             <i id="lifeBar"></i>
           </div>
         </div>
-
       </div>
 
       <div id="characterArea" class="character-area">
