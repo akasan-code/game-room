@@ -56,6 +56,9 @@ const S = {
   blue: 0,
   yellow: 0,
 
+  // 黄色い宝石を一度でも入手すると解放
+  specialFacilityUnlocked: false,
+
   fac: {
     base: 0,
     kitchen: 0,
@@ -750,6 +753,8 @@ function init() {
   S.red = 0;
   S.blue = 0;
   S.yellow = 0;
+
+  S.specialFacilityUnlocked = false;
 
   S.fac = {
     base: 0,
@@ -2191,6 +2196,7 @@ if (result.rare) {
 
     if (rareName === '黄色い宝石') {
       S.yellow += amount;
+      S.specialFacilityUnlocked = true;
     }
 
     if (rareName === '食料') {
@@ -2203,6 +2209,7 @@ if (result.rare) {
     !S.gateRewardClaimed
   ) {
     S.yellow += 1;
+    S.specialFacilityUnlocked = true;
     S.gateRewardClaimed = true;
   }
 
@@ -3076,24 +3083,64 @@ function renderFacilities() {
         */
         if (id === 'fridge') {
 
-          return `
-            <button class="facility" data-special-facility="fridge">
-              <div class="facility-image-wrap">
-                <img class="facility-image" src="images/goods_fridge.png" alt="冷蔵庫"
-                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          const built =
+            S.maxHunger > 100;
 
-                <div class="facility-fallback" style="display:none">
-                  🧊
-                </div>
+          const unlocked =
+            S.specialFacilityUnlocked;
+
+          return `
+            <button
+              class="
+                facility
+                ${!unlocked ? 'special-hidden' : ''}
+                ${unlocked && !built ? 'special-silhouette' : ''}
+              "
+              data-special-facility="fridge"
+              ${!unlocked ? 'disabled' : ''}
+            >
+
+              <div class="facility-image-wrap">
+
+                ${
+                  !unlocked
+                    ? ''
+                    : `
+                      <img
+                        class="facility-image"
+                        src="images/goods_fridge.png"
+                        alt="冷蔵庫"
+                        onerror="
+                          this.style.display='none';
+                          this.nextElementSibling.style.display='flex';
+                        "
+                      >
+
+                      <div
+                        class="facility-fallback"
+                        style="display:none"
+                      >
+                        🧊
+                      </div>
+                    `
+                }
+
               </div>
-              <div class="facility-name">冷蔵庫</div>
+
+              <div class="facility-name">
+                ${unlocked ? '冷蔵庫' : ''}
+              </div>
+
               <div class="facility-level">
                 ${
-                  S.maxHunger > 100
-                    ? '建設済'
-                    : '未建設'
+                  !unlocked
+                    ? ''
+                    : built
+                      ? '建設済'
+                      : '未建設'
                 }
               </div>
+
             </button>
           `;
         }
@@ -3103,25 +3150,64 @@ function renderFacilities() {
         */
         if (id === 'compass') {
 
-          return `
-            <button class="facility" data-special-facility="compass">
-              <div class="facility-image-wrap">
-                <img class="facility-image" src="images/goods_compass.png" alt="コンパス"
-                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          const built =
+            S.compass;
 
-                <div class="facility-fallback" style="display:none">
-                  🧭
-                </div>
+          const unlocked =
+            S.specialFacilityUnlocked;
+
+          return `
+            <button
+              class="
+                facility
+                ${!unlocked ? 'special-hidden' : ''}
+                ${unlocked && !built ? 'special-silhouette' : ''}
+              "
+              data-special-facility="compass"
+              ${!unlocked ? 'disabled' : ''}
+            >
+
+              <div class="facility-image-wrap">
+
+                ${
+                  !unlocked
+                    ? ''
+                    : `
+                      <img
+                        class="facility-image"
+                        src="images/goods_compass.png"
+                        alt="コンパス"
+                        onerror="
+                          this.style.display='none';
+                          this.nextElementSibling.style.display='flex';
+                        "
+                      >
+
+                      <div
+                        class="facility-fallback"
+                        style="display:none"
+                      >
+                        🧭
+                      </div>
+                    `
+                }
+
               </div>
 
-              <div class="facility-name">コンパス</div>
+              <div class="facility-name">
+                ${unlocked ? 'コンパス' : ''}
+              </div>
+
               <div class="facility-level">
                 ${
-                  S.compass
-                    ? '建設済'
-                    : '未建設'
+                  !unlocked
+                    ? ''
+                    : built
+                      ? '建設済'
+                      : '未建設'
                 }
               </div>
+
             </button>
           `;
         }

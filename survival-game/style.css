@@ -1587,6 +1587,13 @@ h2 {
   opacity: .4;
   cursor: not-allowed;
 }
+.special-silhouette .facility-image {
+  filter: brightness(0);
+  opacity: 0.85;
+}
+.special-hidden .facility-image-wrap {
+  min-height: 72px;
+}
 /* =========================================================
    2026-08 探索演出・ステータス配置 調整
 ========================================================= */
