@@ -2720,11 +2720,13 @@ function showExploreResult(result) {
 function recoverLifeFromBase() {
 
   const recovery =
-    S.fac.base === 2
-      ? 2
-      : S.fac.base === 1
-        ? 1
-        : 0;
+    S.fac.base === 3
+      ? 3
+      : S.fac.base === 2
+        ? 2
+        : S.fac.base === 1
+          ? 1
+          : 0;
 
 
   if (recovery <= 0) {
@@ -2788,56 +2790,118 @@ const FACILITIES = {
   base: {
     name: '拠点',
     icon: '🏕️',
+
+    initialName: '大地',
+    initialFlavor: 'とっても広いお部屋だわ',
+
     images: [
       'images/base_lv0.png',
       'images/base_lv1.png',
-      'images/base_lv2.png'
+      'images/base_lv2.png',
+      'images/base_lv3.png'
     ],
+
     levels: [
-      { name: '藁の寝床', cost: { grass: 5 }, effect: '1日ごとにライフ +1' },
-      { name: '簡易小屋', cost: { grass: 10, wood: 5, stone: 2}, effect: '1日ごとにライフ +2' }
+      {
+        name: '藁の寝床',
+        cost: {
+          grass: 5
+        },
+        effect: '1日ごとにライフ +1',
+        flavor: '馬舎の子たちも、暖かかったのね'
+      },
+
+      {
+        name: '簡易小屋',
+        cost: {
+          grass: 10,
+          wood: 5,
+          stone: 2
+        },
+        effect: '1日ごとにライフ +2',
+        flavor: 'こう……屋根があると落ち着かないわね'
+      },
+
+      {
+        name: '藁の家',
+        cost: {
+          grass: 50,
+          wood: 5
+        },
+        effect: '1日ごとにライフ +3',
+        flavor: '藁の家って、吹き飛ばされそうでちょっと不吉よね'
+      }
     ]
   },
 
   kitchen: {
     name: '食堂',
     icon: '🔥',
+
+    initialName: '1枚のお皿',
+    initialFlavor: 'お皿に盛り付ければ、ごちそうのできあがりよ',
+
     images: [
       'images/kitchen_lv0.png',
       'images/kitchen_lv1.png',
       'images/kitchen_lv2.png'
     ],
+
     levels: [
-      { name: '焚き火', cost: { wood: 5 }, effect: '食事回復量 10 → 12' },
-      { name: '電気鍋', cost: { stone: 5, red: 1 }, effect: '食事回復量 12 → 15' }
+      {
+        name: '焚き火',
+        cost: {
+          wood: 5
+        },
+        effect: '食事回復量 10 → 12',
+        flavor: '焼いてみれば、なんでもおいしくなるわ'
+      },
+
+      {
+        name: '電気鍋',
+        cost: {
+          stone: 5,
+          red: 1
+        },
+        effect: '食事回復量 12 → 15',
+        flavor: 'なんでも作れる魔法の鍋……ただの電気鍋ね'
+      }
     ]
   },
 
   weapon: {
     name: '武器',
     icon: '⚔️',
+
+    initialName: 'KOBUSHI',
+    initialFlavor: '拳があれば、なんとかなるわ',
+
     images: [
       'images/weapon_lv0.png',
       'images/weapon_lv1.png',
       'images/weapon_lv2.png'
     ],
     levels: [
-      { name: '木の棍棒', cost: { wood: 5 }, effect: '探索ダメージを20%軽減' },
-      { name: '石の槍', cost: { stone: 5, fur: 1 }, effect: '探索ダメージを50%軽減' }
+      { name: '木の棍棒', cost: { wood: 5 }, effect: '探索ダメージを20%軽減' ,flavor: 'ただの棒でも心強いわね'},
+      { name: '石の槍', cost: { stone: 5, fur: 1 }, effect: '探索ダメージを50%軽減' ,flavor: '構えて...突く、それだけね'}
     ]
   },
 
   armor: {
     name: '防具',
     icon: '🛡️',
+
+    initialName: 'エア盾',
+    initialFlavor: 'エア盾って魔法の盾みたいでかっこいい',
+
     images: [
       'images/armor_lv0.png',
       'images/armor_lv1.png',
       'images/armor_lv2.png'
     ],
     levels: [
-      { name: '木の盾', cost: { wood: 5 }, effect: '最大ライフ 100 → 120' },
-      { name: '石の盾', cost: { stone: 5, fur: 1 }, effect: '最大ライフ 120 → 150' }
+      { name: '木の盾', cost: { wood: 5 }, effect: '最大ライフ 100 → 120' ,flavor: '……現実ってこういうのよね'},
+      { name: '石の盾', cost: { stone: 5, fur: 1 }, effect: '最大ライフ 120 → 150' ,flavor: 'これ、毎日持ってたらムキムキになりそうね……'}
     ]
   }
 };
@@ -2850,6 +2914,16 @@ const RESOURCE_NAMES = {
   red: '赤い宝石',
   blue: '青い宝石',
   yellow: '黄色い宝石'
+};
+
+const RESOURCE_IMAGES = {
+  grass: 'images/UI/materials_grass.png',
+  wood: 'images/UI/materials_wood.png',
+  stone: 'images/UI/materials_stone.png',
+  fur: 'images/UI/materials_fur.png',
+  red: 'images/UI/materials_gem_red.png',
+  blue: 'images/UI/materials_gem_blue.png',
+  yellow: 'images/UI/materials_gem_yellow.png'
 };
 
 function canPayCost(cost) {
@@ -2866,6 +2940,20 @@ function costText(cost) {
   return Object.entries(cost)
     .map(([key, amount]) => `${RESOURCE_NAMES[key]} ×${amount}`)
     .join('　');
+}
+
+function costHtml(cost) {
+  return Object.entries(cost)
+    .map(([key, amount]) => `
+      <div class="facility-cost-item">
+        <img
+          src="${RESOURCE_IMAGES[key]}"
+          alt="${RESOURCE_NAMES[key]}"
+        >
+        <span>${amount}</span>
+      </div>
+    `)
+    .join('');
 }
 
 function imageWithFallback(src, alt, fallback) {
@@ -2911,7 +2999,6 @@ const SPECIAL_FACILITIES = {
 /* =========================================================
    施設確認モーダル
 ========================================================= */
-
 function openFacilityModal(id) {
   const facility = FACILITIES[id];
   if (!facility) return;
@@ -2935,29 +3022,122 @@ function openFacilityModal(id) {
   }
 
   const next = facility.levels[nextLevel - 1];
-  const baseRequirement = id === 'base' || nextLevel <= S.fac.base;
-  const affordable = canPayCost(next.cost);
+
+  const currentName =
+    currentLevel === 0
+      ? facility.initialName
+      : facility.levels[currentLevel - 1].name;
+
+  const currentFlavor =
+    currentLevel === 0
+      ? facility.initialFlavor
+      : facility.levels[currentLevel - 1].flavor;
+
+  const baseRequirement =
+    id === 'base' ||
+    nextLevel <= S.fac.base;
+
+  const affordable =
+    canPayCost(next.cost);
 
   $('facilityDetail').innerHTML = `
     <div class="facility-upgrade-preview">
-      <div>
+
+      <div class="facility-preview-card">
+
         <small>現在</small>
-        ${imageWithFallback(facility.images[currentLevel], `${facility.name} Lv${currentLevel}`, facility.icon)}
-        <strong>Lv${currentLevel}</strong>
+
+        ${imageWithFallback(
+          facility.images[currentLevel],
+          `${facility.name} Lv${currentLevel}`,
+          facility.icon
+        )}
+
+        <strong>
+          Lv${currentLevel}　${currentName}
+        </strong>
+
+        ${
+          currentFlavor
+            ? `
+              <p class="facility-card-flavor">
+                ${currentFlavor}
+              </p>
+            `
+            : ''
+        }
+
       </div>
-      <div class="facility-arrow">→</div>
-      <div>
+
+
+      <div class="facility-arrow">
+        →
+      </div>
+
+
+      <div class="facility-preview-card">
+
         <small>レベルアップ後</small>
-        ${imageWithFallback(facility.images[nextLevel], `${facility.name} Lv${nextLevel}`, facility.icon)}
-        <strong>Lv${nextLevel}　${next.name}</strong>
+
+        ${imageWithFallback(
+          facility.images[nextLevel],
+          `${facility.name} Lv${nextLevel}`,
+          facility.icon
+        )}
+
+        <strong>
+          Lv${nextLevel}　${next.name}
+        </strong>
+
+        ${
+          next.flavor
+            ? `
+              <p class="facility-card-flavor">
+                ${next.flavor}
+              </p>
+            `
+            : ''
+        }
+
       </div>
+
     </div>
 
+
     <div class="facility-modal-copy">
-      <p><b>必要素材</b><br>${costText(next.cost)}</p>
-      <p><b>効果</b><br>${next.effect}</p>
-      ${!baseRequirement ? `<p class="facility-warning">先に拠点を Lv${nextLevel} にしてください。</p>` : ''}
-      ${baseRequirement && !affordable ? '<p class="facility-warning">素材が足りません。</p>' : ''}
+
+      <div class="facility-cost-section">
+        <b>必要素材</b>
+        <div class="facility-cost-list">
+          ${costHtml(next.cost)}
+        </div>
+      </div>
+
+      <p>
+        <b>効果</b><br>
+        ${next.effect}
+      </p>
+
+      ${
+        !baseRequirement
+          ? `
+            <p class="facility-warning">
+              先に拠点を Lv${nextLevel} にしてください。
+            </p>
+          `
+          : ''
+      }
+
+      ${
+        baseRequirement && !affordable
+          ? `
+            <p class="facility-warning">
+              素材が足りません。
+            </p>
+          `
+          : ''
+      }
+
     </div>
   `;
 

@@ -1845,6 +1845,55 @@ h2 {
   font-size: 10px;
 }
 
+.facility-card-flavor {
+  margin: 7px 3px 2px;
+  padding-top: 6px;
+
+  border-top:
+    1px dashed rgba(80, 57, 35, 0.4);
+
+  font-family: "Yomogi", cursive;
+  font-size: 10px;
+  line-height: 1.5;
+
+  color: #51402f;
+
+  text-align: left;
+}
+
+.facility-cost-section {
+  margin-top: 7px;
+}
+
+.facility-cost-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 10px;
+
+  margin-top: 6px;
+}
+
+.facility-cost-item {
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+}
+
+.facility-cost-item img {
+  width: 28px;
+  height: 28px;
+
+  object-fit: contain;
+  display: block;
+}
+
+.facility-cost-item span {
+  font-size: 14px;
+  font-weight: bold;
+}
 
 /* =========================================================
    探索結果
