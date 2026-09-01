@@ -2901,7 +2901,7 @@ const FACILITIES = {
     ],
     levels: [
       { name: '木の盾', cost: { wood: 5 }, effect: '最大ライフ 100 → 120' ,flavor: '……現実ってこういうのよね'},
-      { name: '石の盾', cost: { stone: 5, fur: 1 }, effect: '最大ライフ 120 → 150' ,flavor: 'これ、毎日持ってたらムキムキになりそうね……'}
+      { name: '石の盾', cost: { stone: 5, fur: 1 }, effect: '最大ライフ 120 → 150' ,flavor: '毎日持ってたらムキムキになりそうね……'}
     ]
   }
 };
