@@ -2196,28 +2196,41 @@ function startGateCutscene(hasCompass) {
 
 
   /*
-   * オーバーレイ表示
+   * タップで次のカットへ
+   *
+   * イベント開始時に登録するので、
+   * HTMLの読み込み順に影響されない
    */
-  overlay.hidden = false;
+  overlay.onclick = () => {
+
+    showNextGateCut();
+
+  };
 
 
   /*
-   * 1枚目をすぐ表示
-   */
-  showNextGateCut();
-
-
-  /*
-   * 終了まで待てるPromise
+   * 終了まで待機
    */
   return new Promise(resolve => {
 
     gateCutResolve =
       resolve;
 
+
+    /*
+     * オーバーレイ表示
+     */
+    overlay.hidden =
+      false;
+
+
+    /*
+     * 1枚目表示
+     */
+    showNextGateCut();
+
   });
 }
-
 
 /* =========================================================
    次のカット表示
@@ -3954,22 +3967,6 @@ function renderBook() {
 /* =========================================================
    イベント
 ========================================================= */
-
-/* =========================================================
-   スクラップブックイベント操作
-========================================================= */
-const gateCutsceneOverlay =
-  $('gateCutsceneOverlay');
-
-if (gateCutsceneOverlay) {
-
-  gateCutsceneOverlay.onclick = () => {
-
-    showNextGateCut();
-
-  };
-
-}
 const testGateCutsceneButton =
   $('testGateCutscene');
 
