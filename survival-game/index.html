@@ -75,6 +75,9 @@
           alt=""
         >
       </button>
+<button id="testGateCutscene" type="button">
+  ゲート演出テスト
+</button>
 
     </header>
 
@@ -473,6 +476,31 @@
 
 
   <script src="app.js"></script>
+
+  <!-- =====================================================
+      スクラップブックイベント　ラストイベント
+  ===================================================== -->
+  <div
+    id="gateCutsceneOverlay"
+    class="story-cutscene-overlay"
+    hidden
+  >
+    <div
+      id="gateScrapbook"
+      class="story-scrapbook"
+    >
+
+      <div
+        id="gateCutLayer"
+        class="story-cut-layer"
+      ></div>
+
+      <div class="story-cut-guide">
+        タップして続ける
+      </div>
+
+    </div>
+  </div>
 
 </body>
 </html>

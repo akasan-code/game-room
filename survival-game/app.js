@@ -298,10 +298,23 @@ const EXPLORATION_BACKGROUNDS = {
   gate: 'images/bg/explore_gate.png'
 };
 
+/* =========================================================
+   ゲートイベント画像
+========================================================= */
+const GATE_CUT_IMAGES = [
+  'images/events/gate_cut_1.png',
+  'images/events/gate_cut_2.png',
+  'images/events/gate_cut_3.png',
+  'images/events/gate_cut_4.png',
+  'images/events/gate_cut_5.png',
+  'images/events/gate_cut_6.png'
+];
 
 let characterAnimationTimer = null;
-
-
+let currentGateCut = 0;
+let gateCutInputLocked = false;
+let gateCutHasCompass = false;
+let gateCutResolve = null;
 /* =========================================================
    キャラクターアニメーション開始
 ========================================================= */
@@ -2149,6 +2162,194 @@ function resetExploreAnimation() {
   startCharacterAnimation('idle');
 }
 
+/* =========================================================
+   スクラップブックイベント開始
+========================================================= */
+
+function startGateCutscene(hasCompass) {
+
+  const overlay =
+    $('gateCutsceneOverlay');
+
+  const layer =
+    $('gateCutLayer');
+
+  if (
+    !overlay ||
+    !layer
+  ) {
+    return Promise.resolve();
+  }
+
+
+  /*
+   * 初期化
+   */
+  currentGateCut = 0;
+
+  gateCutInputLocked = false;
+
+  gateCutHasCompass =
+    hasCompass;
+
+  layer.innerHTML = '';
+
+
+  /*
+   * オーバーレイ表示
+   */
+  overlay.hidden = false;
+
+
+  /*
+   * 1枚目をすぐ表示
+   */
+  showNextGateCut();
+
+
+  /*
+   * 終了まで待てるPromise
+   */
+  return new Promise(resolve => {
+
+    gateCutResolve =
+      resolve;
+
+  });
+}
+
+
+/* =========================================================
+   次のカット表示
+========================================================= */
+
+function showNextGateCut() {
+
+  if (gateCutInputLocked) {
+    return;
+  }
+
+
+  const layer =
+    $('gateCutLayer');
+
+  if (!layer) {
+    return;
+  }
+
+
+  /*
+   * コンパスなし
+   * → カット2まで
+   *
+   * コンパスあり
+   * → カット6まで
+   */
+  const maxCuts =
+    gateCutHasCompass
+      ? 6
+      : 2;
+
+
+  /*
+   * 全カット表示済み
+   */
+  if (
+    currentGateCut >= maxCuts
+  ) {
+
+    finishGateCutscene();
+
+    return;
+  }
+
+
+  /*
+   * 入力ロック
+   */
+  gateCutInputLocked =
+    true;
+
+
+  /*
+   * 次のカット番号
+   */
+  currentGateCut++;
+
+
+  const image =
+    document.createElement('img');
+
+
+  image.className =
+    `story-cut story-cut-${currentGateCut}`;
+
+  image.src =
+    GATE_CUT_IMAGES[currentGateCut - 1];
+
+  image.alt =
+    `ゲートイベント ${currentGateCut}`;
+
+
+  /*
+   * 後から追加されたものほど上に
+   */
+  image.style.zIndex =
+    String(currentGateCut);
+
+
+  layer.appendChild(
+    image
+  );
+
+
+  /*
+   * 連打防止
+   */
+  setTimeout(() => {
+
+    gateCutInputLocked =
+      false;
+
+  }, 300);
+}
+
+
+/* =========================================================
+   スクラップブックイベント終了
+========================================================= */
+
+function finishGateCutscene() {
+
+  const overlay =
+    $('gateCutsceneOverlay');
+
+  if (overlay) {
+    overlay.hidden = true;
+  }
+
+
+  currentGateCut = 0;
+
+  gateCutInputLocked = false;
+
+
+  /*
+   * 待機している処理へ戻す
+   */
+  if (gateCutResolve) {
+
+    const resolve =
+      gateCutResolve;
+
+    gateCutResolve =
+      null;
+
+    resolve();
+
+  }
+}
+
 
 /* =========================================================
    探索結果決定
@@ -3754,7 +3955,33 @@ function renderBook() {
    イベント
 ========================================================= */
 
+/* =========================================================
+   スクラップブックイベント操作
+========================================================= */
+const gateCutsceneOverlay =
+  $('gateCutsceneOverlay');
 
+if (gateCutsceneOverlay) {
+
+  gateCutsceneOverlay.onclick = () => {
+
+    showNextGateCut();
+
+  };
+
+}
+const testGateCutsceneButton =
+  $('testGateCutscene');
+
+if (testGateCutsceneButton) {
+
+  testGateCutsceneButton.onclick = () => {
+
+    startGateCutscene(true);
+
+  };
+
+}
 /*
  * START
  */
