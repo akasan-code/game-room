@@ -3047,7 +3047,8 @@ const SPECIAL_FACILITIES = {
       blue: 2,
       stone: 10
     },
-    effect: '空腹最大値 +50'
+    effect: '空腹最大値 +50',
+    flavor: '昨日の残りが今日も食べられる……文明って素敵ね'
   },
 
   compass: {
@@ -3059,7 +3060,8 @@ const SPECIAL_FACILITIES = {
       blue: 1,
       red: 1
     },
-    effect: 'ゲートの位置が分かる'
+    effect: 'ゲートの位置が分かる・起動できる',
+    flavor: '私、どうやってこれを作ったんだろ……'
   }
 };
 
@@ -3248,54 +3250,175 @@ function upgradeFacility(id) {
 }
 
 function openSpecialFacilityModal(type) {
-  const isFridge = type === 'fridge';
-  const built = isFridge ? S.maxHunger > 100 : S.compass;
-  const name = isFridge ? '冷蔵庫' : 'コンパス';
-  const icon = isFridge ? '🧊' : '🧭';
-  const image = isFridge ? 'images/goods_fridge.png' : 'images/goods_compass.png';
-  const cost = isFridge
-    ? { yellow: 1, blue: 2, stone: 10 }
-    : { yellow: 1, blue: 1, red: 1 };
-  const effect = isFridge ? '空腹最大値 +50' : 'ゲートの位置が分かる';
 
-  $('facilityTitle').textContent = name;
+  /*
+   * 未解放なら開かない
+   */
+  if (!S.specialFacilityUnlocked) {
+    return;
+  }
+
+
+  const facility =
+    SPECIAL_FACILITIES[type];
+
+  if (!facility) {
+    return;
+  }
+
+
+  const isFridge =
+    type === 'fridge';
+
+  const built =
+    isFridge
+      ? S.maxHunger > 100
+      : S.compass;
+
+  const affordable =
+    canPayCost(facility.cost);
+
+
+  $('facilityTitle').textContent =
+    facility.name;
+
+
   $('facilityDetail').innerHTML = `
-    ${imageWithFallback(
-      image,
-      name,
-      icon
-    )}
+
+    <div
+      class="
+        special-facility-preview
+        ${built ? '' : 'special-silhouette'}
+      "
+    >
+
+      ${imageWithFallback(
+        facility.image,
+        facility.name,
+        facility.icon
+      )}
+
+      <p class="facility-card-flavor">
+        ${facility.flavor}
+      </p>
+
+    </div>
+
+
     <div class="facility-modal-copy">
-      <strong>${name}</strong>
-      ${built
-        ? '<p>建設済みです。</p>'
-        : `<p><b>必要素材</b><br>${costText(cost)}</p><p><b>効果</b><br>${effect}</p>${!canPayCost(cost) ? '<p class="facility-warning">素材が足りません。</p>' : ''}`}
+
+      ${
+        built
+          ? `
+            <p>
+              建設済みです。
+            </p>
+          `
+          : `
+            <div class="facility-cost-section">
+
+              <b>必要素材</b>
+
+              <div class="facility-cost-list">
+                ${costHtml(facility.cost)}
+              </div>
+
+            </div>
+
+
+            <p>
+              <b>効果</b><br>
+              ${facility.effect}
+            </p>
+
+
+            ${
+              !affordable
+                ? `
+                  <p class="facility-warning">
+                    素材が足りません。
+                  </p>
+                `
+                : ''
+            }
+          `
+      }
+
     </div>
   `;
 
-  const button = $('facilityUpgradeBtn');
-  button.hidden = built;
-  button.disabled = built || !canPayCost(cost);
-  button.textContent = '建設する';
+
+  const button =
+    $('facilityUpgradeBtn');
+
+
+  button.hidden =
+    built;
+
+  button.disabled =
+    built || !affordable;
+
+  button.textContent =
+    '建設する';
+
+
   button.onclick = () => {
-    if (!canPayCost(cost)) return;
-    payCost(cost);
-    if (isFridge) {
-      S.maxHunger = 150;
-    } else {
-      S.compass = true;
+
+    if (
+      built ||
+      !canPayCost(facility.cost)
+    ) {
+      return;
     }
-    closeModal('facilityModal');
+
+
+    payCost(
+      facility.cost
+    );
+
+
+    if (isFridge) {
+
+      S.maxHunger = 150;
+
+    }
+
+    else {
+
+      S.compass = true;
+
+    }
+
+
+    closeModal(
+      'facilityModal'
+    );
+
     render();
 
+
     if (isFridge) {
-      toast('冷蔵庫を建設した');
-    } else {
-      toast('拠点にゲートの方角が表示された');
+
+      toast(
+        '冷蔵庫を建設した'
+      );
+
     }
+
+    else {
+
+      toast(
+        '拠点にゲートの方角が表示された'
+      );
+
+    }
+
   };
 
-  showModal('facilityModal');
+
+  showModal(
+    'facilityModal'
+  );
 }
 
 /* =========================================================
