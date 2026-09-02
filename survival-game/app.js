@@ -664,6 +664,58 @@ function generateGate() {
   }
 }
 
+/* =========================================================
+   拠点からゲートへの方向
+========================================================= */
+function getGateDirectionAngle() {
+
+  /*
+   * ゲート未生成
+   */
+  if (!S.gate) {
+    return 0;
+  }
+
+
+  /*
+   * 拠点から見たゲートのHEX座標差
+   */
+  const dq =
+    S.gate.q - S.base.q;
+
+  const dr =
+    S.gate.r - S.base.r;
+
+
+  /*
+   * renderMap() と同じ座標計算で
+   * 画面上の方向へ変換
+   */
+  const dx =
+    dq * 84;
+
+  const dy =
+    dr * 108 +
+    dq * 54;
+
+
+  /*
+   * atan2 で角度を取得
+   *
+   * 右方向 = 0度
+   * 下方向 = 90度
+   * 左方向 = 180度
+   * 上方向 = -90度
+   */
+  const angle =
+    Math.atan2(dy, dx) *
+    180 /
+    Math.PI;
+
+
+  return angle;
+}
+
 /* マップの外縁を作る　*/
 function generateDarkTiles() {
 
@@ -1464,13 +1516,28 @@ function renderMap() {
       * 拠点
       */
       if (isBase) {
+        // コンパスを持っていたら拠点に矢印を表示する
+        const gateAngle = getGateDirectionAngle();
 
         content = `
           <div class="inside">
 
-            <div class="terrain-icon">
-              🏕️
-            </div>
+            ${
+              S.compass
+                ? `
+                  <img
+                    class="gate-direction-arrow"
+                    src="images/UI/gate_arrow.png"
+                    alt="ゲートの方向"
+                    style="transform: rotate(${gateAngle}deg);"
+                  >
+                `
+                : `
+                  <div class="terrain-icon">
+                    🏕️
+                  </div>
+                `
+            }
 
             <div>
               拠点
@@ -3220,7 +3287,12 @@ function openSpecialFacilityModal(type) {
     }
     closeModal('facilityModal');
     render();
-    toast(`${name}を建設した`);
+
+    if (isFridge) {
+      toast('冷蔵庫を建設した');
+    } else {
+      toast('拠点にゲートの方角が表示された');
+    }
   };
 
   showModal('facilityModal');

@@ -2238,3 +2238,13 @@ h2 {
   text-align: center;
   font-weight: bold;
 }
+
+.gate-direction-arrow {
+  width: 68px;
+  height: 68px;
+
+  object-fit: contain;
+  display: block;
+
+  transform-origin: center;
+}
