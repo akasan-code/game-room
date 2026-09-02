@@ -121,7 +121,7 @@ const T = {
     food: [1, 2],
     grass: [1, 2],
     damage: 0,
-    rare: ['食料', 4]
+    rare: ['食料', 3]
   },
 
   forest: {
@@ -294,7 +294,8 @@ const EXPLORATION_BACKGROUNDS = {
   // 専用背景がない地形は草原へフォールバック
   cave: 'images/bg/explore_grass.png',
   waste: 'images/bg/explore_grass.png',
-  gate: 'images/bg/explore_grass.png'
+
+  gate: 'images/bg/explore_gate.png'
 };
 
 
@@ -626,8 +627,8 @@ function generateGate() {
      * 拠点から7～9マス
      */
     if (
-      distance < 7 ||
-      distance > 9
+      distance < 2 ||
+      distance > 3
     ) {
       continue;
     }
