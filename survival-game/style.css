@@ -2480,7 +2480,29 @@ h2 {
     rotate(-1.5deg);
 }
 
+.story-cut-text {
+  position: absolute;
 
+  left: 8%;
+  right: 8%;
+  bottom: 7%;
+
+  z-index: 30;
+
+  min-height: 2em;
+
+  font-family: "Yomogi", cursive;
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #4b3928;
+
+  letter-spacing: 0.03em;
+
+  transform: rotate(-0.7deg);
+
+  pointer-events: none;
+}
 /* =========================================================
    カット出現アニメーション
 ========================================================= */

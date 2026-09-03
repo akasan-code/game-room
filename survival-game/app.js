@@ -315,6 +315,7 @@ let currentGateCut = 0;
 let gateCutInputLocked = false;
 let gateCutHasCompass = false;
 let gateCutResolve = null;
+let gateCutTextTimer = null;
 /* =========================================================
    キャラクターアニメーション開始
 ========================================================= */
@@ -2163,6 +2164,74 @@ function resetExploreAnimation() {
 }
 
 /* =========================================================
+   スクラップブック文字表示
+========================================================= */
+function playGateCutText(text) {
+
+  const textBox =
+    $('gateCutText');
+
+  if (!textBox) {
+    return Promise.resolve();
+  }
+
+
+  /*
+   * 前の文字送りが残っていたら停止
+   */
+  if (gateCutTextTimer) {
+
+    clearTimeout(
+      gateCutTextTimer
+    );
+
+    gateCutTextTimer = null;
+  }
+
+
+  textBox.textContent = '';
+
+
+  return new Promise(resolve => {
+
+    let index = 0;
+
+
+    function writeNextCharacter() {
+
+      /*
+       * 全文表示完了
+       */
+      if (index >= text.length) {
+
+        gateCutTextTimer = null;
+
+        resolve();
+
+        return;
+      }
+
+
+      textBox.textContent +=
+        text[index];
+
+      index++;
+
+
+      gateCutTextTimer =
+        setTimeout(
+          writeNextCharacter,
+          55
+        );
+    }
+
+
+    writeNextCharacter();
+
+  });
+}
+
+/* =========================================================
    スクラップブックイベント開始
 ========================================================= */
 
@@ -2193,7 +2262,11 @@ function startGateCutscene(hasCompass) {
     hasCompass;
 
   layer.innerHTML = '';
+  const textBox = $('gateCutText');
 
+  if (textBox) {
+    textBox.textContent = '';
+  }
 
   /*
    * タップで次のカットへ
@@ -2236,7 +2309,7 @@ function startGateCutscene(hasCompass) {
    次のカット表示
 ========================================================= */
 
-function showNextGateCut() {
+async function showNextGateCut() {
 
   if (gateCutInputLocked) {
     return;
@@ -2315,6 +2388,16 @@ function showNextGateCut() {
     image
   );
 
+  /*
+  * カット1：旅の記録
+  */
+  if (currentGateCut === 1) {
+
+    await playGateCutText(
+      `${S.day}日目：不思議な場所にたどり着いた`
+    );
+
+  }
 
   /*
    * 連打防止
