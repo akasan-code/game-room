@@ -2489,6 +2489,24 @@ if (currentGateCut === 6) {
       '　　　これが私の冒険の終わり',true
     );
 
+      /*
+      * 最後の文章を少し見せる
+      */
+      await wait(3000);
+
+      /*
+      * ホワイトアウト
+      */
+      await playEndingTransition();
+
+      /*
+      * 今はテスト用として演出終了
+      * 後でここからエンディングへ接続する
+      */
+      finishGateCutscene();
+
+      return;
+      
   }
 
   setTimeout(() => {
@@ -2534,6 +2552,112 @@ function finishGateCutscene() {
     gateCutResolve = null;
     resolve();
   }
+}
+
+function playGateEndingFade() {
+
+  const fade =
+    $('gateEndingFade');
+
+  if (!fade) {
+    return Promise.resolve();
+  }
+
+  fade.classList.remove(
+    'active'
+  );
+
+  void fade.offsetWidth;
+
+  fade.classList.add(
+    'active'
+  );
+
+  return wait(2800);
+}
+
+async function playEndingTransition() {
+
+  const fade =
+    $('gateEndingFade');
+
+  if (!fade) {
+    return;
+  }
+
+
+  /*
+   * まず白
+   */
+  fade.classList.remove(
+    'black'
+  );
+
+  fade.classList.add(
+    'active'
+  );
+
+  await wait(2800);
+
+
+  /*
+   * 白 → 黒
+   */
+  fade.classList.add(
+    'black'
+  );
+
+  await wait(1200);
+
+
+  /*
+   * 瞬き1回目：少し開く
+   */
+  fade.classList.remove(
+    'active'
+  );
+
+  await wait(180);
+
+
+  /*
+   * また閉じる
+   */
+  fade.classList.add(
+    'active'
+  );
+
+  await wait(220);
+
+
+  /*
+   * 2回目：少し長めに開く
+   */
+  fade.classList.remove(
+    'active'
+  );
+
+  await wait(320);
+
+
+  /*
+   * また閉じる
+   */
+  fade.classList.add(
+    'active'
+  );
+
+  await wait(260);
+
+
+  /*
+   * 最後に完全に開く
+   */
+  fade.classList.remove(
+    'active'
+  );
+
+  await wait(700);
 }
 
 /* =========================================================

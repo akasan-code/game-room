@@ -2561,3 +2561,31 @@ h2 {
   }
 
 }
+/* =========================================================
+   ゲートイベント：ホワイトアウト
+========================================================= */
+.gate-ending-fade {
+  position: absolute;
+  inset: 0;
+
+  z-index: 100;
+
+  background: #fffdf7;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition:
+    opacity 1.8s ease,
+    background-color 0.8s ease;
+}
+
+.gate-ending-fade.active {
+  opacity: 1;
+}
+
+/* ブラックアウト */
+.gate-ending-fade.black {
+  background: #000;
+}
