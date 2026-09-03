@@ -303,6 +303,8 @@ const EXPLORATION_BACKGROUNDS = {
 ========================================================= */
 const GATE_CUT_IMAGES = [
   'images/events/gate_cut_1.png',
+  // 追加：主人公カット
+  'images/events/gate_cut_character1.png',
   'images/events/gate_cut_2.png',
   'images/events/gate_cut_3.png',
   'images/events/gate_cut_4.png',
@@ -315,6 +317,8 @@ let currentGateCut = 0;
 let gateCutInputLocked = false;
 let gateCutHasCompass = false;
 let gateCutResolve = null;
+let gateCutTextTimer = null;
+let gateCutAutoTimer = null;
 /* =========================================================
    キャラクターアニメーション開始
 ========================================================= */
@@ -2163,6 +2167,80 @@ function resetExploreAnimation() {
 }
 
 /* =========================================================
+   スクラップブック文字表示
+========================================================= */
+function playGateCutText(text, append = false) {
+
+  const textBox =
+    $('gateCutText');
+
+  if (!textBox) {
+    return Promise.resolve();
+  }
+
+  if (gateCutTextTimer) {
+
+    clearTimeout(
+      gateCutTextTimer
+    );
+
+    gateCutTextTimer = null;
+  }
+
+
+  /*
+   * 新規文章なら一度消す
+   * 追記なら改行だけ追加
+   */
+  if (!append) {
+
+    textBox.textContent = '';
+
+  }
+
+  else if (textBox.textContent) {
+
+    textBox.textContent += '\n';
+
+  }
+
+
+  return new Promise(resolve => {
+
+    let index = 0;
+
+
+    function writeNextCharacter() {
+
+      if (index >= text.length) {
+
+        gateCutTextTimer = null;
+
+        resolve();
+
+        return;
+      }
+
+
+      textBox.textContent +=
+        text[index];
+
+      index++;
+
+
+      gateCutTextTimer =
+        setTimeout(
+          writeNextCharacter,
+          55
+        );
+    }
+
+
+    writeNextCharacter();
+
+  });
+}
+/* =========================================================
    スクラップブックイベント開始
 ========================================================= */
 
@@ -2192,8 +2270,23 @@ function startGateCutscene(hasCompass) {
   gateCutHasCompass =
     hasCompass;
 
+  if (gateCutAutoTimer) {
+    clearTimeout(gateCutAutoTimer);
+    gateCutAutoTimer = null;
+  }
+
+  if (gateCutTextTimer) {
+    clearTimeout(gateCutTextTimer);
+    gateCutTextTimer = null;
+  }
+
   layer.innerHTML = '';
 
+  const textBox = $('gateCutText');
+
+  if (textBox) {
+    textBox.textContent = '';
+  }
 
   /*
    * タップで次のカットへ
@@ -2236,12 +2329,11 @@ function startGateCutscene(hasCompass) {
    次のカット表示
 ========================================================= */
 
-function showNextGateCut() {
+async function showNextGateCut() {
 
   if (gateCutInputLocked) {
     return;
   }
-
 
   const layer =
     $('gateCutLayer');
@@ -2250,49 +2342,31 @@ function showNextGateCut() {
     return;
   }
 
-
   /*
    * コンパスなし
-   * → カット2まで
+   * → 1, 主人公, くぼみ まで
    *
    * コンパスあり
-   * → カット6まで
+   * → 全7枚
    */
   const maxCuts =
     gateCutHasCompass
-      ? 6
-      : 2;
-
+      ? 7
+      : 3;
 
   /*
    * 全カット表示済み
    */
-  if (
-    currentGateCut >= maxCuts
-  ) {
-
+  if (currentGateCut >= maxCuts) {
     finishGateCutscene();
-
     return;
   }
 
-
-  /*
-   * 入力ロック
-   */
-  gateCutInputLocked =
-    true;
-
-
-  /*
-   * 次のカット番号
-   */
+  gateCutInputLocked = true;
   currentGateCut++;
-
 
   const image =
     document.createElement('img');
-
 
   image.className =
     `story-cut story-cut-${currentGateCut}`;
@@ -2303,30 +2377,124 @@ function showNextGateCut() {
   image.alt =
     `ゲートイベント ${currentGateCut}`;
 
-
-  /*
-   * 後から追加されたものほど上に
-   */
   image.style.zIndex =
     String(currentGateCut);
 
+  layer.appendChild(image);
 
-  layer.appendChild(
-    image
+
+  /*
+   * カット1：最初の一文
+   */
+  if (currentGateCut === 1) {
+
+    await playGateCutText(
+      `${S.day}日目：不思議な場所にたどり着いた`
+    );
+
+    /*
+     * 1秒後に主人公カットを自動表示
+     */
+    if (gateCutAutoTimer) {
+      clearTimeout(gateCutAutoTimer);
+    }
+
+    gateCutAutoTimer = setTimeout(() => {
+      gateCutAutoTimer = null;
+      gateCutInputLocked = false;
+      showNextGateCut();
+    }, 1000);
+
+    return;
+  }
+
+
+/*
+ * カット4
+ * 2行目を書き足す
+ */
+if (currentGateCut === 4) {
+
+  await playGateCutText(
+    '　　　コンパスをはめる',
+    true
   );
 
 
   /*
-   * 連打防止
+   * 1秒後にカット5
    */
-  setTimeout(() => {
+  gateCutAutoTimer =
+    setTimeout(() => {
 
-    gateCutInputLocked =
-      false;
+      gateCutAutoTimer = null;
 
-  }, 300);
+      gateCutInputLocked = false;
+
+      showNextGateCut();
+
+    }, 2000);
+
+  return;
 }
 
+
+/*
+ * カット5
+ * 発光
+ * → 1秒後に自動でカット6
+ */
+if (currentGateCut === 5) {
+
+  gateCutAutoTimer =
+    setTimeout(() => {
+
+      gateCutAutoTimer = null;
+
+      gateCutInputLocked = false;
+
+      showNextGateCut();
+
+    }, 3000);
+
+  return;
+}
+
+
+/*
+ * カット6
+ * 起動ゲート
+ *
+ * ここでは自動進行を止める。
+ * 次のカット7へはタップ。
+ */
+if (currentGateCut === 6) {
+
+  setTimeout(() => {
+
+    gateCutInputLocked = false;
+
+  }, 300);
+
+  return;
+}
+
+
+  /*
+   * 最後のカット：締めの一文
+   */
+  if (currentGateCut === 7) {
+
+    await playGateCutText(
+      '　　　これが私の冒険の終わり',true
+    );
+
+  }
+
+  setTimeout(() => {
+    gateCutInputLocked = false;
+  }, 300);
+}
 
 /* =========================================================
    スクラップブックイベント終了
@@ -2341,28 +2509,32 @@ function finishGateCutscene() {
     overlay.hidden = true;
   }
 
+  if (gateCutAutoTimer) {
+    clearTimeout(gateCutAutoTimer);
+    gateCutAutoTimer = null;
+  }
+
+  if (gateCutTextTimer) {
+    clearTimeout(gateCutTextTimer);
+    gateCutTextTimer = null;
+  }
+
+  const textBox =
+    $('gateCutText');
+
+  if (textBox) {
+    textBox.textContent = '';
+  }
 
   currentGateCut = 0;
-
   gateCutInputLocked = false;
 
-
-  /*
-   * 待機している処理へ戻す
-   */
   if (gateCutResolve) {
-
-    const resolve =
-      gateCutResolve;
-
-    gateCutResolve =
-      null;
-
+    const resolve = gateCutResolve;
+    gateCutResolve = null;
     resolve();
-
   }
 }
-
 
 /* =========================================================
    探索結果決定

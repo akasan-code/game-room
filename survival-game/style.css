@@ -2305,6 +2305,7 @@ h2 {
 
   padding-top: 133.333%;
 }
+
 /* =========================================================
    カット配置領域
 ========================================================= */
@@ -2343,6 +2344,7 @@ h2 {
 
   white-space: nowrap;
 }
+
 /* =========================================================
    スクラップブック：イベントカット共通
 ========================================================= */
@@ -2393,18 +2395,34 @@ h2 {
     rotate(-0.5deg);
 }
 
+/* 追加：主人公カット */
+.story-cut-2 {
+  width: 20%;
+  left: 10%;
+  top: 37%;
+  z-index: 2;
+
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.18));
+
+  transform: rotate(-8deg);
+}
+
 
 /* =========================================================
    カット2：くぼみアップ
 ========================================================= */
 
-.story-cut-2 {
+.story-cut-3 {
   width: 34%;
 
   right: 8%;
-  top: 46%;
+  top: 42%;
 
-  z-index: 2;
+  z-index: 3;
 
   transform:
     rotate(5deg);
@@ -2415,13 +2433,13 @@ h2 {
    カット3：コンパスセット
 ========================================================= */
 
-.story-cut-3 {
+.story-cut-4 {
   width: 36%;
 
   right: 11%;
-  top: 43%;
+  top: 42%;
 
-  z-index: 3;
+  z-index: 4;
 
   transform:
     rotate(-3deg);
@@ -2432,13 +2450,13 @@ h2 {
    カット4：コンパス発光
 ========================================================= */
 
-.story-cut-4 {
+.story-cut-5 {
   width: 38%;
 
   right: 7%;
-  top: 45%;
+  top: 44%;
 
-  z-index: 4;
+  z-index: 5;
 
   transform:
     rotate(2deg);
@@ -2449,13 +2467,13 @@ h2 {
    カット5：起動ゲート全景
 ========================================================= */
 
-.story-cut-5 {
+.story-cut-6 {
   width: 83%;
 
   left: 50%;
   top: 10%;
 
-  z-index: 5;
+  z-index: 6;
 
   transform:
     translateX(-50%)
@@ -2467,19 +2485,44 @@ h2 {
    カット6：主人公がゲートへ入る
 ========================================================= */
 
-.story-cut-6 {
-  width: 85%;
+.story-cut-7 {
+  width: 87%;
 
   left: 50%;
-  top: 9%;
+  top: 12%;
 
-  z-index: 6;
+  z-index: 7;
 
   transform:
     translateX(-50%)
-    rotate(-1.5deg);
+    rotate(-2.0deg);
 }
 
+.story-cut-text {
+  position: absolute;
+
+  left: 20%;
+  right: 8%;
+  bottom: 18%;
+
+  z-index: 30;
+
+  min-height: 2em;
+
+  font-family: "Yomogi", cursive;
+  font-size: 15px;
+  line-height: 1.6;
+
+  color: #4b3928;
+
+  letter-spacing: 0.03em;
+
+  transform: rotate(-0.7deg);
+
+  white-space: pre-line;
+
+  pointer-events: none;
+}
 
 /* =========================================================
    カット出現アニメーション
