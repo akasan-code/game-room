@@ -2589,3 +2589,250 @@ h2 {
 .gate-ending-fade.black {
   background: #000;
 }
+
+/* =========================================================
+   エンディング
+========================================================= */
+
+.ending-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 14px;
+
+  background: #050505;
+}
+
+.ending-overlay[hidden] {
+  display: none;
+}
+
+
+/* =========================================================
+   最後のページ
+========================================================= */
+
+.ending-page {
+  position: relative;
+
+  width: min(94vw, 460px);
+
+  overflow: hidden;
+
+  background:
+    url("images/events/scrapbook_base.png")
+    center / 100% 100%
+    no-repeat;
+
+  box-shadow:
+    0 12px 35px
+    rgba(0, 0, 0, 0.5);
+}
+
+
+/* 3:4 */
+.ending-page::before {
+  content: "";
+  display: block;
+  padding-top: 133.333%;
+}
+
+
+.ending-cut-layer {
+  position: absolute;
+  inset: 0;
+
+  z-index: 1;
+}
+
+
+/* =========================================================
+   エンディング各カット共通
+========================================================= */
+
+.ending-cut {
+  position: absolute;
+
+  display: block;
+
+  object-fit: contain;
+
+  border: 4px solid #f1e6cf;
+
+  box-shadow:
+    0 3px 7px
+    rgba(40, 28, 17, 0.18);
+
+  opacity: 0;
+
+  animation:
+    ending-cut-appear
+    0.35s
+    ease
+    forwards;
+}
+
+
+@keyframes ending-cut-appear {
+
+  from {
+    opacity: 0;
+    scale: 0.97;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+/* 1：眠っている */
+.ending-cut-1 {
+  width: 72%;
+
+  left: 50%;
+  top: 6%;
+
+  transform:
+    translateX(-50%)
+    rotate(-1deg);
+
+  z-index: 1;
+}
+
+
+/* 2：目が覚める */
+.ending-cut-2 {
+  width: 70%;
+
+  left: 47%;
+  top: 28%;
+
+  transform:
+    translateX(-50%)
+    rotate(1.5deg);
+
+  z-index: 2;
+}
+
+
+/* 3：ほっとする */
+.ending-cut-3 {
+  width: 68%;
+
+  left: 52%;
+  top: 45%;
+
+  transform:
+    translateX(-50%)
+    rotate(-1.5deg);
+
+  z-index: 3;
+}
+
+
+/* 4：コンパス */
+.ending-cut-4 {
+  width: 35%;
+
+  right: 16%;
+  bottom: 12%;
+
+  border: none;
+  box-shadow: none;
+
+  transform:
+    rotate(4deg);
+
+  z-index: 4;
+
+  animation:
+  ending-compass-appear
+  2.5s
+  ease
+  forwards;
+
+}
+@keyframes ending-compass-appear {
+
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+/* =========================================================
+   閉じる表紙
+========================================================= */
+
+.ending-book-cover {
+  position: absolute;
+  inset: 0;
+
+  z-index: 20;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transform-origin: left center;
+
+  transform:
+    perspective(900px)
+    rotateY(-92deg);
+
+  transition:
+  transform 2.8s cubic-bezier(0.45, 0, 0.2, 1),
+  opacity 0.2s ease;
+}
+
+
+.ending-book-cover img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: fill;
+}
+
+
+.ending-book-cover.closing {
+  opacity: 1;
+
+  transform:
+    perspective(900px)
+    rotateY(0deg);
+}
+
+.ending-title {
+  position: absolute;
+  right: 13%;
+  bottom: 9%;
+  z-index: 30;
+
+  font-family: "Yomogi", cursive;
+  font-size: clamp(30px, 6vw, 40px);
+
+  letter-spacing: 0.12em;
+  color: #eadfc5;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition: opacity 1.5s ease;
+}
+
+.ending-title.show {
+  opacity: 1;
+}

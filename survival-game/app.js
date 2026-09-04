@@ -312,6 +312,13 @@ const GATE_CUT_IMAGES = [
   'images/events/gate_cut_6.png'
 ];
 
+const ENDING_CUT_IMAGES = [
+  'images/events/ending_cut_1.png',
+  'images/events/ending_cut_2.png',
+  'images/events/ending_cut_3.png',
+  'images/events/ending_cut_4.png'
+];
+
 let characterAnimationTimer = null;
 let currentGateCut = 0;
 let gateCutInputLocked = false;
@@ -2283,8 +2290,6 @@ function startGateCutscene(hasCompass) {
   layer.innerHTML = '';
   const textBox = $('gateCutText');
 
-  const textBox = $('gateCutText');
-
   if (textBox) {
     textBox.textContent = '';
   }
@@ -2661,6 +2666,146 @@ async function playEndingTransition() {
   await wait(700);
 }
 
+async function startEndingScene() {
+
+  const overlay =
+    $('endingOverlay');
+
+  const layer =
+    $('endingCutLayer');
+
+  const cover =
+    $('endingBookCover');
+
+  const title =
+    $('endingTitle');
+
+  if (
+    !overlay ||
+    !layer ||
+    !cover ||
+    !title
+  ) {
+    return;
+  }
+
+
+  /*
+   * 初期化
+   */
+  layer.innerHTML = '';
+
+  cover.classList.remove(
+    'closing'
+  );
+
+  title.classList.remove(
+    'show'
+  );
+
+
+  /*
+   * エンディング表示
+   */
+  overlay.hidden = false;
+
+
+  /*
+   * カット1
+   * 主人公が寝ている
+   */
+  addEndingCut(1);
+
+  await wait(1800);
+
+
+  /*
+   * カット2
+   * 目が覚める
+   */
+  addEndingCut(2);
+
+  await wait(1000);
+
+
+  /*
+   * カット3
+   * ほっとする
+   */
+  addEndingCut(3);
+
+  await wait(1800);
+
+
+  /*
+   * カット4
+   * コンパス
+   */
+  addEndingCut(4);
+
+  await wait(3500);
+
+
+  /*
+   * 表紙を閉じる
+   */
+  cover.classList.add(
+    'closing'
+  );
+
+  await wait(1400);
+
+
+  /*
+   * 少し間を空けて
+   * THE END
+   */
+  await wait(2000);
+
+  title.classList.add(
+    'show'
+  );
+}
+function addEndingCut(number) {
+
+  const layer =
+    $('endingCutLayer');
+
+  if (!layer) {
+    return;
+  }
+
+
+  const src =
+    ENDING_CUT_IMAGES[
+      number - 1
+    ];
+
+  if (!src) {
+    return;
+  }
+
+
+  const image =
+    document.createElement('img');
+
+  image.className =
+    `ending-cut ending-cut-${number}`;
+
+  image.src =
+    src;
+
+  image.alt =
+    `エンディング ${number}`;
+
+  image.style.zIndex =
+    String(number);
+
+
+  layer.appendChild(
+    image
+  );
+}
 /* =========================================================
    探索結果決定
 ========================================================= */
@@ -4271,8 +4416,8 @@ if (testGateCutsceneButton) {
 
   testGateCutsceneButton.onclick = () => {
 
-    startGateCutscene(true);
-
+//    startGateCutscene(true);
+    startEndingScene();
   };
 
 }
