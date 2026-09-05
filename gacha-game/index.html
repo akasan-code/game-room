@@ -12,7 +12,7 @@
     <div class="vignette"></div>
 
     <section class="hud">
-      <div class="title">召喚</div>
+      <div class="title" id="gachaTitle">召喚</div>
       <div class="currency">
         <span class="gem red"></span><b>2,350</b>
         <span class="gem blue"></span><b>1,580</b>
@@ -47,12 +47,12 @@
 
     <section class="summon-actions">
       <button class="summon-btn single" data-count="1">
-        <span>1回召喚</span>
-        <small>◆ 300</small>
+        <span id="singleSummonLabel">1回召喚</span>
+        <small id="singleSummonCost">◆ 300</small>
       </button>
       <button class="summon-btn ten" data-count="12">
-        <span>12回召喚</span>
-        <small>◆ 3,600</small>
+        <span id="multiSummonLabel">12回召喚</span>
+        <small id="multiSummonCost">◆ 3,600</small>
       </button>
     </section>
 
@@ -81,6 +81,7 @@
     <!-- 取得カード専用：カード枠DOMとは完全に独立 -->
     <div class="acquisition-reveal" id="acquisitionReveal" aria-hidden="true">
       <div class="acquisition-backdrop"></div>
+      <div class="acquisition-flash" aria-hidden="true"></div>
       <img
         class="acquisition-character"
         id="acquisitionCharacter"
@@ -122,6 +123,7 @@
     </div>
 
   </main>
+  <script src="data/master.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

@@ -78,13 +78,6 @@ async function preloadCardAssets(card, rarity) {
   ]);
 }
 
-const RARITY_RATES = [
-  { rarity:'UR', rate:0.03 },
-  { rarity:'SR', rate:0.07 },
-  { rarity:'R',  rate:0.25 },
-  { rarity:'N',  rate:0.65 }
-];
-
 const ORB_START_RATES = {
   SR: [
     { color:'N',  rate:0.50, promotion:'blue-to-sr' },
@@ -124,19 +117,176 @@ const FRAME_BY_RARITY = {
   UR:'assets/card_frame_ur.png'
 };
 
-const CARDS = [
-  {
-    id:'sample_001',
-    name:'星導の魔導姫',
-    image:'assets/sample_character.png'
+/*
+  ============================================================
+  マスターデータ参照
+  ============================================================
+*/
+
+const MASTER = window.GACHA_MASTER;
+
+if (!MASTER) {
+  throw new Error('GACHA_MASTER が読み込まれていません。data/master.js を確認してください。');
+}
+
+function getCurrentGacha() {
+  const gacha = MASTER.gachas[MASTER.currentGachaId];
+
+  if (!gacha) {
+    throw new Error(`ガチャマスターが見つかりません: ${MASTER.currentGachaId}`);
   }
-];
+
+  return gacha;
+}
+
+function getCardMaster(cardId) {
+  const card = MASTER.cards[cardId];
+
+  if (!card) {
+    throw new Error(`カードマスターが見つかりません: ${cardId}`);
+  }
+
+  return card;
+}
+
+
+/*
+  ============================================================
+  ガチャpool自動生成
+  ============================================================
+
+  各カードの
+    gachas: ['standard_001']
+  を見て、レア度別poolを自動で作る。
+
+  cards に追加して gachas を指定するだけで排出対象になる。
+*/
+function buildPoolForGacha(gachaId) {
+  const pool = {
+    N: [],
+    R: [],
+    SR: [],
+    UR: []
+  };
+
+  for (const card of Object.values(MASTER.cards)) {
+    const targetGachas = Array.isArray(card.gachas)
+      ? card.gachas
+      : [];
+
+    if (!targetGachas.includes(gachaId)) {
+      continue;
+    }
+
+    if (!pool[card.rarity]) {
+      console.warn(
+        `未対応レアリティのためpoolへ追加できません: ${card.id} / ${card.rarity}`
+      );
+      continue;
+    }
+
+    const weight = card.weights?.[gachaId] ?? 1;
+
+    pool[card.rarity].push({
+      cardId: card.id,
+      weight
+    });
+  }
+
+  return pool;
+}
+
+function validateAutoPool(gachaId, pool) {
+  const gacha = MASTER.gachas[gachaId];
+  if (!gacha) return;
+
+  for (const rate of gacha.rarityRates) {
+    if (rate.rate <= 0) continue;
+
+    const entries = pool[rate.rarity] || [];
+
+    if (entries.length === 0) {
+      console.warn(
+        `${gacha.name}: ${rate.rarity} の排出率が設定されていますが、` +
+        `対象カードが1枚も登録されていません。`
+      );
+    }
+  }
+}
+
+const AUTO_GACHA_POOLS = {};
+
+function getAutoPool(gachaId) {
+  if (!AUTO_GACHA_POOLS[gachaId]) {
+    const pool = buildPoolForGacha(gachaId);
+    validateAutoPool(gachaId, pool);
+    AUTO_GACHA_POOLS[gachaId] = pool;
+  }
+
+  return AUTO_GACHA_POOLS[gachaId];
+}
+
+function getEnabledGachas() {
+  return Object.values(MASTER.gachas).filter(gacha => gacha.enabled !== false);
+}
+
+function setCurrentGacha(gachaId) {
+  if (!MASTER.gachas[gachaId]) {
+    throw new Error(`存在しないガチャIDです: ${gachaId}`);
+  }
+
+  MASTER.currentGachaId = gachaId;
+  renderCurrentGachaInfo();
+}
+
+function renderCurrentGachaInfo() {
+  const gacha = getCurrentGacha();
+
+  const title = document.getElementById('gachaTitle');
+  const singleLabel = document.getElementById('singleSummonLabel');
+  const singleCost = document.getElementById('singleSummonCost');
+  const multiLabel = document.getElementById('multiSummonLabel');
+  const multiCost = document.getElementById('multiSummonCost');
+
+  if (title) {
+    title.textContent = gacha.name;
+  }
+
+  if (singleLabel) {
+    singleLabel.textContent = `${gacha.summon.single.count}回召喚`;
+  }
+
+  if (singleCost) {
+    singleCost.textContent = `◆ ${gacha.summon.single.cost.toLocaleString()}`;
+  }
+
+  if (multiLabel) {
+    multiLabel.textContent = `${gacha.summon.multi.count}回召喚`;
+  }
+
+  if (multiCost) {
+    multiCost.textContent = `◆ ${gacha.summon.multi.cost.toLocaleString()}`;
+  }
+
+  const singleButton = document.querySelector('.summon-btn.single');
+  const multiButton = document.querySelector('.summon-btn.ten');
+
+  if (singleButton) {
+    singleButton.dataset.count = gacha.summon.single.count;
+  }
+
+  if (multiButton) {
+    multiButton.dataset.count = gacha.summon.multi.count;
+  }
+}
 
 function rollRarity() {
+  const rarityRates = getCurrentGacha().rarityRates;
+
   const r = Math.random();
   let total = 0;
 
-  for (const item of RARITY_RATES) {
+  for (const item of rarityRates) {
     total += item.rate;
     if (r < total) return item.rarity;
   }
@@ -168,8 +318,50 @@ function decideOrbStart(rarity) {
   return weightedChoice(ORB_START_RATES[rarity]);
 }
 
-function pickCard() {
-  return CARDS[Math.floor(Math.random() * CARDS.length)];
+function pickPoolEntry(rarity) {
+  const gacha = getCurrentGacha();
+  const pool = getAutoPool(gacha.id);
+  const entries = pool[rarity] || [];
+
+  if (entries.length === 0) {
+    throw new Error(
+      `${gacha.name} の ${rarity} プールにカードが登録されていません。`
+    );
+  }
+
+  const totalWeight = entries.reduce(
+    (sum, entry) => sum + (entry.weight ?? 1),
+    0
+  );
+
+  let r = Math.random() * totalWeight;
+
+  for (const entry of entries) {
+    r -= entry.weight ?? 1;
+
+    if (r <= 0) {
+      return entry;
+    }
+  }
+
+  return entries[entries.length - 1];
+}
+
+function pickCard(rarity) {
+  const entry = pickPoolEntry(rarity);
+  const card = getCardMaster(entry.cardId);
+
+  /*
+    マスター設定ミスを早めに見つけるためのチェック。
+  */
+  if (card.rarity !== rarity) {
+    console.warn(
+      `カード ${card.id} の rarity(${card.rarity}) と ` +
+      `ガチャプール(${rarity}) が一致していません。`
+    );
+  }
+
+  return card;
 }
 
 function createResultItem() {
@@ -178,7 +370,7 @@ function createResultItem() {
 
   return {
     rarity,
-    card: pickCard(),
+    card: pickCard(rarity),
     orbStartColor: orbStart.color,
     promotion: orbStart.promotion
   };
@@ -888,7 +1080,20 @@ async function summon(count = 1) {
 cardEjectLayer.style.display = 'none';
 
 Object.values(FRAME_BY_RARITY).forEach(preloadImage);
-CARDS.forEach(card => preloadImage(card.image));
+Object.values(MASTER.cards).forEach(card => preloadImage(card.image));
+
+renderCurrentGachaInfo();
+
+// 将来のガチャ選択UIから呼び出せるように公開
+window.GachaMasterAPI = {
+  getCurrentGacha,
+  getEnabledGachas,
+  getCardMaster,
+  getAutoPool,
+  buildPoolForGacha,
+  setCurrentGacha
+};
+
 
 buttons.forEach(button => {
   button.addEventListener('click', () => {

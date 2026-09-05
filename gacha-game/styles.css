@@ -3424,3 +3424,358 @@
     --acq-pad-bottom: max(5.2dvh, 32px);
   }
 }
+
+
+/* =========================================================
+   v25 SR以上の取得表示にホワイトアウト演出を追加
+   SR: 白～銀青
+   UR: 白ベース + 少し金色
+   ========================================================= */
+
+.acquisition-flash{
+  position:absolute;
+  z-index:3;
+  inset:-8%;
+  opacity:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 45%,
+      rgba(255,255,255,1) 0%,
+      rgba(255,255,255,.95) 24%,
+      rgba(220,238,255,.66) 48%,
+      rgba(220,238,255,0) 76%);
+  mix-blend-mode:screen;
+  filter:blur(10px);
+}
+
+/* SR以上だけフラッシュ有効 */
+.acquisition-reveal.rarity-sr.show .acquisition-flash{
+  animation:acquisitionWhiteoutSR .58s ease-out both;
+}
+
+.acquisition-reveal.rarity-ur.show .acquisition-flash{
+  background:
+    radial-gradient(circle at 50% 45%,
+      rgba(255,248,224,1) 0%,
+      rgba(255,243,197,.96) 22%,
+      rgba(255,223,132,.70) 48%,
+      rgba(255,223,132,0) 78%);
+  animation:acquisitionWhiteoutUR .72s ease-out both;
+}
+
+/*
+  SR/UR はフラッシュのあとにイラストが現れるよう、
+  少しだけ表示を遅らせる。
+*/
+.acquisition-reveal.rarity-sr.show .acquisition-character:not(.preparing){
+  animation:acquisitionImageEnterSR .56s cubic-bezier(.18,.86,.32,1.02) forwards;
+}
+
+.acquisition-reveal.rarity-ur.show .acquisition-character:not(.preparing){
+  animation:acquisitionImageEnterUR .70s cubic-bezier(.18,.86,.32,1.02) forwards;
+}
+
+/* レア度表示 / TAP も少し遅れて出す */
+.acquisition-reveal.rarity-sr.show .acquisition-rarity,
+.acquisition-reveal.rarity-sr.show .acquisition-tap-guide{
+  animation:acquisitionUiFadeIn .34s ease-out .18s both;
+}
+
+.acquisition-reveal.rarity-ur.show .acquisition-rarity,
+.acquisition-reveal.rarity-ur.show .acquisition-tap-guide{
+  animation:acquisitionUiFadeIn .40s ease-out .28s both;
+}
+
+/* N / R は従来通り */
+.acquisition-reveal.rarity-n.show .acquisition-character:not(.preparing),
+.acquisition-reveal.rarity-r.show .acquisition-character:not(.preparing){
+  animation:acquisitionImageEnter .38s cubic-bezier(.18,.86,.32,1.06) forwards;
+}
+
+@keyframes acquisitionWhiteoutSR{
+  0%{
+    opacity:0;
+    transform:scale(.72);
+    filter:blur(18px);
+  }
+  18%{
+    opacity:.95;
+    transform:scale(1.02);
+    filter:blur(8px);
+  }
+  40%{
+    opacity:.82;
+    transform:scale(1.10);
+    filter:blur(10px);
+  }
+  100%{
+    opacity:0;
+    transform:scale(1.34);
+    filter:blur(16px);
+  }
+}
+
+@keyframes acquisitionWhiteoutUR{
+  0%{
+    opacity:0;
+    transform:scale(.68);
+    filter:blur(18px);
+  }
+  18%{
+    opacity:1;
+    transform:scale(1.03);
+    filter:blur(7px);
+  }
+  46%{
+    opacity:.92;
+    transform:scale(1.16);
+    filter:blur(10px);
+  }
+  100%{
+    opacity:0;
+    transform:scale(1.44);
+    filter:blur(18px);
+  }
+}
+
+@keyframes acquisitionImageEnterSR{
+  0%{
+    opacity:0;
+    transform:scale(1.035);
+    filter:
+      blur(10px)
+      brightness(1.42)
+      drop-shadow(0 0 26px rgba(226,240,255,.72));
+  }
+  24%{
+    opacity:.18;
+    transform:scale(1.02);
+  }
+  100%{
+    opacity:1;
+    transform:scale(1);
+    filter:
+      drop-shadow(0 0 34px rgba(205,230,255,.42))
+      drop-shadow(0 22px 52px rgba(0,0,0,.66));
+  }
+}
+
+@keyframes acquisitionImageEnterUR{
+  0%{
+    opacity:0;
+    transform:scale(1.05);
+    filter:
+      blur(10px)
+      brightness(1.50)
+      drop-shadow(0 0 34px rgba(255,226,138,.86));
+  }
+  28%{
+    opacity:.22;
+    transform:scale(1.03);
+  }
+  100%{
+    opacity:1;
+    transform:scale(1);
+    filter:
+      drop-shadow(0 0 46px rgba(255,210,84,.52))
+      drop-shadow(0 22px 54px rgba(0,0,0,.68));
+  }
+}
+
+@keyframes acquisitionUiFadeIn{
+  0%{
+    opacity:0;
+    transform:translateY(6px);
+  }
+  100%{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@media(max-width:820px){
+  .acquisition-reveal.rarity-sr.show .acquisition-flash{
+    animation-duration:.54s;
+  }
+
+  .acquisition-reveal.rarity-ur.show .acquisition-flash{
+    animation-duration:.66s;
+  }
+}
+
+
+/* =========================================================
+   v26 ホワイトアウト視認性修正
+   親フェードに埋もれないよう、SR/URは即表示＋全画面フラッシュ
+   ========================================================= */
+
+/* SR/URは取得レイヤー自体を即表示 */
+.acquisition-reveal.rarity-sr,
+.acquisition-reveal.rarity-ur{
+  transition:none !important;
+}
+
+.acquisition-reveal.rarity-sr.show,
+.acquisition-reveal.rarity-ur.show{
+  opacity:1 !important;
+  visibility:visible !important;
+}
+
+/*
+  フラッシュは画面全面。
+  blurやmix-blendに頼らず、単純な高輝度オーバーレイにする。
+*/
+.acquisition-flash{
+  position:absolute !important;
+  z-index:20 !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  opacity:0;
+  pointer-events:none;
+  mix-blend-mode:normal !important;
+  filter:none !important;
+}
+
+/* SR = 白〜銀青 */
+.acquisition-reveal.rarity-sr .acquisition-flash{
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(255,255,255,1) 0%,
+      rgba(248,252,255,1) 34%,
+      rgba(224,239,255,.98) 62%,
+      rgba(205,228,255,.92) 100%
+    ) !important;
+}
+
+/* UR = 白＋金 */
+.acquisition-reveal.rarity-ur .acquisition-flash{
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(255,255,255,1) 0%,
+      rgba(255,250,229,1) 28%,
+      rgba(255,230,151,.98) 62%,
+      rgba(255,200,82,.90) 100%
+    ) !important;
+}
+
+/* SRホワイトアウト */
+.acquisition-reveal.rarity-sr.show .acquisition-flash{
+  animation:visibleWhiteoutSR .78s ease-out both !important;
+}
+
+/* URは少し長く金を残す */
+.acquisition-reveal.rarity-ur.show .acquisition-flash{
+  animation:visibleWhiteoutUR .92s ease-out both !important;
+}
+
+/*
+  フラッシュが先に見えてからイラストを出す。
+*/
+.acquisition-reveal.rarity-sr.show .acquisition-character:not(.preparing){
+  animation:visibleImageEnterSR .72s ease-out .20s both !important;
+}
+
+.acquisition-reveal.rarity-ur.show .acquisition-character:not(.preparing){
+  animation:visibleImageEnterUR .84s ease-out .28s both !important;
+}
+
+/* UIもイラストより少し後 */
+.acquisition-reveal.rarity-sr.show .acquisition-rarity,
+.acquisition-reveal.rarity-sr.show .acquisition-tap-guide{
+  animation:visibleUiIn .28s ease-out .42s both !important;
+}
+
+.acquisition-reveal.rarity-ur.show .acquisition-rarity,
+.acquisition-reveal.rarity-ur.show .acquisition-tap-guide{
+  animation:visibleUiIn .30s ease-out .56s both !important;
+}
+
+@keyframes visibleWhiteoutSR{
+  0%{
+    opacity:0;
+  }
+  10%{
+    opacity:1;
+  }
+  34%{
+    opacity:1;
+  }
+  62%{
+    opacity:.64;
+  }
+  100%{
+    opacity:0;
+  }
+}
+
+@keyframes visibleWhiteoutUR{
+  0%{
+    opacity:0;
+  }
+  9%{
+    opacity:1;
+  }
+  38%{
+    opacity:1;
+  }
+  68%{
+    opacity:.70;
+  }
+  100%{
+    opacity:0;
+  }
+}
+
+@keyframes visibleImageEnterSR{
+  0%{
+    opacity:0;
+    transform:scale(1.015);
+    filter:
+      brightness(1.7)
+      blur(7px)
+      drop-shadow(0 0 34px rgba(220,238,255,.68));
+  }
+  34%{
+    opacity:.30;
+  }
+  100%{
+    opacity:1;
+    transform:scale(1);
+    filter:
+      drop-shadow(0 0 34px rgba(205,230,255,.42))
+      drop-shadow(0 22px 52px rgba(0,0,0,.66));
+  }
+}
+
+@keyframes visibleImageEnterUR{
+  0%{
+    opacity:0;
+    transform:scale(1.02);
+    filter:
+      brightness(1.8)
+      blur(7px)
+      drop-shadow(0 0 42px rgba(255,222,120,.78));
+  }
+  36%{
+    opacity:.28;
+  }
+  100%{
+    opacity:1;
+    transform:scale(1);
+    filter:
+      drop-shadow(0 0 46px rgba(255,210,84,.52))
+      drop-shadow(0 22px 54px rgba(0,0,0,.68));
+  }
+}
+
+@keyframes visibleUiIn{
+  0%{
+    opacity:0;
+  }
+  100%{
+    opacity:1;
+  }
+}

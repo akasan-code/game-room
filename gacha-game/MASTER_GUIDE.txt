@@ -1,0 +1,105 @@
+ガチャマスター追加ガイド v27
+================================
+
+■ 今回から pool は書かない
+
+カードを cards に追加し、
+
+  gachas: ['standard_001']
+
+を付けるだけで、自動的にそのガチャの
+N / R / SR / UR poolへ登録されます。
+
+
+■ カード追加例
+
+new_sr_001: {
+  id: 'new_sr_001',
+  name: '新しいSRキャラ',
+  rarity: 'SR',
+  image: 'images/OBA/new_sr.png',
+  gachas: ['standard_001']
+}
+
+
+■ 複数シリーズに同じカードを入れる
+
+gachas: [
+  'standard_001',
+  'limited_001'
+]
+
+
+■ 同じレア度内で排出率を変える
+
+通常は全カード weight: 1 扱い。
+
+特定ガチャだけ2倍出したい場合:
+
+weights: {
+  standard_001: 2
+}
+
+例:
+
+new_ur_001: {
+  id: 'new_ur_001',
+  name: 'ピックアップUR',
+  rarity: 'UR',
+  image: 'images/new_ur.png',
+  gachas: ['standard_001', 'pickup_001'],
+  weights: {
+    pickup_001: 3
+  }
+}
+
+standard_001では weight 1、
+pickup_001では weight 3。
+
+
+■ 新しいガチャシリーズ追加
+
+gachas に追加するだけ。
+
+limited_001: {
+  id: 'limited_001',
+  name: '限定召喚',
+  enabled: true,
+  currency: 'gem',
+
+  summon: {
+    single: { count: 1, cost: 300 },
+    multi: { count: 12, cost: 3600 }
+  },
+
+  rarityRates: [
+    { rarity: 'UR', rate: 0.03 },
+    { rarity: 'SR', rate: 0.07 },
+    { rarity: 'R',  rate: 0.25 },
+    { rarity: 'N',  rate: 0.65 }
+  ]
+}
+
+あとは、そのガチャに入れたいカードの gachas に
+
+  'limited_001'
+
+を追加するだけ。
+
+
+■ 自動生成されたpoolを確認する
+
+ブラウザのコンソールで:
+
+GachaMasterAPI.getAutoPool('standard_001')
+
+と入力すると、
+
+{
+  N: [...],
+  R: [...],
+  SR: [...],
+  UR: [...]
+}
+
+を確認できます。
