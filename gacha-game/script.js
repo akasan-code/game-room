@@ -531,6 +531,7 @@ async function playOpeningSequence() {
   stage.classList.remove('phase-start');
   stage.classList.add('phase-activate');
   tapText.textContent = '';
+
   await wait(900);
 
   // 3. 魔力集積

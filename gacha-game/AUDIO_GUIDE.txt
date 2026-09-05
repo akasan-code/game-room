@@ -1,0 +1,54 @@
+Web Audio API SE ガイド
+=======================
+
+■ audio.js
+効果音の合成処理をまとめています。
+
+SummonAudio.playDeviceStart()
+  召喚装置起動SE
+
+SummonAudio.playCardReveal(rarity)
+  カード取得SE
+  rarity: N / R / SR / UR
+
+SummonAudio.setVolume(0.5)
+  SE全体音量を0〜1で変更
+
+
+■ 現在の再生タイミング
+
+召喚ボタン
+↓
+召喚術式
+↓
+装置起動
+  → playDeviceStart()
+↓
+魔力集積
+↓
+オーブ
+↓
+解放
+↓
+取得イラスト表示
+  → playCardReveal(rarity)
+
+
+■ 音声ファイル
+使用していません。
+すべてWeb Audio APIのOscillator / Noise / Filterで
+リアルタイム合成しています。
+
+
+■ モバイル対策
+iOS / Androidでは、音声再生にユーザー操作が必要なため、
+召喚ボタンを押した瞬間に SummonAudio.unlock() を呼んでいます。
+
+
+■ 今後追加しやすい音
+・魔力集積ループ
+・亀裂音
+・昇格音
+・オーブ破裂音
+・SR専用取得音
+・UR専用確定音
