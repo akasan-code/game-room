@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Summon Prototype</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="screen">
+    <img class="layer background" src="assets/background.png" alt="">
+    <div class="vignette"></div>
+
+    <section class="hud">
+      <div class="title">召喚</div>
+      <div class="currency">
+        <span class="gem red"></span><b>2,350</b>
+        <span class="gem blue"></span><b>1,580</b>
+        <span class="gem gold"></span><b>890</b>
+      </div>
+      <button class="help">?</button>
+    </section>
+
+    <aside class="side-menu">
+      <button>提供割合</button>
+      <button>履歴</button>
+    </aside>
+
+    <aside class="rarity-panel">
+      <div>10連召喚で</div>
+      <strong>SR以上1体確定！</strong>
+      <div class="rarities"><span>R</span><span>SR</span><span>SSR</span></div>
+    </aside>
+
+    <section class="summon-stage" id="summonStage">
+      <img class="layer pillars" src="assets/pillars.png" alt="">
+      <img class="layer ring" src="assets/upper_ring.png" alt="">
+      <img class="layer platform" src="assets/platform.png" alt="">
+      <img class="layer aura" src="assets/orb_aura.png" alt="">
+      <img class="layer orb" src="assets/orb.png" alt="">
+      <img class="layer lower-fx" src="assets/lower_fx.png" alt="">
+      <div class="flash"></div>
+    </section>
+
+    <div class="tap-text" id="tapText">✦ タップで召喚開始 ✦</div>
+
+    <section class="summon-actions">
+      <button class="summon-btn single" data-count="1">
+        <span>1回召喚</span>
+        <small>◆ 300</small>
+      </button>
+      <button class="summon-btn ten" data-count="10">
+        <span>10回召喚</span>
+        <small>◆ 3,000</small>
+        <em>SR以上1体確定！</em>
+      </button>
+    </section>
+
+    <nav class="bottom-nav">
+      <span>ホーム</span><span>キャラ</span><span>バトル</span>
+      <span class="active">召喚</span><span>ショップ</span><span>メニュー</span>
+    </nav>
+
+    <div class="result-card" id="resultCard">
+      <div class="result-inner">
+        <div class="result-rarity" id="resultRarity">SSR</div>
+        <div class="result-title">召喚成功</div>
+        <button id="closeResult">閉じる</button>
+      </div>
+    </div>
+  </main>
+  <script>
+const stage=document.getElementById('summonStage');const result=document.getElementById('resultCard');const rarityEl=document.getElementById('resultRarity');const tapText=document.getElementById('tapText');const closeBtn=document.getElementById('closeResult');const buttons=[...document.querySelectorAll('.summon-btn')];let running=false;
+function rollRarity(count){const r=Math.random();if(count===10&&r<.18)return'SSR';if(r<.08)return'SSR';if(r<.33)return'SR';return'R'}
+function applyRarity(rarity){const orb=document.querySelector('.orb');const aura=document.querySelector('.aura');const fx=document.querySelector('.lower-fx');const filters={R:'hue-rotate(0deg) saturate(1.0)',SR:'hue-rotate(55deg) saturate(1.35)',SSR:'hue-rotate(145deg) saturate(1.45) brightness(1.2)'};[orb,aura,fx].forEach(el=>el.style.filter=filters[rarity]);rarityEl.textContent=rarity;rarityEl.style.color=rarity==='SSR'?'#ffd46a':rarity==='SR'?'#d477ff':'#58a8ff'}
+async function summon(count=1){if(running)return;running=true;buttons.forEach(b=>b.disabled=true);tapText.textContent='魔力を集めています…';stage.classList.add('summoning');const rarity=rollRarity(count);applyRarity(rarity);await new Promise(r=>setTimeout(r,1700));stage.classList.remove('summoning');tapText.textContent='✦ タップで召喚開始 ✦';result.classList.add('show');running=false;buttons.forEach(b=>b.disabled=false)}
+buttons.forEach(button=>button.addEventListener('click',()=>summon(Number(button.dataset.count))));stage.addEventListener('click',()=>summon(1));closeBtn.addEventListener('click',()=>result.classList.remove('show'));
+
+
+
+window.addEventListener('load', () => {
+  const targets = [
+    ['background', document.querySelector('.background')],
+    ['pillars', document.querySelector('.pillars')],
+    ['ring', document.querySelector('.ring')],
+    ['platform', document.querySelector('.platform')],
+    ['aura', document.querySelector('.aura')],
+    ['orb', document.querySelector('.orb')],
+    ['lower-fx', document.querySelector('.lower-fx')]
+  ];
+
+  const panel = document.createElement('pre');
+  panel.id = 'assetDebug';
+  panel.style.cssText = `
+    position:fixed;
+    left:8px;
+    bottom:52px;
+    z-index:999999;
+    margin:0;
+    background:rgba(0,0,0,.92);
+    color:#fff;
+    padding:10px 12px;
+    font:12px/1.55 monospace;
+    border:2px solid #00ff99;
+    max-width:94vw;
+    max-height:45vh;
+    overflow:auto;
+    white-space:pre-wrap;
+    pointer-events:none;
+  `;
+
+  const stage = document.getElementById('summonStage');
+  let lines = [];
+
+  if (stage) {
+    const r = stage.getBoundingClientRect();
+    lines.push(`stage: ${Math.round(r.width)} x ${Math.round(r.height)}`);
+  } else {
+    lines.push('NG stage: element not found');
+  }
+
+  targets.forEach(([name, img]) => {
+    if (!img) {
+      lines.push(`NG ${name}: element not found`);
+      return;
+    }
+
+    const r = img.getBoundingClientRect();
+    const ok = img.complete && img.naturalWidth > 0;
+
+    lines.push(
+      `${ok ? 'OK' : 'NG'} ${name}: ` +
+      `natural=${img.naturalWidth}x${img.naturalHeight}, ` +
+      `display=${Math.round(r.width)}x${Math.round(r.height)}, ` +
+      `src=${img.getAttribute('src')}`
+    );
+  });
+
+  panel.textContent = lines.join('\n');
+  document.body.appendChild(panel);
+});
+
+</script>
+</body>
+</html>

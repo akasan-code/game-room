@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Summon Prototype</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="screen">
+    <img class="layer background" src="assets/background.png" alt="">
+    <div class="vignette"></div>
+
+    <section class="hud">
+      <div class="title">召喚</div>
+      <div class="currency">
+        <span class="gem red"></span><b>2,350</b>
+        <span class="gem blue"></span><b>1,580</b>
+        <span class="gem gold"></span><b>890</b>
+      </div>
+      <button class="help">?</button>
+    </section>
+
+    <aside class="side-menu">
+      <button>提供割合</button>
+      <button>履歴</button>
+    </aside>
+
+    <aside class="rarity-panel">
+      <div>10連召喚で</div>
+      <strong>SR以上1体確定！</strong>
+      <div class="rarities"><span>R</span><span>SR</span><span>SSR</span></div>
+    </aside>
+
+    <section class="summon-stage" id="summonStage">
+      <img class="layer pillars" src="assets/pillars.png" alt="">
+      <img class="layer ring" src="assets/upper_ring.png" alt="">
+      <img class="layer platform" src="assets/platform.png" alt="">
+      <img class="layer aura" src="assets/orb_aura.png" alt="">
+      <img class="layer orb" src="assets/orb.png" alt="">
+      <img class="layer lower-fx" src="assets/lower_fx.png" alt="">
+      <div class="flash"></div>
+    </section>
+
+    <div class="tap-text" id="tapText">✦ タップで召喚開始 ✦</div>
+
+    <section class="summon-actions">
+      <button class="summon-btn single" data-count="1">
+        <span>1回召喚</span>
+        <small>◆ 300</small>
+      </button>
+      <button class="summon-btn ten" data-count="10">
+        <span>10回召喚</span>
+        <small>◆ 3,000</small>
+        <em>SR以上1体確定！</em>
+      </button>
+    </section>
+
+    <nav class="bottom-nav">
+      <span>ホーム</span><span>キャラ</span><span>バトル</span>
+      <span class="active">召喚</span><span>ショップ</span><span>メニュー</span>
+    </nav>
+
+    <div class="result-card" id="resultCard">
+      <div class="result-inner">
+        <div class="result-rarity" id="resultRarity">SSR</div>
+        <div class="result-title">召喚成功</div>
+        <button id="closeResult">閉じる</button>
+      </div>
+    </div>
+  </main>
+  <script src="script_debug_assets.js"></script>
+</body>
+</html>
