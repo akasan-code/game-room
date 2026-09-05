@@ -31,12 +31,19 @@
       <img class="layer platform" src="assets/platform.png" alt="">
       <img class="layer aura" src="assets/orb_aura.png" alt="">
       <img class="layer orb" src="assets/orb.png" alt="">
+      <img class="layer orb-crack" id="orbCrack" src="" alt="" aria-hidden="true">
       <img class="layer lower-fx" src="assets/lower_fx.png" alt="">
       <div class="flash"></div>
       <div class="summon-glow"></div>
+      <div class="reveal-burst" id="revealBurst" aria-hidden="true">
+        <div class="reveal-burst-rays"></div>
+        <div class="reveal-burst-ring ring-a"></div>
+        <div class="reveal-burst-ring ring-b"></div>
+        <div class="reveal-burst-core"></div>
+      </div>
     </section>
 
-    <div class="tap-text" id="tapText">✦ タップで召喚開始 ✦</div>
+    <div class="tap-text" id="tapText">✦ 召喚ボタンを選択 ✦</div>
 
     <section class="summon-actions">
       <button class="summon-btn single" data-count="1">
@@ -70,6 +77,20 @@
     </div>
 
     
+
+    <!-- 取得カード専用：カード枠DOMとは完全に独立 -->
+    <div class="acquisition-reveal" id="acquisitionReveal" aria-hidden="true">
+      <div class="acquisition-backdrop"></div>
+      <img
+        class="acquisition-character"
+        id="acquisitionCharacter"
+        src=""
+        alt="取得キャラクター"
+      >
+      <div class="acquisition-rarity" id="acquisitionRarity"></div>
+      <div class="acquisition-tap-guide" id="acquisitionTapGuide">TAP</div>
+    </div>
+
     <div class="result-card" id="resultCard">
       <div class="result-inner">
 
