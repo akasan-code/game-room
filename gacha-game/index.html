@@ -18,18 +18,11 @@
         <span class="gem blue"></span><b>1,580</b>
         <span class="gem gold"></span><b>890</b>
       </div>
-      <button class="help">?</button>
     </section>
 
     <aside class="side-menu">
       <button>提供割合</button>
       <button>履歴</button>
-    </aside>
-
-    <aside class="rarity-panel">
-      <div>10連召喚で</div>
-      <strong>SR以上1体確定！</strong>
-      <div class="rarities"><span>R</span><span>SR</span><span>SSR</span></div>
     </aside>
 
     <section class="summon-stage" id="summonStage">
@@ -40,6 +33,7 @@
       <img class="layer orb" src="assets/orb.png" alt="">
       <img class="layer lower-fx" src="assets/lower_fx.png" alt="">
       <div class="flash"></div>
+      <div class="summon-glow"></div>
     </section>
 
     <div class="tap-text" id="tapText">✦ タップで召喚開始 ✦</div>
@@ -49,10 +43,9 @@
         <span>1回召喚</span>
         <small>◆ 300</small>
       </button>
-      <button class="summon-btn ten" data-count="10">
-        <span>10回召喚</span>
-        <small>◆ 3,000</small>
-        <em>SR以上1体確定！</em>
+      <button class="summon-btn ten" data-count="12">
+        <span>12回召喚</span>
+        <small>◆ 3,600</small>
       </button>
     </section>
 
@@ -61,13 +54,52 @@
       <span class="active">召喚</span><span>ショップ</span><span>メニュー</span>
     </nav>
 
+    
+    <div class="card-eject-layer" id="cardEjectLayer" aria-hidden="true">
+      <div class="layered-card eject-card" id="ejectCard">
+        <img class="card-frame-sizing" id="ejectFrameSizing" src="assets/card_frame_sr.png" alt="">
+        <div class="card-art-window">
+          <img class="card-character" id="ejectCharacter" src="assets/sample_character.png" alt="キャラクター">
+        </div>
+        <img class="card-frame-overlay" id="ejectFrameOverlay" src="assets/card_frame_sr.png" alt="">
+        <div class="card-rarity-label" id="ejectRarity">N</div>
+        <div class="card-nameplate">
+          <div class="card-name" id="ejectName">星導の魔導姫</div>
+        </div>
+      </div>
+    </div>
+
+    
     <div class="result-card" id="resultCard">
       <div class="result-inner">
-        <div class="result-rarity" id="resultRarity">SSR</div>
-        <div class="result-title">召喚成功</div>
+
+        <div class="single-result" id="singleResult">
+          <div class="result-rarity" id="resultRarity">N</div>
+
+          <div class="layered-card result-layered-card" id="resultLayeredCard">
+            <img class="card-frame-sizing" id="resultFrameSizing" src="assets/card_frame_sr.png" alt="">
+            <div class="card-art-window">
+              <img class="card-character" id="resultCharacter" src="assets/sample_character.png" alt="キャラクター">
+            </div>
+            <img class="card-frame-overlay" id="resultFrameOverlay" src="assets/card_frame_sr.png" alt="">
+            <div class="card-rarity-label" id="resultCardRarity">N</div>
+            <div class="card-nameplate">
+              <div class="card-name" id="resultCardName">星導の魔導姫</div>
+            </div>
+          </div>
+
+          <div class="result-title">召喚成功</div>
+        </div>
+
+        <div class="ten-result" id="tenResult">
+          <div class="ten-result-title">12連召喚結果</div>
+          <div class="ten-card-grid" id="tenCardGrid"></div>
+        </div>
+
         <button id="closeResult">閉じる</button>
       </div>
     </div>
+
   </main>
   <script src="script.js"></script>
 </body>
