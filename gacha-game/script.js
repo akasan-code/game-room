@@ -54,8 +54,8 @@ const RARITY_COLORS = {
 };
 
 const FRAME_BY_RARITY = {
-  N:'assets/card_frame_sr.png',
-  R:'assets/card_frame_sr.png',
+  N:'assets/card_frame_n.png',
+  R:'assets/card_frame_r.png',
   SR:'assets/card_frame_sr.png',
   UR:'assets/card_frame_ur.png'
 };

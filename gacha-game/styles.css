@@ -1581,3 +1581,156 @@
     bottom:15.6%;
   }
 }
+
+
+/* =========================================================
+   v7 調整
+   ・キャラクターをもう少しだけ小さく
+   ・N / R / SR / UR でフレーム切り替え
+   ========================================================= */
+
+/* 基本のキャラ表示をほんの少し縮小 */
+.card-character{
+  width:92%;
+  height:92%;
+}
+
+/* URは装飾が強いので少しだけさらに余裕を取る */
+.layered-card.rarity-ur .card-character{
+  width:90%;
+  height:90%;
+}
+
+/* 12連一覧では小型表示なので少しだけ見やすく戻す */
+.result-card.twelve-mode .ten-layered-card .card-character{
+  width:94%;
+  height:94%;
+}
+
+.result-card.twelve-mode .ten-layered-card.rarity-ur .card-character{
+  width:92%;
+  height:92%;
+}
+
+
+/* =========================================================
+   v8 スマホ結果画面の見直し
+   幅だけでなく画面高さ(dvh)でもカードサイズを制限する。
+   ========================================================= */
+
+@media (max-width:820px){
+
+  /* ---------- 1連：結果画面 ---------- */
+  .result-card:not(.twelve-mode){
+    padding:2dvh 3vw;
+  }
+
+  .result-card:not(.twelve-mode) .result-inner{
+    width:min(92vw, 360px);
+    max-height:94dvh;
+    padding:16px 14px 14px;
+    overflow:auto;
+  }
+
+  .result-card:not(.twelve-mode) .result-rarity{
+    margin:0 0 4px;
+    font-size:clamp(26px, 8vw, 38px);
+  }
+
+  /*
+    以前は 68vw だったため縦長カードがかなり巨大になっていた。
+    高さ基準も加えて最大220px程度に抑える。
+  */
+  .result-card:not(.twelve-mode) .result-layered-card{
+    width:min(54vw, 34dvh, 220px);
+    margin:6px auto 10px;
+  }
+
+  .result-card:not(.twelve-mode) .result-title{
+    margin:6px 0 12px;
+    font-size:clamp(18px, 5vw, 24px);
+  }
+
+  .result-card:not(.twelve-mode) #closeResult{
+    padding:8px 20px;
+    font-size:14px;
+  }
+
+
+  /* ---------- カード排出中 ---------- */
+  .card-eject-layer .eject-card{
+    width:min(52vw, 32dvh, 210px);
+  }
+
+
+  /* ---------- 12連：専用結果画面 ---------- */
+  .result-card.twelve-mode{
+    padding:.8dvh 1vw;
+  }
+
+  .result-card.twelve-mode .result-inner{
+    width:98vw;
+    height:97dvh;
+    padding:1.2dvh 1vw .8dvh;
+  }
+
+  .result-card.twelve-mode .ten-result-title{
+    margin:0 0 .7dvh;
+    font-size:clamp(17px, 4.8vw, 22px);
+  }
+
+  .result-card.twelve-mode .ten-card-grid{
+    width:100%;
+    gap:.55dvh 1.2vw;
+    grid-template-columns:repeat(4, auto);
+    grid-template-rows:repeat(3, auto);
+  }
+
+  /*
+    4×3が確実に収まるよう、カード幅を高さで強めに制限。
+    1448/1086 ≒ 1.333 なので3段でも余裕を残せる。
+  */
+  .result-card.twelve-mode .ten-card-item{
+    width:min(21vw, 12.8dvh, 112px);
+  }
+
+  .result-card.twelve-mode .ten-layered-card .card-rarity-label{
+    top:3.8%;
+    right:6%;
+    min-width:2.1em;
+    padding:.18em .34em;
+    font-size:clamp(5px, 1.35vw, 7px);
+  }
+
+  .result-card.twelve-mode .ten-layered-card .card-name{
+    font-size:clamp(4px, 1.18vw, 6px);
+  }
+
+  .result-card.twelve-mode #closeResult{
+    min-width:110px;
+    margin-top:.55dvh;
+    padding:6px 16px;
+    font-size:12px;
+  }
+}
+
+
+/* 高さが特に低いスマホ向け */
+@media (max-width:820px) and (max-height:700px){
+
+  .result-card:not(.twelve-mode) .result-layered-card{
+    width:min(48vw, 29dvh, 180px);
+  }
+
+  .card-eject-layer .eject-card{
+    width:min(46vw, 28dvh, 175px);
+  }
+
+  .result-card.twelve-mode .ten-card-item{
+    width:min(20vw, 11.6dvh, 98px);
+  }
+
+  .result-card.twelve-mode .ten-result-title{
+    font-size:16px;
+  }
+}
