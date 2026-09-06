@@ -2414,6 +2414,29 @@ async function showNextGateCut() {
     return;
   }
 
+  /*
+  * コンパスなし
+  * カット3で専用メッセージ
+  */
+  if (
+    !gateCutHasCompass &&
+    currentGateCut === 3
+  ) {
+
+    await playGateCutText(
+      '　　　何かをはめる場所なのかしら',
+      true
+    );
+
+    setTimeout(() => {
+
+      gateCutInputLocked =
+        false;
+
+    }, 300);
+
+    return;
+  }  
 
 /*
  * カット4
@@ -2593,7 +2616,7 @@ async function playEndingTransition() {
 
 
   /*
-   * まず白
+   * ホワイトアウト
    */
   fade.classList.remove(
     'black'
@@ -2617,53 +2640,83 @@ async function playEndingTransition() {
 
 
   /*
-   * 瞬き1回目：少し開く
+   * 完全に黒くなったところで
+   * ゲートの台紙を隠す
    */
-  fade.classList.remove(
-    'active'
-  );
+  const scrapbook =
+    $('gateScrapbook');
 
-  await wait(180);
+  if (scrapbook) {
+    scrapbook.style.visibility =
+      'hidden';
+  }
+}
+
+async function playEndingBlink() {
+
+  const page =
+    $('endingPage');
+
+  if (!page) {
+    return;
+  }
 
 
   /*
-   * また閉じる
+   * 最初はほぼ真っ暗
    */
-  fade.classList.add(
-    'active'
-  );
+  page.style.opacity = '0';
+  page.style.filter = 'blur(7px)';
 
-  await wait(220);
+  await wait(500);
 
 
   /*
-   * 2回目：少し長めに開く
+   * 1回目
+   * ぼんやり少しだけ見える
    */
-  fade.classList.remove(
-    'active'
-  );
+  page.style.opacity = '0.55';
+  page.style.filter = 'blur(5px)';
 
-  await wait(320);
+  await wait(350);
 
 
   /*
-   * また閉じる
+   * また目を閉じる
+   * 完全には消さない
    */
-  fade.classList.add(
-    'active'
-  );
+  page.style.opacity = '0.08';
+  page.style.filter = 'blur(7px)';
 
-  await wait(260);
+  await wait(350);
 
 
   /*
-   * 最後に完全に開く
+   * 2回目
+   * 少しはっきり見える
    */
-  fade.classList.remove(
-    'active'
-  );
+  page.style.opacity = '0.75';
+  page.style.filter = 'blur(3px)';
 
-  await wait(700);
+  await wait(500);
+
+
+  /*
+   * もう一度閉じる
+   */
+  page.style.opacity = '0.12';
+  page.style.filter = 'blur(6px)';
+
+  await wait(350);
+
+
+  /*
+   * 最後にゆっくり目を開ける
+   */
+  page.style.opacity = '1';
+  page.style.filter = 'blur(0px)';
+
+  await wait(900);
 }
 
 async function startEndingScene() {
@@ -2674,15 +2727,20 @@ async function startEndingScene() {
   const layer =
     $('endingCutLayer');
 
+  const page =
+    $('endingPage');
+
   const cover =
     $('endingBookCover');
 
   const title =
     $('endingTitle');
 
+
   if (
     !overlay ||
     !layer ||
+    !page ||
     !cover ||
     !title
   ) {
@@ -2705,18 +2763,33 @@ async function startEndingScene() {
 
 
   /*
-   * エンディング表示
+   * エンディング画面を表示
+   *
+   * overlay側の背景が黒なので、
+   * pageが透明な間は真っ黒になる
    */
   overlay.hidden = false;
 
+  page.style.opacity =
+    '0';
+
 
   /*
-   * カット1
-   * 主人公が寝ている
+   * 黒い間に寝室1枚目を用意
    */
   addEndingCut(1);
 
-  await wait(1800);
+
+  /*
+   * 瞬き
+   */
+  await playEndingBlink();
+
+
+  /*
+   * 少し寝室を見せる
+   */
+  await wait(1100);
 
 
   /*
@@ -2753,19 +2826,28 @@ async function startEndingScene() {
     'closing'
   );
 
-  await wait(1400);
+  /*
+   * CSSの表紙transitionに合わせる
+   * 今2秒以上にしているなら、
+   * ここも同程度にする
+   */
+  await wait(2600);
 
 
   /*
-   * 少し間を空けて
-   * THE END
+   * 少し余韻
    */
   await wait(2000);
 
+
+  /*
+   * THE END
+   */
   title.classList.add(
     'show'
   );
 }
+
 function addEndingCut(number) {
 
   const layer =
@@ -4414,12 +4496,21 @@ const testGateCutsceneButton =
 
 if (testGateCutsceneButton) {
 
-  testGateCutsceneButton.onclick = () => {
 
-//    startGateCutscene(true);
-    startEndingScene();
-  };
+  testGateCutsceneButton.onclick = async () => {
 
+    /*
+     * ゲートクリア演出
+     * true = コンパス所持状態
+     */
+    await startGateCutscene(true);
+
+
+    /*
+     * 続けてエンディング
+     */
+    await startEndingScene();
+  }
 }
 /*
  * START
