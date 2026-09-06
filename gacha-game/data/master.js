@@ -48,6 +48,14 @@ window.GACHA_MASTER = {
       gachas: ['standard_001']
     },
 
+    oba_n_004: {
+      id: 'oba_n_004',
+      name: 'ぽんきち',
+      rarity: 'N',
+      image: 'images/OBA/ponkiti.png',
+      gachas: ['standard_001']
+    },
+
     oba_r_001: {
       id: 'oba_r_001',
       name: '赤マント',
@@ -77,6 +85,22 @@ window.GACHA_MASTER = {
       name: '赤べえ',
       rarity: 'R',
       image: 'images/OBA/akabee.png',
+      gachas: ['standard_001']
+    },
+
+    oba_r_005: {
+      id: 'oba_r_005',
+      name: 'グリ',
+      rarity: 'R',
+      image: 'images/OBA/guri.png',
+      gachas: ['standard_001']
+    },
+
+    oba_r_006: {
+      id: 'oba_r_006',
+      name: 'フーラン',
+      rarity: 'R',
+      image: 'images/OBA/fuuran.png',
       gachas: ['standard_001']
     },
 
@@ -112,6 +136,38 @@ window.GACHA_MASTER = {
       gachas: ['standard_001']
     },
 
+    oba_sr_005: {
+      id: 'oba_sr_005',
+      name: 'アリサ',
+      rarity: 'SR',
+      image: 'images/OBA/arisa.png',
+      gachas: ['standard_001']
+    },
+
+    oba_sr_006: {
+      id: 'oba_sr_006',
+      name: 'アレス',
+      rarity: 'SR',
+      image: 'images/OBA/ares.png',
+      gachas: ['standard_001']
+    },
+
+    oba_sr_007: {
+      id: 'oba_sr_007',
+      name: 'メアリー',
+      rarity: 'SR',
+      image: 'images/OBA/meary.png',
+      gachas: ['standard_001']
+    },
+
+    oba_sr_008: {
+      id: 'oba_sr_008',
+      name: 'ルル',
+      rarity: 'SR',
+      image: 'images/OBA/lulu.png',
+      gachas: ['standard_001']
+    },
+
     oba_ur_001: {
       id: 'oba_ur_001',
       name: 'メリーさん',
@@ -133,6 +189,14 @@ window.GACHA_MASTER = {
       name: 'お雪',
       rarity: 'UR',
       image: 'images/OBA/oyuki.png',
+      gachas: ['standard_001']
+    },
+
+    oba_ur_004: {
+      id: 'oba_ur_004',
+      name: 'リジー',
+      rarity: 'UR',
+      image: 'images/OBA/lisy.png',
       gachas: ['standard_001']
     }
   },
