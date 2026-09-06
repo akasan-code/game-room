@@ -1778,7 +1778,7 @@ h2 {
 
 /* 探索時の移動先 */
 .character-area.walking #char {
-  left: 55%;
+  left: 45%;
 }
 
 .discovery-mark {

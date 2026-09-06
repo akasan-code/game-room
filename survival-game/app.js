@@ -2048,7 +2048,7 @@ function openGateControl(tile) {
    ゲート起動
 ========================================================= */
 
-function activateGate() {
+async function activateGate() {
 
   /*
    * 二重起動防止
@@ -2096,20 +2096,35 @@ function activateGate() {
     'exploreModal'
   );
 
-
   /*
-   * コンパスは消費しない
-   */
+  * 発見済みゲートへ再訪した場合も
+  * 通常探索アニメーションから開始
+  */
+  const gateResult = {
+    isRare: false,
+    discoveredFood: null
+  };
 
-
-  /*
-   * クリア
-   */
-  alert(
-    'ゲートが起動した！ GAME CLEAR'
+  await playExploreAnimation(
+    'gate',
+    gateResult
   );
 
-  location.reload();
+
+  /*
+  * ゲート起動イベント
+  */
+  await startGateCutscene(
+    true
+  );
+
+
+  /*
+  * エンディングへ
+  */
+  S.isExploring = false;
+
+  await startEndingScene();
 }
 
 /* =========================================================
@@ -3117,10 +3132,69 @@ async function explore() {
   $('exploreSign').hidden = true;
 
   /*
-   * 歩行・レア発見演出
-   */
-  await playExploreAnimation(tile.t,result);
+  * 探索アニメーション
+  */
+  if (tile.t === 'gate') {
 
+    /*
+    * ゲートの場合、
+    * 資源発見演出はまだ出さない。
+    *
+    * 通常の歩行アニメーションだけ再生する。
+    */
+    await playExploreAnimation(
+      tile.t,
+      {
+        ...result,
+        isRare: false,
+        discoveredFood: null
+      }
+    );
+
+
+    /*
+    * 通常探索アニメーションのあとに
+    * ゲートイベント
+    */
+    await startGateCutscene(
+      S.compass
+    );
+
+
+    /* =====================================================
+      コンパスあり
+      → そのままエンディング
+    ===================================================== */
+
+    if (S.compass) {
+
+      S.gateDiscovered = true;
+      S.gateActivated = true;
+
+      S.pending = null;
+      S.isExploring = false;
+
+
+      /*
+      * 寝室エンディング
+      */
+      await startEndingScene();
+
+      return;
+    }
+
+  }
+  else {
+
+    /*
+    * 通常地形
+    */
+    await playExploreAnimation(
+      tile.t,
+      result
+    );
+
+  }
 
   /* =====================================================
      空腹・ライフ
@@ -3198,39 +3272,20 @@ async function explore() {
   /* =====================================================
      ゲート・ゲームオーバー判定を保存
   ===================================================== */
-  const exploredGate = tile.t === 'gate';
+  const exploredGate =
+    tile.t === 'gate';
 
   if (exploredGate) {
 
-    S.gateDiscovered = true;
-
-    /*
-    * コンパス所持時だけ、その場でゲート起動
-    */
-    if (
-      S.compass &&
-      !S.gateActivated
-    ) {
-
-      S.gateActivated = true;
-      S.pendingGameClear = true;
-
-    }
-
-    else {
-
-      S.pendingGameClear = false;
-
-    }
+    S.gateDiscovered =
+      true;
 
   }
 
-  else {
-
-    S.pendingGameClear = false;
-
-  }
-
+  /*
+  * 旧クリアalertは使用しない
+  */
+  S.pendingGameClear = false;
 
   S.pendingGameOver =
     S.life <= 0;
