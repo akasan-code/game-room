@@ -1,0 +1,92 @@
+CSVカード管理版
+========================
+
+■ 普段編集するファイル
+
+data/cards.csv
+
+カードを増やすときは1行追加するだけです。
+
+
+■ 列
+
+collectionNo
+  図鑑番号。例: 23
+
+id
+  内部カードID。重複不可。
+  例: oba_r_007
+
+name
+  表示名。
+
+rarity
+  N / R / SR / UR
+
+image
+  画像パス。
+  例: images/OBA/luka.png
+
+gachas
+  所属するガチャSeries。
+  複数の場合は | で区切る。
+
+  例:
+  standard_001
+
+  複数:
+  standard_001|series_002
+
+weights
+  任意。
+  同レア内の排出重みを変えたいときだけ使用。
+
+  例:
+  standard_001:2
+
+  複数:
+  standard_001:2|series_002:1
+
+  通常は空欄でOK。
+
+
+■ 追加例
+
+23,oba_r_007,ルカ,R,images/OBA/luka.png,standard_001,
+
+これだけで、
+・ガチャpool
+・図鑑
+・図鑑No.
+・所持数
+・魔力回復対象
+に自動反映されます。
+
+
+■ 起動について
+
+CSVはブラウザのfetchで読み込むため、
+index.htmlの直接ダブルクリック(file://)では
+ブラウザのセキュリティ制限で動かない場合があります。
+
+Windows:
+START_GAME.bat をダブルクリック
+
+手動:
+このフォルダで
+
+python -m http.server 8000
+
+を実行し、
+
+http://localhost:8000
+
+を開いてください。
+
+
+■ master.js
+
+data/master.js には今後、
+カード一覧を書かなくて大丈夫です。
+
+Series、排出率、召喚コスト、魔力設定だけを管理します。

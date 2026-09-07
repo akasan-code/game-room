@@ -35,6 +35,19 @@ const acquisitionReveal = document.getElementById('acquisitionReveal');
 const acquisitionCharacter = document.getElementById('acquisitionCharacter');
 const acquisitionRarity = document.getElementById('acquisitionRarity');
 const acquisitionTapGuide = document.getElementById('acquisitionTapGuide');
+const seriesSelector = document.getElementById('seriesSelector');
+const openCollectionBtn = document.getElementById('openCollection');
+const collectionOverlay = document.getElementById('collectionOverlay');
+const closeCollectionBtn = document.getElementById('closeCollection');
+const collectionSeriesTabs = document.getElementById('collectionSeriesTabs');
+const collectionSeriesName = document.getElementById('collectionSeriesName');
+const collectionProgressText = document.getElementById('collectionProgressText');
+const collectionProgressBar = document.getElementById('collectionProgressBar');
+const collectionGrid = document.getElementById('collectionGrid');
+const gameToast = document.getElementById('gameToast');
+const magicAmountEl = document.getElementById('magicAmount');
+const magicRateEl = document.getElementById('magicRate');
+
 
 let running = false;
 let awaitingTap = false;
@@ -127,6 +140,249 @@ const MASTER = window.GACHA_MASTER;
 
 if (!MASTER) {
   throw new Error('GACHA_MASTER が読み込まれていません。data/master.js を確認してください。');
+}
+
+const COLLECTION_SAVE_KEY = 'gachaGameCollection_v31b';
+
+function createInitialCollectionData() {
+  return {
+    ownedCounts: {},
+    discoveredBySeries: {}
+  };
+}
+
+function loadCollectionData() {
+  try {
+    const raw = localStorage.getItem(COLLECTION_SAVE_KEY);
+    if (!raw) return createInitialCollectionData();
+
+    const parsed = JSON.parse(raw);
+    return {
+      ownedCounts: parsed.ownedCounts || {},
+      discoveredBySeries: parsed.discoveredBySeries || {}
+    };
+  } catch (error) {
+    console.warn('図鑑データの読み込みに失敗しました。', error);
+    return createInitialCollectionData();
+  }
+}
+
+let collectionData = loadCollectionData();
+let collectionSeriesId = MASTER.currentGachaId;
+
+/*
+  ============================================================
+  魔力
+  ============================================================
+*/
+const MAGIC_SAVE_KEY = 'gachaGameMagic_v31c';
+
+function loadMagic() {
+  try {
+    const raw = localStorage.getItem(MAGIC_SAVE_KEY);
+
+    if (raw === null) {
+      return MASTER.economy?.initialMagic ?? 3000;
+    }
+
+    const value = Number(raw);
+
+    return Number.isFinite(value)
+      ? Math.max(0, value)
+      : (MASTER.economy?.initialMagic ?? 3000);
+  } catch (error) {
+    console.warn('魔力データの読み込みに失敗しました。', error);
+    return MASTER.economy?.initialMagic ?? 3000;
+  }
+}
+
+let currentMagic = loadMagic();
+let toastTimer = null;
+
+function saveMagic() {
+  try {
+    localStorage.setItem(MAGIC_SAVE_KEY, String(currentMagic));
+  } catch (error) {
+    console.warn('魔力データの保存に失敗しました。', error);
+  }
+}
+
+function getCurrentMagic() {
+  return currentMagic;
+}
+
+function formatMagic(value) {
+  return Math.floor(value).toLocaleString('ja-JP');
+}
+
+
+function updateSummonButtonStates() {
+  const gacha = getCurrentGacha();
+
+  for (const button of buttons) {
+    const count = Number(button.dataset.count);
+
+    let cost = 0;
+    if (count === gacha.summon.single.count) {
+      cost = gacha.summon.single.cost;
+    } else if (count === gacha.summon.multi.count) {
+      cost = gacha.summon.multi.cost;
+    }
+
+    button.classList.toggle('insufficient-magic', currentMagic < cost);
+  }
+}
+
+function renderMagicHud() {
+  if (magicAmountEl) {
+    magicAmountEl.textContent = formatMagic(currentMagic);
+  }
+
+  if (magicRateEl) {
+    magicRateEl.textContent = `+${formatMagic(getMagicPerSecond())} / 秒`;
+  }
+
+  updateSummonButtonStates();
+}
+
+function showGameToast(message) {
+  if (!gameToast) return;
+
+  clearTimeout(toastTimer);
+
+  gameToast.textContent = message;
+  gameToast.classList.add('show');
+
+  toastTimer = setTimeout(() => {
+    gameToast.classList.remove('show');
+  }, 1800);
+}
+
+function getSummonConfigByCount(count) {
+  const summon = getCurrentGacha().summon;
+
+  if (count === summon.single.count) {
+    return summon.single;
+  }
+
+  if (count === summon.multi.count) {
+    return summon.multi;
+  }
+
+  return null;
+}
+
+function spendMagic(cost) {
+  if (currentMagic < cost) {
+    return false;
+  }
+
+  currentMagic -= cost;
+  saveMagic();
+  renderMagicHud();
+  return true;
+}
+
+
+/*
+  ============================================================
+  毎秒の魔力補充
+  ============================================================
+*/
+function getOwnedCountByRarity() {
+  const counts = {
+    N: 0,
+    R: 0,
+    SR: 0,
+    UR: 0
+  };
+
+  for (const [cardId, owned] of Object.entries(collectionData.ownedCounts)) {
+    const card = MASTER.cards[cardId];
+
+    if (!card || !Object.prototype.hasOwnProperty.call(counts, card.rarity)) {
+      continue;
+    }
+
+    counts[card.rarity] += owned;
+  }
+
+  return counts;
+}
+
+function getEffectiveOwnedCountByRarity() {
+  const owned = getOwnedCountByRarity();
+  const caps = MASTER.economy?.contributionCaps || {};
+
+  return {
+    N: Math.min(owned.N, caps.N ?? Infinity),
+    R: Math.min(owned.R, caps.R ?? Infinity),
+    SR: Math.min(owned.SR, caps.SR ?? Infinity),
+    UR: Math.min(owned.UR, caps.UR ?? Infinity)
+  };
+}
+
+function getMagicPerSecond() {
+  const effective = getEffectiveOwnedCountByRarity();
+  const rates = MASTER.economy?.magicPerSecond || {};
+
+  return (
+    effective.N * (rates.N ?? 0) +
+    effective.R * (rates.R ?? 0) +
+    effective.SR * (rates.SR ?? 0) +
+    effective.UR * (rates.UR ?? 0)
+  );
+}
+
+function addMagic(amount) {
+  const value = Number(amount);
+
+  if (!Number.isFinite(value) || value <= 0) {
+    return;
+  }
+
+  currentMagic += value;
+  saveMagic();
+  renderMagicHud();
+}
+
+setInterval(() => {
+  const gain = getMagicPerSecond();
+
+  if (gain <= 0) {
+    return;
+  }
+
+  addMagic(gain);
+}, 1000);
+
+
+function saveCollectionData() {
+  try {
+    localStorage.setItem(COLLECTION_SAVE_KEY, JSON.stringify(collectionData));
+  } catch (error) {
+    console.warn('図鑑データの保存に失敗しました。', error);
+  }
+}
+
+function getOwnedCount(cardId) {
+  return collectionData.ownedCounts[cardId] || 0;
+}
+
+function isDiscoveredInSeries(cardId, gachaId) {
+  return Boolean(collectionData.discoveredBySeries[gachaId]?.[cardId]);
+}
+
+function registerObtainedCard(card, gachaId) {
+  collectionData.ownedCounts[card.id] = getOwnedCount(card.id) + 1;
+
+  if (!collectionData.discoveredBySeries[gachaId]) {
+    collectionData.discoveredBySeries[gachaId] = {};
+  }
+
+  collectionData.discoveredBySeries[gachaId][card.id] = true;
+  saveCollectionData();
+  renderMagicHud();
 }
 
 function getCurrentGacha() {
@@ -235,8 +491,12 @@ function setCurrentGacha(gachaId) {
     throw new Error(`存在しないガチャIDです: ${gachaId}`);
   }
 
+  if (running) return;
+
   MASTER.currentGachaId = gachaId;
   renderCurrentGachaInfo();
+  renderSeriesSelector();
+  renderMagicHud();
 }
 
 function renderCurrentGachaInfo() {
@@ -278,6 +538,172 @@ function renderCurrentGachaInfo() {
   if (multiButton) {
     multiButton.dataset.count = gacha.summon.multi.count;
   }
+
+  updateSummonButtonStates();
+}
+
+function renderSeriesSelector() {
+  if (!seriesSelector) return;
+
+  seriesSelector.innerHTML = '';
+
+  for (const gacha of getEnabledGachas()) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'series-tab';
+    button.textContent = gacha.name;
+
+    if (gacha.id === MASTER.currentGachaId) {
+      button.classList.add('active');
+    }
+
+    button.addEventListener('click', () => {
+      setCurrentGacha(gacha.id);
+    });
+
+    seriesSelector.appendChild(button);
+  }
+}
+
+function getCardsForGacha(gachaId) {
+  const pool = getAutoPool(gachaId);
+  const result = [];
+
+  for (const rarity of ['N', 'R', 'SR', 'UR']) {
+    for (const entry of pool[rarity] || []) {
+      result.push(getCardMaster(entry.cardId));
+    }
+  }
+
+  return result.sort((a, b) => {
+    const noA = Number.isFinite(a.collectionNo)
+      ? a.collectionNo
+      : Number.MAX_SAFE_INTEGER;
+    const noB = Number.isFinite(b.collectionNo)
+      ? b.collectionNo
+      : Number.MAX_SAFE_INTEGER;
+
+    return noA - noB;
+  });
+}
+
+function createCollectionCard(card, gachaId) {
+  const discovered = isDiscoveredInSeries(card.id, gachaId);
+  const ownedCount = getOwnedCount(card.id);
+  const item = document.createElement('article');
+
+  const collectionNo = Number.isFinite(card.collectionNo)
+    ? String(card.collectionNo).padStart(3, '0')
+    : '---';
+
+  item.className = `collection-card ${rarityClass(card.rarity)}`;
+  if (!discovered) item.classList.add('locked');
+
+  if (discovered) {
+    const cap = MASTER.economy?.contributionCaps?.[card.rarity];
+
+    const ownedText = Number.isFinite(cap)
+      ? `所持 ${ownedCount} / ${cap}`
+      : `所持 ×${ownedCount}`;
+
+    item.innerHTML = `
+      <div class="collection-art">
+        <img src="${card.image}" alt="${card.name}" loading="lazy">
+        <div class="collection-rarity">${card.rarity}</div>
+      </div>
+      <div class="collection-card-body">
+        <div class="collection-number">No.${collectionNo}</div>
+        <div class="collection-card-name">${card.name}</div>
+        <div class="collection-owned">${ownedText}</div>
+      </div>
+    `;
+  } else {
+    item.innerHTML = `
+      <div class="collection-art collection-art-locked">
+        <div class="collection-question">?</div>
+        <div class="collection-rarity">${card.rarity}</div>
+      </div>
+      <div class="collection-card-body">
+        <div class="collection-number">No.${collectionNo}</div>
+        <div class="collection-card-name">未召喚</div>
+        <div class="collection-owned">???</div>
+      </div>
+    `;
+  }
+
+  return item;
+}
+
+function renderCollectionTabs() {
+  if (!collectionSeriesTabs) return;
+
+  collectionSeriesTabs.innerHTML = '';
+
+  for (const gacha of getEnabledGachas()) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'collection-series-tab';
+    button.textContent = gacha.name;
+
+    if (gacha.id === collectionSeriesId) {
+      button.classList.add('active');
+    }
+
+    button.addEventListener('click', () => {
+      collectionSeriesId = gacha.id;
+      renderCollection();
+    });
+
+    collectionSeriesTabs.appendChild(button);
+  }
+}
+
+function renderCollection() {
+  if (!collectionGrid) return;
+
+  const gacha = MASTER.gachas[collectionSeriesId];
+  const cards = getCardsForGacha(collectionSeriesId);
+  const discovered = cards.filter(card =>
+    isDiscoveredInSeries(card.id, collectionSeriesId)
+  ).length;
+
+  renderCollectionTabs();
+
+  if (collectionSeriesName) {
+    collectionSeriesName.textContent = gacha?.name || '---';
+  }
+
+  if (collectionProgressText) {
+    collectionProgressText.textContent = `${discovered} / ${cards.length}`;
+  }
+
+  if (collectionProgressBar) {
+    const percent = cards.length ? (discovered / cards.length) * 100 : 0;
+    collectionProgressBar.style.width = `${percent}%`;
+  }
+
+  collectionGrid.innerHTML = '';
+
+  for (const card of cards) {
+    collectionGrid.appendChild(createCollectionCard(card, collectionSeriesId));
+  }
+}
+
+function openCollection() {
+  if (running || !collectionOverlay) return;
+
+  collectionSeriesId = MASTER.currentGachaId;
+  renderCollection();
+
+  collectionOverlay.classList.add('show');
+  collectionOverlay.setAttribute('aria-hidden', 'false');
+}
+
+function closeCollection() {
+  if (!collectionOverlay) return;
+
+  collectionOverlay.classList.remove('show');
+  collectionOverlay.setAttribute('aria-hidden', 'true');
 }
 
 function rollRarity() {
@@ -809,7 +1235,13 @@ async function playOneOrbResult(item, {
   await playPostReleaseBurst(rarity, fast);
 
   /*
-    9. カード排出の代わりに、
+    9. この時点で排出確定。
+    所持数と現在Seriesの図鑑を更新する。
+  */
+  registerObtainedCard(card, getCurrentGacha().id);
+
+  /*
+    カード排出の代わりに、
     取得イラストを直接・全画面で表示する。
   */
   await showAcquisitionReveal(item, index, total);
@@ -1005,6 +1437,24 @@ async function showTenResult(results) {
 async function summon(count = 1) {
   if (running) return;
 
+  const summonConfig = getSummonConfigByCount(count);
+
+  if (!summonConfig) {
+    console.warn(`召喚回数 ${count} の設定が見つかりません。`);
+    return;
+  }
+
+  if (currentMagic < summonConfig.cost) {
+    showGameToast(
+      `魔力が不足しています（必要: ${formatMagic(summonConfig.cost)}）`
+    );
+    return;
+  }
+
+  if (!spendMagic(summonConfig.cost)) {
+    return;
+  }
+
   running = true;
   buttons.forEach(button => button.disabled = true);
   clearState();
@@ -1070,6 +1520,7 @@ async function summon(count = 1) {
     awaitingTap = false;
     tapResolve = null;
     buttons.forEach(button => button.disabled = false);
+    renderMagicHud();
   }
 }
 
@@ -1084,6 +1535,8 @@ Object.values(FRAME_BY_RARITY).forEach(preloadImage);
 Object.values(MASTER.cards).forEach(card => preloadImage(card.image));
 
 renderCurrentGachaInfo();
+renderSeriesSelector();
+renderMagicHud();
 
 // 将来のガチャ選択UIから呼び出せるように公開
 window.GachaMasterAPI = {
@@ -1092,7 +1545,13 @@ window.GachaMasterAPI = {
   getCardMaster,
   getAutoPool,
   buildPoolForGacha,
-  setCurrentGacha
+  setCurrentGacha,
+  getOwnedCount,
+  getCurrentMagic,
+  getOwnedCountByRarity,
+  getEffectiveOwnedCountByRarity,
+  getMagicPerSecond,
+  openCollection
 };
 
 
@@ -1100,6 +1559,29 @@ buttons.forEach(button => {
   button.addEventListener('click', () => {
     summon(Number(button.dataset.count));
   });
+});
+
+if (openCollectionBtn) {
+  openCollectionBtn.addEventListener('click', openCollection);
+}
+
+if (closeCollectionBtn) {
+  closeCollectionBtn.addEventListener('click', closeCollection);
+}
+
+if (collectionOverlay) {
+  collectionOverlay.addEventListener('click', event => {
+    if (event.target === collectionOverlay) {
+      closeCollection();
+    }
+  });
+}
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' &&
+      collectionOverlay?.classList.contains('show')) {
+    closeCollection();
+  }
 });
 
 /*

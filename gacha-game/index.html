@@ -13,17 +13,21 @@
 
     <section class="hud">
       <div class="title" id="gachaTitle">召喚</div>
-      <div class="currency">
-        <span class="gem red"></span><b>2,350</b>
-        <span class="gem blue"></span><b>1,580</b>
-        <span class="gem gold"></span><b>890</b>
+      <div class="magic-hud" aria-label="魔力情報">
+        <div class="magic-main">
+          <span class="magic-icon">◆</span>
+          <div class="magic-values">
+            <div class="magic-label">魔力</div>
+            <b id="magicAmount">3,000</b>
+          </div>
+        </div>
+        <div class="magic-rate" id="magicRate">+0 / 秒</div>
       </div>
     </section>
 
-    <aside class="side-menu">
-      <button>提供割合</button>
-      <button>履歴</button>
-    </aside>
+    <section class="series-selector" id="seriesSelector" aria-label="ガチャシリーズ"></section>
+
+    <button type="button" class="collection-open-btn" id="openCollection">図鑑</button>
 
     <section class="summon-stage" id="summonStage">
       <img class="layer pillars" src="assets/pillars.png" alt="">
@@ -52,7 +56,7 @@
       </button>
       <button class="summon-btn ten" data-count="12">
         <span id="multiSummonLabel">12回召喚</span>
-        <small id="multiSummonCost">◆ 3,600</small>
+        <small id="multiSummonCost">◆ 3,000</small>
       </button>
     </section>
 
@@ -77,6 +81,34 @@
     </div>
 
     
+
+
+    <div class="game-toast" id="gameToast" role="status" aria-live="polite"></div>
+
+    <section class="collection-overlay" id="collectionOverlay" aria-hidden="true">
+      <div class="collection-panel">
+        <header class="collection-header">
+          <div>
+            <div class="collection-kicker">COLLECTION</div>
+            <h2>召喚図鑑</h2>
+          </div>
+          <button type="button" class="collection-close" id="closeCollection" aria-label="図鑑を閉じる">×</button>
+        </header>
+
+        <div class="collection-series-tabs" id="collectionSeriesTabs" aria-label="図鑑シリーズ切り替え"></div>
+
+        <div class="collection-summary">
+          <div class="collection-series-name" id="collectionSeriesName">---</div>
+          <div class="collection-count" id="collectionProgressText">0 / 0</div>
+        </div>
+
+        <div class="collection-progress-track">
+          <div class="collection-progress-fill" id="collectionProgressBar"></div>
+        </div>
+
+        <div class="collection-grid" id="collectionGrid"></div>
+      </div>
+    </section>
 
     <!-- 取得カード専用：カード枠DOMとは完全に独立 -->
     <div class="acquisition-reveal" id="acquisitionReveal" aria-hidden="true">
@@ -124,6 +156,6 @@
 
   </main>
   <script src="data/master.js"></script>
-  <script src="script.js"></script>
+  <script src="data/card_loader.js"></script>
 </body>
 </html>
