@@ -651,8 +651,8 @@ function generateGate() {
      * 拠点から7～9マス
      */
     if (
-      distance < 2 ||
-      distance > 3
+      distance < 7 ||
+      distance > 9
     ) {
       continue;
     }
@@ -4546,27 +4546,6 @@ function renderBook() {
 /* =========================================================
    イベント
 ========================================================= */
-const testGateCutsceneButton =
-  $('testGateCutscene');
-
-if (testGateCutsceneButton) {
-
-
-  testGateCutsceneButton.onclick = async () => {
-
-    /*
-     * ゲートクリア演出
-     * true = コンパス所持状態
-     */
-    await startGateCutscene(true);
-
-
-    /*
-     * 続けてエンディング
-     */
-    await startEndingScene();
-  }
-}
 /*
  * START
  */
