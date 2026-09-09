@@ -33,7 +33,7 @@ window.GACHA_MASTER = {
   gachas: {
     standard_001: {
       id: 'standard_001',
-      name: 'オバケイドロ召喚',
+      name: 'オバケイドロ',
       enabled: true,
 
       currency: 'magic',
@@ -59,7 +59,7 @@ window.GACHA_MASTER = {
 
     series_002: {
       id: 'series_002',
-      name: '深淵の召喚',
+      name: '元素の人影',
       enabled: true,
 
       currency: 'magic',
@@ -90,15 +90,15 @@ window.GACHA_MASTER = {
     magicPerSecond: {
       N: 1,
       R: 10,
-      SR: 100,
-      UR: 500
+      SR: 50,
+      UR: 100
     },
 
     contributionCaps: {
       N: 99,
       R: 20,
       SR: 9,
-      UR: 3
+      UR: 5
     }
   },
 

@@ -502,15 +502,10 @@ function setCurrentGacha(gachaId) {
 function renderCurrentGachaInfo() {
   const gacha = getCurrentGacha();
 
-  const title = document.getElementById('gachaTitle');
   const singleLabel = document.getElementById('singleSummonLabel');
   const singleCost = document.getElementById('singleSummonCost');
   const multiLabel = document.getElementById('multiSummonLabel');
   const multiCost = document.getElementById('multiSummonCost');
-
-  if (title) {
-    title.textContent = gacha.name;
-  }
 
   if (singleLabel) {
     singleLabel.textContent = `${gacha.summon.single.count}回召喚`;
