@@ -34,6 +34,7 @@ const tenCardGrid = document.getElementById('tenCardGrid');
 const acquisitionReveal = document.getElementById('acquisitionReveal');
 const acquisitionCharacter = document.getElementById('acquisitionCharacter');
 const acquisitionRarity = document.getElementById('acquisitionRarity');
+const acquisitionCardName = document.getElementById('acquisitionCardName');
 const acquisitionTapGuide = document.getElementById('acquisitionTapGuide');
 const seriesSelector = document.getElementById('seriesSelector');
 const openCollectionBtn = document.getElementById('openCollection');
@@ -374,6 +375,8 @@ function isDiscoveredInSeries(cardId, gachaId) {
 }
 
 function registerObtainedCard(card, gachaId) {
+  const firstDiscovery = !isDiscoveredInSeries(card.id, gachaId);
+
   collectionData.ownedCounts[card.id] = getOwnedCount(card.id) + 1;
 
   if (!collectionData.discoveredBySeries[gachaId]) {
@@ -383,6 +386,8 @@ function registerObtainedCard(card, gachaId) {
   collectionData.discoveredBySeries[gachaId][card.id] = true;
   saveCollectionData();
   renderMagicHud();
+
+  return firstDiscovery;
 }
 
 function getCurrentGacha() {
@@ -915,6 +920,10 @@ function clearState() {
   if (acquisitionCharacter) {
     acquisitionCharacter.removeAttribute('src');
   }
+
+  if (acquisitionCardName) {
+    acquisitionCardName.textContent = '';
+  }
 }
 
 function waitForSummonTap() {
@@ -1233,7 +1242,7 @@ async function playOneOrbResult(item, {
     9. この時点で排出確定。
     所持数と現在Seriesの図鑑を更新する。
   */
-  registerObtainedCard(card, getCurrentGacha().id);
+  item.isNew = registerObtainedCard(card, getCurrentGacha().id);
 
   /*
     カード排出の代わりに、
@@ -1292,6 +1301,12 @@ async function showAcquisitionReveal(item, index = 0, total = 1) {
   acquisitionCharacter.src = card.image;
 
   acquisitionRarity.textContent = rarity;
+
+  if (acquisitionCardName) {
+    acquisitionCardName.innerHTML = item.isNew
+      ? `<span class="acquisition-new-badge">NEW</span><span class="acquisition-name-text">${card.name}</span>`
+      : `<span class="acquisition-name-text">${card.name}</span>`;
+  }
 
   if (acquisitionTapGuide) {
     acquisitionTapGuide.textContent = total > 1
