@@ -4435,3 +4435,213 @@
     }
   }
 }
+
+
+/* =========================================================
+   図鑑 v2.3
+   パネル全体スクロール方式
+   ・一覧を残り高さへ押し込まない
+   ・カードの3:4サイズを保持
+   ・カード数が増えたらパネル全体を縦スクロール
+   ========================================================= */
+
+/*
+  図鑑パネルそのものをスクロールコンテナにする。
+  これにより collection-grid を無理に縮めない。
+*/
+.collection-panel{
+  display:block !important;
+
+  width:min(1180px, 96vw);
+  height:min(94dvh, 960px);
+  max-height:94dvh;
+
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+}
+
+/*
+  上部の各要素は普通の文書フローに戻す。
+*/
+.collection-header,
+.collection-series-tabs,
+.collection-summary,
+.collection-progress-track{
+  flex:none !important;
+}
+
+/*
+  一覧は内容の高さだけ自然に伸びる。
+  ここではスクロールさせない。
+*/
+.collection-grid{
+  display:grid !important;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(180px, 1fr)) !important;
+
+  grid-auto-rows:max-content !important;
+
+  width:100%;
+  height:auto !important;
+  min-height:0 !important;
+
+  overflow:visible !important;
+
+  flex:none !important;
+
+  align-content:start !important;
+
+  gap:18px;
+  padding:8px 22px 28px;
+}
+
+/*
+  カード自体も縮ませない。
+*/
+.collection-card{
+  display:block !important;
+
+  width:100%;
+  height:auto !important;
+  min-height:0 !important;
+
+  overflow:hidden;
+}
+
+/*
+  サムネイル部分は必ず3:4。
+  幅が決まれば高さも確保される。
+*/
+.collection-art,
+.collection-art-locked{
+  position:relative;
+
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+
+  width:100% !important;
+  height:auto !important;
+
+  aspect-ratio:3 / 4 !important;
+
+  flex:none !important;
+  overflow:hidden;
+}
+
+.collection-art img{
+  position:static !important;
+
+  display:block !important;
+
+  width:100% !important;
+  height:100% !important;
+
+  object-fit:contain !important;
+  object-position:center center !important;
+}
+
+/*
+  情報部分も自然な高さを保持。
+*/
+.collection-card-body{
+  display:block;
+  height:auto !important;
+  flex:none !important;
+}
+
+
+/* ---------- スマホ ---------- */
+@media(max-width:820px){
+
+  .collection-overlay{
+    align-items:center !important;
+    justify-content:center !important;
+
+    padding:
+      max(6px, env(safe-area-inset-top))
+      6px
+      max(6px, env(safe-area-inset-bottom));
+
+    overflow:hidden;
+  }
+
+  .collection-panel{
+    width:100%;
+    height:calc(
+      100dvh
+      - max(6px, env(safe-area-inset-top))
+      - max(6px, env(safe-area-inset-bottom))
+    );
+
+    max-height:none;
+
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+  }
+
+  .collection-grid{
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr)) !important;
+
+    grid-auto-rows:max-content !important;
+
+    gap:10px;
+    padding:8px 9px 24px;
+
+    height:auto !important;
+    overflow:visible !important;
+  }
+
+  .collection-card{
+    width:100%;
+    height:auto !important;
+  }
+
+  .collection-art,
+  .collection-art-locked{
+    width:100% !important;
+    height:auto !important;
+    aspect-ratio:3 / 4 !important;
+  }
+
+  .collection-art img{
+    width:100% !important;
+    height:100% !important;
+    padding:2px;
+    object-fit:contain !important;
+  }
+}
+
+
+/*
+  aspect-ratio非対応環境向け。
+*/
+@supports not (aspect-ratio: 3 / 4){
+
+  .collection-art,
+  .collection-art-locked{
+    position:relative !important;
+    display:block !important;
+
+    width:100% !important;
+    height:0 !important;
+    padding-bottom:133.3333% !important;
+  }
+
+  .collection-art img{
+    position:absolute !important;
+    inset:0 !important;
+  }
+
+  .collection-art-locked .collection-question{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+  }
+}
