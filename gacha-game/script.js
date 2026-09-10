@@ -45,6 +45,13 @@ const collectionSeriesName = document.getElementById('collectionSeriesName');
 const collectionProgressText = document.getElementById('collectionProgressText');
 const collectionProgressBar = document.getElementById('collectionProgressBar');
 const collectionGrid = document.getElementById('collectionGrid');
+const collectionDetail = document.getElementById('collectionDetail');
+const closeCollectionDetailBtn = document.getElementById('closeCollectionDetail');
+const collectionDetailImage = document.getElementById('collectionDetailImage');
+const collectionDetailRarity = document.getElementById('collectionDetailRarity');
+const collectionDetailNumber = document.getElementById('collectionDetailNumber');
+const collectionDetailName = document.getElementById('collectionDetailName');
+const collectionDetailOwned = document.getElementById('collectionDetailOwned');
 const gameToast = document.getElementById('gameToast');
 const magicAmountEl = document.getElementById('magicAmount');
 const magicRateEl = document.getElementById('magicRate');
@@ -631,6 +638,25 @@ function createCollectionCard(card, gachaId) {
     `;
   }
 
+  if (discovered) {
+    item.classList.add('is-clickable');
+    item.tabIndex = 0;
+    item.setAttribute('role', 'button');
+    item.setAttribute('aria-label', `${card.name}の詳細を表示`);
+
+    const openDetail = () => {
+      openCollectionDetail(card);
+    };
+
+    item.addEventListener('click', openDetail);
+    item.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openDetail();
+      }
+    });
+  }
+
   return item;
 }
 
@@ -689,6 +715,68 @@ function renderCollection() {
   }
 }
 
+function openCollectionDetail(card) {
+  if (!collectionDetail || !card) return;
+
+  const ownedCount = getOwnedCount(card.id);
+  const cap = MASTER.economy?.contributionCaps?.[card.rarity];
+  const collectionNo = Number.isFinite(card.collectionNo)
+    ? String(card.collectionNo).padStart(3, '0')
+    : '---';
+
+  if (collectionDetailImage) {
+    collectionDetailImage.src = card.image;
+    collectionDetailImage.alt = card.name;
+  }
+
+  if (collectionDetailRarity) {
+    collectionDetailRarity.textContent = card.rarity;
+  }
+
+  if (collectionDetailNumber) {
+    collectionDetailNumber.textContent = `No.${collectionNo}`;
+  }
+
+  if (collectionDetailName) {
+    collectionDetailName.textContent = card.name;
+  }
+
+  if (collectionDetailOwned) {
+    collectionDetailOwned.textContent = Number.isFinite(cap)
+      ? `所持 ${ownedCount} / ${cap}`
+      : `所持 ×${ownedCount}`;
+  }
+
+  collectionDetail.classList.remove(
+    'rarity-n',
+    'rarity-r',
+    'rarity-sr',
+    'rarity-ur'
+  );
+  collectionDetail.classList.add(rarityClass(card.rarity));
+
+  collectionDetail.classList.add('show');
+  collectionDetail.setAttribute('aria-hidden', 'false');
+}
+
+function closeCollectionDetail() {
+  if (!collectionDetail) return;
+
+  collectionDetail.classList.remove(
+    'show',
+    'rarity-n',
+    'rarity-r',
+    'rarity-sr',
+    'rarity-ur'
+  );
+  collectionDetail.setAttribute('aria-hidden', 'true');
+
+  if (collectionDetailImage) {
+    collectionDetailImage.removeAttribute('src');
+    collectionDetailImage.alt = '';
+  }
+}
+
 function openCollection() {
   if (running || !collectionOverlay) return;
 
@@ -701,6 +789,8 @@ function openCollection() {
 
 function closeCollection() {
   if (!collectionOverlay) return;
+
+  closeCollectionDetail();
 
   collectionOverlay.classList.remove('show');
   collectionOverlay.setAttribute('aria-hidden', 'true');
@@ -1587,9 +1677,33 @@ if (collectionOverlay) {
   });
 }
 
+if (closeCollectionDetailBtn) {
+  closeCollectionDetailBtn.addEventListener('click', event => {
+    event.stopPropagation();
+    closeCollectionDetail();
+  });
+}
+
+if (collectionDetail) {
+  collectionDetail.addEventListener('click', event => {
+    if (
+      event.target === collectionDetail ||
+      event.target.classList.contains('collection-detail-backdrop')
+    ) {
+      closeCollectionDetail();
+    }
+  });
+}
+
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' &&
-      collectionOverlay?.classList.contains('show')) {
+  if (event.key !== 'Escape') return;
+
+  if (collectionDetail?.classList.contains('show')) {
+    closeCollectionDetail();
+    return;
+  }
+
+  if (collectionOverlay?.classList.contains('show')) {
     closeCollection();
   }
 });

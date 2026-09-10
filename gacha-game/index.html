@@ -107,6 +107,30 @@
 
         <div class="collection-grid" id="collectionGrid"></div>
       </div>
+
+      <div class="collection-detail" id="collectionDetail" aria-hidden="true">
+        <div class="collection-detail-backdrop"></div>
+
+        <article class="collection-detail-card">
+          <button
+            type="button"
+            class="collection-detail-close"
+            id="closeCollectionDetail"
+            aria-label="カード詳細を閉じる"
+          >×</button>
+
+          <div class="collection-detail-art">
+            <img id="collectionDetailImage" src="" alt="">
+            <div class="collection-detail-rarity" id="collectionDetailRarity">N</div>
+          </div>
+
+          <div class="collection-detail-info">
+            <div class="collection-detail-number" id="collectionDetailNumber">No.---</div>
+            <div class="collection-detail-name" id="collectionDetailName">---</div>
+            <div class="collection-detail-owned" id="collectionDetailOwned">所持 0</div>
+          </div>
+        </article>
+      </div>
     </section>
 
     <!-- 取得カード専用：カード枠DOMとは完全に独立 -->
