@@ -1,4 +1,4 @@
-﻿collectionNo,id,name,rarity,image,gachas,weights
+collectionNo,id,name,rarity,image,gachas,weights
 1,oba_n_001,紀子,N,images/OBA/noriko.png,standard_001,
 2,oba_n_002,秋彦,N,images/OBA/akihiko.png,standard_001,
 3,oba_n_003,花子,N,images/OBA/hanako.png,standard_001,
@@ -21,6 +21,9 @@
 20,oba_ur_002,ヤミ子さん,UR,images/OBA/yami.png,standard_001,
 21,oba_ur_003,お雪,UR,images/OBA/oyuki.png,standard_001,
 22,oba_ur_004,リジー,UR,images/OBA/lisy.png,standard_001,
+23,oba_r_006,新アリサ,R,images/OBA/aris2.png,standard_001,
+24,oba_r_007,新アレス,R,images/OBA/ares2.png,standard_001,
+25,oba_r_008,ツギハギ,R,images/OBA/tsugihagi.png,standard_001,
 1,element_001,H 水素,UR,images/element/001_H_ur.png,series_002,
 2,element_002,He ヘリウム,SR,images/element/002_He_sr.png,series_002,
 3,element_003,Li リチウム,SR,images/element/003_Li_sr.png,series_002,
