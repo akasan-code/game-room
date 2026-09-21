@@ -81,7 +81,34 @@ window.GACHA_MASTER = {
         { rarity: 'R',  rate: 0.25 },
         { rarity: 'N',  rate: 0.65 }
       ]
+    },
+
+    series_003: {
+      id: 'series_003',
+      name: 'overload',
+      enabled: true,
+
+      currency: 'magic',
+
+      summon: {
+        single: {
+          count: 1,
+          cost: 300
+        },
+        multi: {
+          count: 12,
+          cost: 3000
+        }
+      },
+
+      rarityRates: [
+        { rarity: 'UR', rate: 0.03 },
+        { rarity: 'SR', rate: 0.07 },
+        { rarity: 'R',  rate: 0.25 },
+        { rarity: 'N',  rate: 0.65 }
+      ]
     }
+
   },
 
   economy: {
