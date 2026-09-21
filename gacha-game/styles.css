@@ -3789,7 +3789,7 @@
   position:absolute;
   z-index:118;
   top:74px;
-  left:50%;
+  left:10%;
   transform:translateX(-50%);
   display:flex;
   gap:8px;
