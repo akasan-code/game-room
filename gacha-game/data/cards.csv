@@ -21,7 +21,7 @@ collectionNo,id,name,rarity,image,gachas,weights
 20,oba_ur_002,ヤミ子さん,UR,images/OBA/yami.png,standard_001,
 21,oba_ur_003,お雪,UR,images/OBA/oyuki.png,standard_001,
 22,oba_ur_004,リジー,UR,images/OBA/lisy.png,standard_001,
-23,oba_r_007,新アリサ,R,images/OBA/aris2.png,standard_001,
+23,oba_r_007,新アリサ,R,images/OBA/arisa2.png,standard_001,
 24,oba_r_008,新アレス,R,images/OBA/ares2.png,standard_001,
 25,oba_r_009,ツギハギ,R,images/OBA/tsugihagi.png,standard_001,
 1,element_001,H 水素,UR,images/element/001_H_ur.png,series_002,
@@ -142,4 +142,5 @@ collectionNo,id,name,rarity,image,gachas,weights
 116,element_116,Lv リバモリウム,N,images/element/116_Lv_n.png,series_002,
 117,element_117,Ts テネシン ,N,images/element/117_Ts_n.png,series_002,
 118,element_118,Og オガネソン,UR,images/element/118_Og_ur.png,series_002,
+001,ovarloard_001,アインズ・ウール・ゴウン,UR,images/ovarloard/001_ur.png,series_003,
 
