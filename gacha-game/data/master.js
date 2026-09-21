@@ -102,10 +102,10 @@ window.GACHA_MASTER = {
       },
 
       rarityRates: [
-        { rarity: 'UR', rate: 0.03 },
-        { rarity: 'SR', rate: 0.07 },
+        { rarity: 'UR', rate: 0.10 },
+        { rarity: 'SR', rate: 0.15 },
         { rarity: 'R',  rate: 0.25 },
-        { rarity: 'N',  rate: 0.65 }
+        { rarity: 'N',  rate: 0.50 }
       ]
     }
 
