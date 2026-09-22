@@ -278,7 +278,7 @@
     foundCount.textContent = `${game.foundHumans} / ${CONFIG.HUMAN_COUNT}`;
   }
 
-  function renderGameBoard(lastIndex = null) {
+  function renderGameBoard(lastIndex = null, revealKind = null) {
     gameBoard.innerHTML = '';
     applyCurrentMap();
     game.board.forEach(cell => {
@@ -291,9 +291,15 @@
         button.innerHTML = `<span class="obk-hide-mark">?</span><span class="obk-cell-number">${cell.index + 1}</span>`;
       } else if (cell.content?.kind === 'human') {
         button.classList.add('found-human');
+        if (lastIndex === cell.index && revealKind === 'human') {
+          button.classList.add('human-caught-motion');
+        }
         button.innerHTML = `<img src="${cell.content.card.image}" alt="${cell.content.card.name}"><span>${cell.content.card.name}</span>`;
       } else if (cell.content?.kind === 'lantern') {
         button.classList.add('found-lantern');
+        if (lastIndex === cell.index && revealKind === 'lantern') {
+          button.classList.add('lantern-found-motion');
+        }
         button.innerHTML = '<b>✦</b><span>ランタン</span>';
       } else {
         button.classList.add('found-empty');
@@ -321,15 +327,17 @@
 
   async function presentSearchResult(result) {
     updateStatus();
-    renderGameBoard(result.index);
+    renderGameBoard(result.index, result.kind);
     gameLog.textContent = result.message;
 
     if (result.kind === 'lantern') {
       lanternAlert.classList.add('show');
       lanternAlert.setAttribute('aria-hidden','false');
-      await wait(900);
+      await wait(1250);
       lanternAlert.classList.remove('show');
       lanternAlert.setAttribute('aria-hidden','true');
+    } else if (result.kind === 'human') {
+      await wait(game.side === 'human' ? 1450 : 1320);
     } else {
       await wait(game.side === 'human' ? 520 : 160);
     }

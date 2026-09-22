@@ -5272,3 +5272,454 @@
     border-radius:13px;
   }
 }
+
+
+/* =========================================================
+   オバケイドロ v4 - ニンゲン発見モーション
+   見つかった時に少し拡大 → 数回揺れる → 元の枠へ落ち着く
+   ========================================================= */
+
+.obk-board .obk-cell.found-human.human-caught-motion{
+  overflow: visible;
+  z-index: 8;
+}
+
+.obk-board .obk-cell.found-human.human-caught-motion img{
+  transform-origin: center 72%;
+  animation: obkHumanCaughtMotion .82s cubic-bezier(.2,.72,.18,1) both;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+}
+
+.obk-board .obk-cell.found-human.human-caught-motion span{
+  animation: obkHumanCaughtLabel .82s ease-out both;
+}
+
+@keyframes obkHumanCaughtMotion{
+  0%{
+    transform: scale(0.86) translate3d(0, 6px, 0) rotate(0deg);
+  }
+  14%{
+    transform: scale(1.14) translate3d(0, -6px, 0) rotate(-2.2deg);
+  }
+  24%{
+    transform: scale(1.10) translate3d(-6px, -3px, 0) rotate(2.6deg);
+  }
+  34%{
+    transform: scale(1.11) translate3d(7px, -2px, 0) rotate(-2.4deg);
+  }
+  46%{
+    transform: scale(1.08) translate3d(-5px, 0, 0) rotate(1.9deg);
+  }
+  58%{
+    transform: scale(1.05) translate3d(4px, 0, 0) rotate(-1.4deg);
+  }
+  72%{
+    transform: scale(1.02) translate3d(-2px, 0, 0) rotate(.8deg);
+  }
+  100%{
+    transform: scale(1) translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+@keyframes obkHumanCaughtLabel{
+  0%{
+    opacity:.7;
+    transform: translateY(4px);
+  }
+  18%{
+    opacity:1;
+    transform: translateY(0);
+  }
+  100%{
+    opacity:1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   オバケイドロ v5
+   発見モーション強化 + ランタン青発光
+   ========================================================= */
+
+/* ニンゲン：より大きく、よりゆっくり揺れる */
+.obk-board .obk-cell.found-human.human-caught-motion img{
+  animation: obkHumanCaughtMotionV5 1.34s cubic-bezier(.18,.72,.18,1) both !important;
+  transform-origin:center 76%;
+  filter:
+    drop-shadow(0 14px 22px rgba(0,0,0,.42))
+    drop-shadow(0 0 10px rgba(190,225,255,.16));
+}
+
+.obk-board .obk-cell.found-human.human-caught-motion span{
+  animation: obkHumanCaughtLabelV5 1.34s ease-out both !important;
+}
+
+@keyframes obkHumanCaughtMotionV5{
+  0%{
+    transform:scale(.84) translate3d(0, 8px, 0) rotate(0deg);
+  }
+  12%{
+    transform:scale(1.34) translate3d(0, -12px, 0) rotate(-3.5deg);
+  }
+  24%{
+    transform:scale(1.29) translate3d(-13px, -8px, 0) rotate(4deg);
+  }
+  36%{
+    transform:scale(1.30) translate3d(14px, -6px, 0) rotate(-3.6deg);
+  }
+  48%{
+    transform:scale(1.24) translate3d(-10px, -3px, 0) rotate(2.8deg);
+  }
+  60%{
+    transform:scale(1.18) translate3d(8px, -2px, 0) rotate(-2.1deg);
+  }
+  72%{
+    transform:scale(1.12) translate3d(-5px, 0, 0) rotate(1.4deg);
+  }
+  84%{
+    transform:scale(1.06) translate3d(3px, 0, 0) rotate(-.8deg);
+  }
+  100%{
+    transform:scale(1) translate3d(0,0,0) rotate(0deg);
+  }
+}
+
+@keyframes obkHumanCaughtLabelV5{
+  0%{
+    opacity:.55;
+    transform:translateY(8px) scale(.95);
+  }
+  18%{
+    opacity:1;
+    transform:translateY(0) scale(1.06);
+  }
+  100%{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+
+/* ランタン：青い魔力発光 */
+.obk-board .obk-cell.found-lantern.lantern-found-motion{
+  position:relative;
+  overflow:visible;
+  z-index:9;
+  animation:obkLanternCellPulse 1.18s ease-out both;
+}
+
+.obk-board .obk-cell.found-lantern.lantern-found-motion::before{
+  content:"";
+  position:absolute;
+  inset:-18%;
+  border-radius:50%;
+  pointer-events:none;
+  z-index:-1;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(115,220,255,.95) 0%,
+      rgba(70,180,255,.70) 25%,
+      rgba(50,125,255,.38) 48%,
+      rgba(20,70,180,.10) 68%,
+      transparent 78%
+    );
+
+  filter:blur(8px);
+  animation:obkLanternAura 1.18s ease-out both;
+}
+
+.obk-board .obk-cell.found-lantern.lantern-found-motion::after{
+  content:"";
+  position:absolute;
+  inset:-6%;
+  border:2px solid rgba(130,225,255,.92);
+  border-radius:16px;
+  pointer-events:none;
+
+  box-shadow:
+    0 0 12px rgba(90,205,255,.95),
+    0 0 26px rgba(60,155,255,.78),
+    inset 0 0 18px rgba(100,220,255,.34);
+
+  animation:obkLanternRing 1.18s ease-out both;
+}
+
+.obk-board .obk-cell.found-lantern.lantern-found-motion b{
+  color:#dff8ff;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 12px rgba(120,230,255,1),
+    0 0 24px rgba(60,170,255,.95),
+    0 0 38px rgba(50,110,255,.8);
+  animation:obkLanternSymbol 1.18s ease-out both;
+}
+
+@keyframes obkLanternCellPulse{
+  0%{
+    transform:scale(.96);
+    filter:brightness(1);
+  }
+  22%{
+    transform:scale(1.08);
+    filter:brightness(1.55);
+  }
+  52%{
+    transform:scale(1.04);
+    filter:brightness(1.32);
+  }
+  100%{
+    transform:scale(1);
+    filter:brightness(1);
+  }
+}
+
+@keyframes obkLanternAura{
+  0%{
+    opacity:0;
+    transform:scale(.55);
+  }
+  18%{
+    opacity:1;
+    transform:scale(1.18);
+  }
+  50%{
+    opacity:.9;
+    transform:scale(1.06);
+  }
+  100%{
+    opacity:0;
+    transform:scale(1.32);
+  }
+}
+
+@keyframes obkLanternRing{
+  0%{
+    opacity:0;
+    transform:scale(.82);
+  }
+  22%{
+    opacity:1;
+    transform:scale(1.05);
+  }
+  62%{
+    opacity:.78;
+    transform:scale(1.01);
+  }
+  100%{
+    opacity:0;
+    transform:scale(1.10);
+  }
+}
+
+@keyframes obkLanternSymbol{
+  0%{
+    transform:scale(.75);
+    opacity:.5;
+  }
+  20%{
+    transform:scale(1.45);
+    opacity:1;
+  }
+  48%{
+    transform:scale(1.22);
+  }
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+
+/* =========================================================
+   v6 ガチャSeriesボタン配置修正
+   左端が画面外へ切れないよう中央配置 + 画面内固定
+   ========================================================= */
+
+.series-selector{
+  left:50% !important;
+  right:auto !important;
+  transform:translateX(-50%) !important;
+
+  width:max-content;
+  max-width:calc(100vw - 36px) !important;
+  box-sizing:border-box;
+
+  justify-content:flex-start;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* 最初と最後のボタンが端へ張り付かない余白 */
+.series-selector::before,
+.series-selector::after{
+  content:"";
+  flex:0 0 1px;
+}
+
+@media(max-width:820px){
+  .series-selector{
+    left:50% !important;
+    transform:translateX(-50%) !important;
+
+    width:calc(100vw - 16px);
+    max-width:calc(100vw - 16px) !important;
+
+    padding-left:8px !important;
+    padding-right:8px !important;
+  }
+}
+
+
+/* =========================================================
+   v7 ミニゲームボタン配置
+   Series選択の直下へ中央配置
+   ========================================================= */
+
+.mini-game-open-btn{
+  top:116px !important;
+  left:50% !important;
+  right:auto !important;
+  transform:translateX(-50%) !important;
+
+  min-width:118px;
+  padding:7px 16px !important;
+
+  border:1px solid rgba(142,111,224,.46);
+  border-radius:999px;
+
+  background:
+    linear-gradient(180deg,rgba(34,20,64,.90),rgba(14,8,31,.92));
+  color:#eee5ff;
+
+  font-size:10px !important;
+  font-weight:700;
+  letter-spacing:.10em;
+
+  box-shadow:
+    0 5px 16px rgba(0,0,0,.24),
+    inset 0 0 12px rgba(151,111,225,.08);
+}
+
+.mini-game-open-btn:hover{
+  transform:translateX(-50%) translateY(-1px) !important;
+  filter:brightness(1.16);
+}
+
+@media(max-width:820px){
+  .mini-game-open-btn{
+    top:96px !important;
+    left:50% !important;
+    right:auto !important;
+    transform:translateX(-50%) !important;
+
+    min-width:104px;
+    padding:6px 13px !important;
+    font-size:9px !important;
+  }
+
+  .mini-game-open-btn:hover{
+    transform:translateX(-50%) !important;
+  }
+}
+
+
+/* =========================================================
+   v8 ミニゲーム行
+   Seriesボタンと同じ並びを1段下へ
+   ========================================================= */
+
+.minigame-selector{
+  position:absolute;
+  z-index:118;
+  top:114px;
+  left:50%;
+  transform:translateX(-50%);
+
+  display:flex;
+  gap:8px;
+
+  width:max-content;
+  max-width:calc(100vw - 36px);
+  padding:5px;
+  box-sizing:border-box;
+
+  overflow-x:auto;
+  scrollbar-width:none;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+}
+
+.minigame-selector::-webkit-scrollbar{
+  display:none;
+}
+
+.minigame-tab{
+  flex:0 0 auto;
+  padding:7px 16px;
+
+  border:1px solid rgba(130,145,190,.24);
+  border-radius:999px;
+
+  background:rgba(8,10,20,.58);
+  color:rgba(176,188,208,.45);
+
+  font:inherit;
+  font-size:11px;
+  letter-spacing:.06em;
+
+  white-space:nowrap;
+  box-sizing:border-box;
+}
+
+.minigame-tab.available{
+  cursor:pointer;
+  color:#efe8ff;
+  border-color:rgba(153,118,235,.52);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(42,25,78,.92),
+      rgba(15,9,33,.94)
+    );
+  box-shadow:
+    inset 0 0 14px rgba(155,115,240,.09),
+    0 5px 15px rgba(0,0,0,.20);
+}
+
+.minigame-tab.available:hover{
+  color:#fff;
+  border-color:rgba(180,145,255,.75);
+  filter:brightness(1.12);
+}
+
+.minigame-tab.dummy{
+  opacity:.38;
+  cursor:default;
+}
+
+/* 旧単独ボタンは使わない */
+.mini-game-open-btn{
+  display:none !important;
+}
+
+@media(max-width:820px){
+  .minigame-selector{
+    top:92px;
+    left:50%;
+    transform:translateX(-50%);
+
+    width:calc(100vw - 16px);
+    max-width:calc(100vw - 16px);
+
+    padding-left:8px;
+    padding-right:8px;
+  }
+
+  .minigame-tab{
+    padding:6px 11px;
+    font-size:8px;
+  }
+}

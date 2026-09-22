@@ -37,6 +37,7 @@ const acquisitionRarity = document.getElementById('acquisitionRarity');
 const acquisitionCardName = document.getElementById('acquisitionCardName');
 const acquisitionTapGuide = document.getElementById('acquisitionTapGuide');
 const seriesSelector = document.getElementById('seriesSelector');
+const minigameSelector = document.getElementById('minigameSelector');
 const openCollectionBtn = document.getElementById('openCollection');
 const collectionOverlay = document.getElementById('collectionOverlay');
 const closeCollectionBtn = document.getElementById('closeCollection');
@@ -554,7 +555,9 @@ function renderSeriesSelector() {
 
   seriesSelector.innerHTML = '';
 
-  for (const gacha of getEnabledGachas()) {
+  const gachas = getEnabledGachas();
+
+  for (const gacha of gachas) {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'series-tab';
@@ -570,6 +573,50 @@ function renderSeriesSelector() {
 
     seriesSelector.appendChild(button);
   }
+
+  renderMiniGameSelector(gachas);
+}
+
+function renderMiniGameSelector(gachas = getEnabledGachas()) {
+  if (!minigameSelector) return;
+
+  minigameSelector.innerHTML = '';
+
+  gachas.forEach((gacha) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'minigame-tab';
+
+    if (gacha.id === 'standard_001') {
+      button.id = 'openObakeidoroGame';
+      button.textContent = 'ミニゲーム';
+      button.classList.add('available');
+    } else {
+      button.textContent = '準備中';
+      button.disabled = true;
+      button.classList.add('dummy');
+    }
+
+    minigameSelector.appendChild(button);
+  });
+
+  requestAnimationFrame(syncMiniGameButtonWidths);
+}
+
+function syncMiniGameButtonWidths() {
+  if (!seriesSelector || !minigameSelector) return;
+
+  const seriesButtons = [...seriesSelector.querySelectorAll('.series-tab')];
+  const miniButtons = [...minigameSelector.querySelectorAll('.minigame-tab')];
+
+  miniButtons.forEach((button, index) => {
+    const source = seriesButtons[index];
+    if (!source) return;
+
+    const width = source.getBoundingClientRect().width;
+    button.style.width = `${width}px`;
+    button.style.flexBasis = `${width}px`;
+  });
 }
 
 function getCardsForGacha(gachaId) {
@@ -1736,4 +1783,9 @@ closeBtn.addEventListener('click', event => {
 
   clearState();
   tapText.textContent = '✦ 召喚ボタンを選択 ✦';
+});
+
+
+window.addEventListener('resize', () => {
+  requestAnimationFrame(syncMiniGameButtonWidths);
 });
