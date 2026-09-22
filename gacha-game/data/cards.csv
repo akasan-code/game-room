@@ -23,7 +23,7 @@ collectionNo,id,name,rarity,image,gachas,weights,type
 22,oba_ur_004,リジー,UR,images/OBA/lisy.png,standard_001,,ghost
 23,oba_r_007,新アリサ,R,images/OBA/arisa2.png,standard_001,,human
 24,oba_r_008,新アレス,R,images/OBA/ares2.png,standard_001,,human
-25,oba_r_009,ツギハギ,R,images/OBA/tsugihagi.png,standard_001,,
+25,oba_r_009,ツギハギ,R,images/OBA/tsugihagi.png,standard_001,,ghost
 26,oba_r_010,ドラコ,R,images/OBA/dorako.png,standard_001,,ghost
 27,oba_r_011,シャルル,R,images/OBA/syaruru.png,standard_001,,human
 1,element_001,H 水素,UR,images/element/001_H_ur.png,series_002,,

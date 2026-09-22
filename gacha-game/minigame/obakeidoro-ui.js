@@ -49,6 +49,52 @@
   let cpuToken = 0;
   let interactionLocked = false;
 
+  const MAPS = [
+    {
+      id: 'school-night',
+      name: '夜の学校',
+      image: 'assets/minigame/maps/school_night.png'
+    },
+    {
+      id: 'twilight-alley',
+      name: '夕方の黄昏横丁',
+      image: 'assets/minigame/maps/twilight_alley.png'
+    },
+    {
+      id: 'ghost-graveyard',
+      name: 'おばけ墓場',
+      image: 'assets/minigame/maps/ghost_graveyard.png'
+    }
+  ];
+
+  let currentMap = null;
+
+  function chooseRandomMap() {
+    const candidates = currentMap && MAPS.length > 1
+      ? MAPS.filter(map => map.id !== currentMap.id)
+      : MAPS;
+
+    currentMap = candidates[Math.floor(Math.random() * candidates.length)];
+    applyCurrentMap();
+  }
+
+  function applyCurrentMap() {
+    if (!currentMap) return;
+
+    const boards = [placementBoard, gameBoard];
+
+    boards.forEach(board => {
+      if (!board) return;
+      board.style.setProperty('--obk-map-image', `url("${currentMap.image}")`);
+      board.dataset.mapId = currentMap.id;
+      board.setAttribute('aria-label',
+        board === placementBoard
+          ? `配置ボード：${currentMap.name}`
+          : `探索ボード：${currentMap.name}`
+      );
+    });
+  }
+
   const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
   function showScreen(name) {
@@ -90,6 +136,7 @@
     interactionLocked = false;
     game.resetAll();
     selectedIds.clear();
+    chooseRandomMap();
     showScreen('side');
     overlay.classList.add('show');
     overlay.setAttribute('aria-hidden','false');
@@ -167,6 +214,7 @@
   function renderPlacement() {
     placementCards.innerHTML = game.selectedCards.map(cardMini).join('');
     placementBoard.innerHTML = '';
+    applyCurrentMap();
 
     game.board.forEach(cell => {
       const button = document.createElement('button');
@@ -232,6 +280,7 @@
 
   function renderGameBoard(lastIndex = null) {
     gameBoard.innerHTML = '';
+    applyCurrentMap();
     game.board.forEach(cell => {
       const button = document.createElement('button');
       button.type = 'button';
