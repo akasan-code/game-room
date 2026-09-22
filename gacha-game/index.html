@@ -27,6 +27,7 @@
     <section class="series-selector" id="seriesSelector" aria-label="ガチャシリーズ"></section>
 
     <button type="button" class="collection-open-btn" id="openCollection">図鑑</button>
+    <button type="button" class="mini-game-open-btn" id="openObakeidoroGame">オバケイドロ</button>
 
     <section class="summon-stage" id="summonStage">
       <img class="layer pillars" src="assets/pillars.png" alt="">
@@ -130,6 +131,116 @@
             <div class="collection-detail-owned" id="collectionDetailOwned">所持 0</div>
           </div>
         </article>
+      </div>
+    </section>
+
+    <!-- オバケイドロ ミニゲーム -->
+    <section class="obk-overlay" id="obkOverlay" aria-hidden="true">
+      <div class="obk-shell">
+        <header class="obk-header">
+          <div>
+            <div class="obk-kicker">CARD MINI GAME</div>
+            <h2>オバケイドロ</h2>
+          </div>
+          <button type="button" class="obk-close" id="obkClose" aria-label="ミニゲームを閉じる">×</button>
+        </header>
+
+        <div class="obk-body">
+          <section class="obk-screen is-active" data-obk-screen="side">
+            <div class="obk-screen-heading">
+              <h3>陣営を選択</h3>
+              <p>所持している standard_001 のカードを使って遊びます。</p>
+            </div>
+            <div class="obk-side-grid">
+              <button type="button" class="obk-side-card human" data-obk-side="human">
+                <span class="obk-side-icon">♙</span>
+                <strong>ニンゲン側</strong>
+                <small>ニンゲンカード3枚を選び、9マスへ隠す</small>
+              </button>
+              <button type="button" class="obk-side-card ghost" data-obk-side="ghost">
+                <span class="obk-side-icon">☾</span>
+                <strong>オバケ側</strong>
+                <small>オバケカード1枚を選び、隠れた3人を探す</small>
+              </button>
+            </div>
+            <div class="obk-data-note" id="obkDataNote"></div>
+          </section>
+
+          <section class="obk-screen" data-obk-screen="cards" hidden>
+            <div class="obk-toolbar">
+              <button type="button" class="obk-back" data-obk-back="side">← 陣営選択</button>
+              <div>
+                <h3 id="obkCardSelectTitle">カード選択</h3>
+                <p id="obkCardSelectHelp"></p>
+              </div>
+              <div class="obk-selection-count" id="obkSelectionCount">0 / 0</div>
+            </div>
+            <div class="obk-card-grid" id="obkCardGrid"></div>
+            <div class="obk-screen-actions">
+              <button type="button" class="obk-primary" id="obkCardConfirm" disabled>決定</button>
+            </div>
+          </section>
+
+          <section class="obk-screen" data-obk-screen="placement" hidden>
+            <div class="obk-toolbar">
+              <button type="button" class="obk-back" data-obk-back="cards">← カード選択</button>
+              <div>
+                <h3>隠れ場所を決める</h3>
+                <p id="obkPlacementGuide">ニンゲンを1人ずつ配置します。</p>
+              </div>
+              <button type="button" class="obk-sub-button" id="obkPlacementReset">配置リセット</button>
+            </div>
+            <div class="obk-layout-two">
+              <div class="obk-placement-info">
+                <div class="obk-selected-strip" id="obkPlacementCards"></div>
+                <div class="obk-placement-next" id="obkPlacementNext"></div>
+              </div>
+              <div class="obk-board-wrap">
+                <div class="obk-board" id="obkPlacementBoard" aria-label="配置ボード"></div>
+                <div class="obk-board-caption">3人 + ランタン1個を重ならない4マスへ配置</div>
+              </div>
+            </div>
+            <div class="obk-screen-actions">
+              <button type="button" class="obk-primary" id="obkStartHumanGame" disabled>ゲーム開始</button>
+            </div>
+          </section>
+
+          <section class="obk-screen" data-obk-screen="game" hidden>
+            <div class="obk-game-top">
+              <div class="obk-own-area">
+                <span class="obk-label">使用カード</span>
+                <div class="obk-selected-strip compact" id="obkGameCards"></div>
+              </div>
+              <div class="obk-status-grid">
+                <div class="obk-status-box"><span>残り探索</span><strong id="obkSearchesLeft">8</strong></div>
+                <div class="obk-status-box"><span>発見</span><strong id="obkFoundCount">0 / 3</strong></div>
+              </div>
+            </div>
+            <div class="obk-board-area">
+              <div class="obk-turn-label" id="obkTurnLabel">探索するマスを選択</div>
+              <div class="obk-board" id="obkGameBoard" aria-label="探索ボード"></div>
+            </div>
+            <div class="obk-log" id="obkGameLog" role="status" aria-live="polite">ゲーム開始</div>
+            <div class="obk-lantern-alert" id="obkLanternAlert" aria-hidden="true">LANTERN<br><span>探索回数 -1</span></div>
+          </section>
+
+          <section class="obk-screen" data-obk-screen="result" hidden>
+            <div class="obk-result-panel" id="obkResultPanel">
+              <div class="obk-result-kicker">RESULT</div>
+              <h3 id="obkResultTitle">勝利</h3>
+              <p id="obkResultMessage"></p>
+              <div class="obk-result-stats">
+                <div><span>発見</span><strong id="obkResultFound">0 / 3</strong></div>
+                <div><span>残り探索</span><strong id="obkResultSearches">0</strong></div>
+              </div>
+              <div class="obk-selected-strip result" id="obkResultCards"></div>
+              <div class="obk-screen-actions">
+                <button type="button" class="obk-primary" id="obkPlayAgain">もう一度遊ぶ</button>
+                <button type="button" class="obk-sub-button" id="obkResultClose">閉じる</button>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </section>
 
