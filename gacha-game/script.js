@@ -92,12 +92,7 @@ function preloadImage(src) {
 }
 
 async function preloadCardAssets(card, rarity) {
-  const frameSrc = FRAME_BY_RARITY[rarity] || FRAME_BY_RARITY.SR;
-
-  await Promise.all([
-    preloadImage(frameSrc),
-    preloadImage(card.image)
-  ]);
+  await preloadImage(card.image);
 }
 
 const ORB_START_RATES = {
@@ -130,13 +125,6 @@ const RARITY_COLORS = {
   R:'#d477ff',
   SR:'#dce5ef',
   UR:'#ffd46a'
-};
-
-const FRAME_BY_RARITY = {
-  N:'assets/card_frame_n.png',
-  R:'assets/card_frame_r.png',
-  SR:'assets/card_frame_sr.png',
-  UR:'assets/card_frame_ur.png'
 };
 
 /*
@@ -591,6 +579,10 @@ function renderMiniGameSelector(gachas = getEnabledGachas()) {
       button.id = 'openObakeidoroGame';
       button.textContent = 'ミニゲーム';
       button.classList.add('available');
+    } else if (gacha.id === 'series_003') {
+      button.id = 'openOverlordBattleGame';
+      button.textContent = 'ミニゲーム';
+      button.classList.add('available');
     } else {
       button.textContent = '準備中';
       button.disabled = true;
@@ -953,15 +945,8 @@ function setOrbColor(rarity) {
 }
 
 function applyCardData(card, rarity) {
-  const frameSrc = FRAME_BY_RARITY[rarity] || FRAME_BY_RARITY.SR;
-
   ejectCharacter.src = card.image;
   resultCharacter.src = card.image;
-
-  ejectFrameSizing.src = frameSrc;
-  ejectFrameOverlay.src = frameSrc;
-  resultFrameSizing.src = frameSrc;
-  resultFrameOverlay.src = frameSrc;
 
   ejectName.textContent = card.name;
   resultCardName.textContent = card.name;
@@ -1025,7 +1010,7 @@ function clearState() {
   clearRarityClasses(ejectCard);
   clearRarityClasses(resultLayeredCard);
 
-  screen.classList.remove('summon-running');
+  screen.classList.remove('summon-running','twelve-result-open');
   result.classList.remove('show','afterglow','twelve-mode');
   cardEjectLayer.classList.remove('show','play','fast');
   cardEjectLayer.style.display = 'none';
@@ -1514,19 +1499,17 @@ function createTenCard(card, rarity, index) {
   wrapper.className = `ten-card-item ${rarityClass(rarity)}`;
   wrapper.style.setProperty('--card-index', index);
 
-  const frameSrc = FRAME_BY_RARITY[rarity] || FRAME_BY_RARITY.SR;
-
+  /*
+    12連最終結果は通常カード(.layered-card)を使わない。
+    専用DOMにして、過去のカードフレーム用CSSとの競合を完全に避ける。
+  */
   wrapper.innerHTML = `
-    <div class="layered-card ten-layered-card ${rarityClass(rarity)}">
-      <img class="card-frame-sizing" src="${frameSrc}" alt="">
-      <div class="card-art-window">
-        <img class="card-character" src="${card.image}" alt="${card.name}">
+    <div class="twelve-result-card ${rarityClass(rarity)}">
+      <div class="twelve-result-art">
+        <img src="${card.image}" alt="${card.name}">
       </div>
-      <img class="card-frame-overlay" src="${frameSrc}" alt="">
-      <div class="card-rarity-label">${rarity}</div>
-      <div class="card-nameplate">
-        <div class="card-name">${card.name}</div>
-      </div>
+      <div class="twelve-result-rarity">${rarity}</div>
+      <div class="twelve-result-name">${card.name}</div>
     </div>
   `;
 
@@ -1558,6 +1541,7 @@ async function showSingleResult(card, rarity) {
 
 async function showTenResult(results) {
   result.classList.add('twelve-mode');
+  screen.classList.add('twelve-result-open');
 
   singleResult.style.display = 'none';
   tenResult.classList.remove('show');
@@ -1678,7 +1662,6 @@ async function summon(count = 1) {
 // 途中の枠つきカード排出演出は使用しない
 cardEjectLayer.style.display = 'none';
 
-Object.values(FRAME_BY_RARITY).forEach(preloadImage);
 Object.values(MASTER.cards).forEach(card => preloadImage(card.image));
 
 renderCurrentGachaInfo();

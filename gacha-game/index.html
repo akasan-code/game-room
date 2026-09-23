@@ -70,11 +70,11 @@
     
     <div class="card-eject-layer" id="cardEjectLayer" aria-hidden="true">
       <div class="layered-card eject-card" id="ejectCard">
-        <img class="card-frame-sizing" id="ejectFrameSizing" src="assets/card_frame_sr.png" alt="">
+        <div class="card-frame-sizing" id="ejectFrameSizing" aria-hidden="true"></div>
         <div class="card-art-window">
           <img class="card-character" id="ejectCharacter" src="assets/sample_character.png" alt="キャラクター">
         </div>
-        <img class="card-frame-overlay" id="ejectFrameOverlay" src="assets/card_frame_sr.png" alt="">
+        <div class="card-frame-overlay" id="ejectFrameOverlay" aria-hidden="true"></div>
         <div class="card-rarity-label" id="ejectRarity">N</div>
         <div class="card-nameplate">
           <div class="card-name" id="ejectName">星導の魔導姫</div>
@@ -246,6 +246,93 @@
       </div>
     </section>
 
+
+    <section class="ovb-overlay" id="ovbOverlay" aria-hidden="true">
+      <div class="ovb-shell">
+        <header class="ovb-header">
+          <div>
+            <div class="ovb-kicker">CARD BATTLE</div>
+            <h2>5枚固定対戦</h2>
+          </div>
+          <button type="button" class="ovb-close" data-ovb-close>×</button>
+        </header>
+
+        <div class="ovb-body">
+          <section class="ovb-screen is-active" data-ovb-screen="select">
+            <div class="ovb-section-head">
+              <div>
+                <div class="ovb-step">STEP 1</div>
+                <h3>使用カードを5枚選択</h3>
+                <p id="ovbSelectHelp">所持カードを読み込み中…</p>
+              </div>
+              <div class="ovb-count" id="ovbSelectedCount">0 / 5</div>
+            </div>
+            <div class="ovb-select-grid" id="ovbSelectGrid"></div>
+            <div class="ovb-actions sticky">
+              <button type="button" class="ovb-primary" id="ovbToPrep" disabled>対戦準備へ</button>
+              <button type="button" class="ovb-secondary" data-ovb-close>閉じる</button>
+            </div>
+          </section>
+
+          <section class="ovb-screen" data-ovb-screen="prep" hidden>
+            <div class="ovb-section-head">
+              <div>
+                <div class="ovb-step">STEP 2</div>
+                <h3>相手の5枚を見て順番を決める</h3>
+                <p>CPUの使用カードだけ公開。実際の順番はまだ分かりません。</p>
+              </div>
+            </div>
+            <div class="ovb-prep-layout">
+              <div class="ovb-panel">
+                <h4>CPU 使用カード</h4>
+                <div class="ovb-cpu-preview" id="ovbCpuPreview"></div>
+              </div>
+              <div class="ovb-panel">
+                <h4>PLAYER 出撃順</h4>
+                <div class="ovb-player-order" id="ovbPlayerOrder"></div>
+              </div>
+            </div>
+            <div class="ovb-actions">
+              <button type="button" class="ovb-secondary" id="ovbBackToSelect">カード選択へ戻る</button>
+              <button type="button" class="ovb-primary" id="ovbBattleStart">バトル開始</button>
+            </div>
+          </section>
+
+          <section class="ovb-screen" data-ovb-screen="battle" hidden>
+            <div class="ovb-battle-stage">
+              <div class="ovb-round-no" id="ovbRoundNo">ROUND 1</div>
+              <div class="ovb-battle-pair">
+                <div class="ovb-battle-card" id="ovbBattlePlayer"></div>
+                <div class="ovb-vs">VS</div>
+                <div class="ovb-battle-card" id="ovbBattleCpu"></div>
+              </div>
+              <div class="ovb-battle-outcome" id="ovbBattleOutcome"></div>
+              <div class="ovb-battle-reason" id="ovbBattleReason">VS</div>
+            </div>
+          </section>
+
+          <section class="ovb-screen" data-ovb-screen="result" hidden>
+            <div class="ovb-result">
+              <div class="ovb-result-kicker">RESULT</div>
+              <h3 id="ovbResultTitle">VICTORY</h3>
+              <div class="ovb-score">
+                <div><span>WIN</span><strong id="ovbResultWin">0</strong></div>
+                <div><span>LOSE</span><strong id="ovbResultLose">0</strong></div>
+                <div><span>DRAW</span><strong id="ovbResultDraw">0</strong></div>
+              </div>
+              <div class="ovb-result-rounds" id="ovbResultRounds"></div>
+              <div class="ovb-actions">
+                <button type="button" class="ovb-secondary" id="ovbResultToSelect">カード選択へ戻る</button>
+                <button type="button" class="ovb-primary" id="ovbRematch">もう一度戦う</button>
+                <button type="button" class="ovb-secondary" data-ovb-close>閉じる</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+
     <!-- 取得カード専用：カード枠DOMとは完全に独立 -->
     <div class="acquisition-reveal" id="acquisitionReveal" aria-hidden="true">
       <div class="acquisition-backdrop"></div>
@@ -268,11 +355,11 @@
           <div class="result-rarity" id="resultRarity">N</div>
 
           <div class="layered-card result-layered-card" id="resultLayeredCard">
-            <img class="card-frame-sizing" id="resultFrameSizing" src="assets/card_frame_sr.png" alt="">
+            <div class="card-frame-sizing" id="resultFrameSizing" aria-hidden="true"></div>
             <div class="card-art-window">
               <img class="card-character" id="resultCharacter" src="assets/sample_character.png" alt="キャラクター">
             </div>
-            <img class="card-frame-overlay" id="resultFrameOverlay" src="assets/card_frame_sr.png" alt="">
+            <div class="card-frame-overlay" id="resultFrameOverlay" aria-hidden="true"></div>
             <div class="card-rarity-label" id="resultCardRarity">N</div>
             <div class="card-nameplate">
               <div class="card-name" id="resultCardName">星導の魔導姫</div>

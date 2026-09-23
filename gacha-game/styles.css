@@ -1244,85 +1244,35 @@
    4枚 × 3段
    ========================================================= */
 
-.ten-result{
-  display:none;
-}
 
-.ten-result.show{
-  display:block;
-}
 
-.ten-result-title{
-  margin-bottom:18px;
-  text-align:center;
-  font-size:clamp(24px,2.6vw,34px);
-  color:#f4e3b1;
-  letter-spacing:.08em;
-  text-shadow:0 0 18px rgba(215,176,101,.35);
-}
 
-.ten-card-grid{
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0, 1fr));
-  gap:10px;
-  width:min(920px,90vw);
-  margin:0 auto 14px;
-}
 
-.ten-card-item{
-  min-width:0;
-  opacity:0;
-  transform:translateY(24px) scale(.92);
-  animation:tenCardAppear .42s ease-out forwards;
-  animation-delay:calc(var(--card-index) * 55ms);
-}
 
-.ten-layered-card{
-  width:100%;
-}
 
-.ten-layered-card .card-name{
-  font-size:clamp(9px,.9vw,13px);
-}
 
-.ten-layered-card .card-rarity-label{
-  font-size:clamp(9px,.9vw,12px);
-}
 
-@keyframes tenCardAppear{
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-}
+
+
+
+
+
+
+
+
+
 
 /* 10連時は結果ウィンドウを広げる */
-.result-card:has(.ten-result.show) .result-inner{
-  width:min(1180px,96vw);
-  max-height:94vh;
-  overflow:auto;
-  padding:18px 20px;
-}
+
 
 @media(max-width:820px){
-  .ten-card-grid{
-    gap:7px;
-    width:96vw;
-  }
+  
 
-  .ten-result-title{
-    margin-bottom:12px;
-    font-size:clamp(20px,5.5vw,28px);
-  }
+  
 
-  .ten-layered-card .card-name{
-    font-size:clamp(6px,1.8vw,9px);
-  }
+  
 
-  .ten-layered-card .card-rarity-label{
-    font-size:clamp(7px,1.8vw,9px);
-    padding:.22em .42em;
-  }
+  
 
   .card-nameplate{
     left:12%;
@@ -1332,27 +1282,9 @@
 
 
 /* 12連専用微調整 */
-.result-card:has(.ten-result.show) .result-inner{
-  width:min(980px,96vw);
-}
 
-@media(max-width:820px){
-  .ten-card-grid{
-    grid-template-columns:repeat(4, minmax(0, 1fr));
-    gap:5px;
-    width:95vw;
-  }
 
-  .result-card:has(.ten-result.show) .result-inner{
-    width:98vw;
-    max-height:95vh;
-    padding:12px 8px 10px;
-  }
 
-  .ten-result-title{
-    margin-bottom:8px;
-  }
-}
 
 
 /* =========================================================
@@ -1361,154 +1293,35 @@
    ========================================================= */
 
 /* 12連時は中央の小窓ではなく、ほぼ全画面の専用枠 */
-.result-card.twelve-mode{
-  padding:2vh 2vw;
-  align-items:center;
-  justify-items:center;
-  background:rgba(0,0,0,.82);
-}
 
-.result-card.twelve-mode .result-inner{
-  position:relative;
-  width:96vw;
-  height:94dvh;
-  max-width:none;
-  max-height:none;
-  padding:2.2vh 2vw 1.8vh;
-  overflow:hidden;
 
-  display:flex;
-  flex-direction:column;
-  align-items:center;
 
-  background:
-    radial-gradient(circle at 50% 45%,rgba(37,77,126,.22),transparent 46%),
-    linear-gradient(180deg,rgba(12,18,29,.985),rgba(4,8,15,.99));
-
-  border:1px solid rgba(215,176,101,.72);
-  box-shadow:
-    0 0 0 1px rgba(73,128,195,.15) inset,
-    0 0 55px rgba(0,0,0,.72);
-}
 
 /* 内側にもう1本ラインを入れて「12連用の表示枠」感を出す */
-.result-card.twelve-mode .result-inner::before{
-  content:"";
-  position:absolute;
-  inset:1.1%;
-  pointer-events:none;
-  border:1px solid rgba(103,157,219,.24);
-  box-shadow:inset 0 0 34px rgba(39,102,174,.08);
-}
 
-.result-card.twelve-mode .ten-result{
-  position:relative;
-  z-index:1;
-  width:100%;
-  flex:1;
-  min-height:0;
 
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-}
 
-.result-card.twelve-mode .ten-result-title{
-  flex:0 0 auto;
-  margin:0 0 1.5vh;
-  font-size:clamp(20px,2.1vw,32px);
-}
+
+
 
 /* 4枚×3段。カード幅は画面幅だけでなく高さでも制限する。 */
-.result-card.twelve-mode .ten-card-grid{
-  flex:0 1 auto;
-  width:100%;
-  min-height:0;
-  margin:0;
 
-  display:grid;
-  grid-template-columns:repeat(4, auto);
-  grid-template-rows:repeat(3, auto);
-  justify-content:center;
-  align-content:center;
-  gap:min(1.5vh,1.2vw) min(2vw,2.2vh);
-}
 
-.result-card.twelve-mode .ten-card-item{
-  width:min(20.5vw,15.5vh);
-  min-width:0;
-}
 
-.result-card.twelve-mode .ten-layered-card{
-  width:100%;
-}
+
+
 
 /* 小型一覧では文字をかなり控えめに */
-.result-card.twelve-mode .ten-layered-card .card-rarity-label{
-  top:4%;
-  right:6.5%;
-  min-width:2.3em;
-  padding:.24em .42em;
-  font-size:clamp(7px,.72vw,10px);
-}
 
-.result-card.twelve-mode .ten-layered-card .card-nameplate{
-  left:11%;
-  right:11%;
-  bottom:3.1%;
-}
 
-.result-card.twelve-mode .ten-layered-card .card-name{
-  font-size:clamp(6px,.62vw,9px);
-}
+
+
+
 
 /* 閉じるボタンも専用枠の下部に固定 */
-.result-card.twelve-mode #closeResult{
-  position:relative;
-  z-index:2;
-  flex:0 0 auto;
-  margin-top:1.2vh;
-  min-width:140px;
-}
 
-@media(max-width:820px){
-  .result-card.twelve-mode{
-    padding:1vh 1vw;
-  }
 
-  .result-card.twelve-mode .result-inner{
-    width:98vw;
-    height:97dvh;
-    padding:1.5vh 1vw 1.2vh;
-  }
 
-  .result-card.twelve-mode .ten-result-title{
-    margin-bottom:1vh;
-    font-size:clamp(18px,5vw,24px);
-  }
-
-  .result-card.twelve-mode .ten-card-grid{
-    gap:1vh 1.4vw;
-  }
-
-  .result-card.twelve-mode .ten-card-item{
-    width:min(22.2vw,15.2vh);
-  }
-
-  .result-card.twelve-mode .ten-layered-card .card-name{
-    font-size:clamp(5px,1.35vw,7px);
-  }
-
-  .result-card.twelve-mode .ten-layered-card .card-rarity-label{
-    font-size:clamp(6px,1.45vw,8px);
-  }
-
-  .result-card.twelve-mode #closeResult{
-    margin-top:.8vh;
-    padding:7px 18px;
-  }
-}
 
 
 /* =========================================================
@@ -1570,19 +1383,9 @@
 }
 
 /* 12連一覧ではさらに少し余白寄り */
-.result-card.twelve-mode .ten-layered-card .card-art-window{
-  left:9.8%;
-  right:9.8%;
-  top:10.6%;
-  bottom:14.5%;
-}
 
-.result-card.twelve-mode .ten-layered-card.rarity-ur .card-art-window{
-  left:10.8%;
-  right:10.8%;
-  top:11.6%;
-  bottom:15.4%;
-}
+
+
 
 @media(max-width:820px){
   .card-art-window{
@@ -1620,15 +1423,9 @@
 }
 
 /* 12連一覧では小型表示なので少しだけ見やすく戻す */
-.result-card.twelve-mode .ten-layered-card .card-character{
-  width:94%;
-  height:94%;
-}
 
-.result-card.twelve-mode .ten-layered-card.rarity-ur .card-character{
-  width:92%;
-  height:92%;
-}
+
+
 
 
 /* =========================================================
@@ -1682,54 +1479,25 @@
 
 
   /* ---------- 12連：専用結果画面 ---------- */
-  .result-card.twelve-mode{
-    padding:.8dvh 1vw;
-  }
+  
 
-  .result-card.twelve-mode .result-inner{
-    width:98vw;
-    height:97dvh;
-    padding:1.2dvh 1vw .8dvh;
-  }
+  
 
-  .result-card.twelve-mode .ten-result-title{
-    margin:0 0 .7dvh;
-    font-size:clamp(17px, 4.8vw, 22px);
-  }
+  
 
-  .result-card.twelve-mode .ten-card-grid{
-    width:100%;
-    gap:.55dvh 1.2vw;
-    grid-template-columns:repeat(4, auto);
-    grid-template-rows:repeat(3, auto);
-  }
+  
 
   /*
     4×3が確実に収まるよう、カード幅を高さで強めに制限。
     1448/1086 ≒ 1.333 なので3段でも余裕を残せる。
   */
-  .result-card.twelve-mode .ten-card-item{
-    width:min(21vw, 12.8dvh, 112px);
-  }
+  
 
-  .result-card.twelve-mode .ten-layered-card .card-rarity-label{
-    top:3.8%;
-    right:6%;
-    min-width:2.1em;
-    padding:.18em .34em;
-    font-size:clamp(5px, 1.35vw, 7px);
-  }
+  
 
-  .result-card.twelve-mode .ten-layered-card .card-name{
-    font-size:clamp(4px, 1.18vw, 6px);
-  }
+  
 
-  .result-card.twelve-mode #closeResult{
-    min-width:110px;
-    margin-top:.55dvh;
-    padding:6px 16px;
-    font-size:12px;
-  }
+  
 }
 
 
@@ -1744,13 +1512,9 @@
     width:min(46vw, 28dvh, 175px);
   }
 
-  .result-card.twelve-mode .ten-card-item{
-    width:min(20vw, 11.6dvh, 98px);
-  }
+  
 
-  .result-card.twelve-mode .ten-result-title{
-    font-size:16px;
-  }
+  
 }
 
 
@@ -5839,5 +5603,996 @@
   .top-selector-stack{
     top:50px;
     gap:5px;
+  }
+}
+
+
+/* =========================================================
+   v11 フレーム画像廃止・カード寸法維持版
+   既存のカード幅/アニメーションは触らず、
+   PNGフレームだけCSS枠へ置換する。
+   ========================================================= */
+
+.layered-card{
+  --rarity-border:#5b9bd5;
+  --rarity-glow:rgba(91,155,213,.18);
+
+  /* 既存の width / display / 結果アニメーションはそのまま */
+  border:2px solid var(--rarity-border);
+  border-radius:10px;
+  overflow:hidden;
+
+  background:#050a12;
+
+  /* 元のdrop-shadowを維持しつつ色を少し足す */
+  box-shadow:
+    0 0 10px var(--rarity-glow);
+}
+
+/*
+  以前はフレーム画像そのものがカードの高さを作っていた。
+  画像を消した後も、この要素だけで同じ3:4の高さを確保する。
+  layered-card自体にはaspect-ratioを指定しない。
+*/
+.card-frame-sizing{
+  display:block !important;
+  width:100% !important;
+  height:auto !important;
+  aspect-ratio:3 / 4;
+  visibility:hidden !important;
+  pointer-events:none;
+}
+
+/* キャラ画像は既存のサイズ計算を残しつつ、枠画像が無い分だけ表示領域を広げる */
+.card-art-window{
+  left:3.5% !important;
+  right:3.5% !important;
+  top:3.5% !important;
+  bottom:8.5% !important;
+
+  border-radius:7px;
+  background:#050a12;
+}
+
+/* 元の contain 表示を維持。潰さない。 */
+.card-character{
+  object-fit:contain !important;
+  object-position:center center !important;
+}
+
+/* PNGフレームの代わりとなるCSS内枠 */
+.card-frame-overlay{
+  display:block !important;
+  position:absolute !important;
+  z-index:4 !important;
+  inset:0 !important;
+
+  width:auto !important;
+  height:auto !important;
+
+  border:2px solid var(--rarity-border);
+  border-radius:9px;
+
+  background:transparent !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    inset 0 0 14px var(--rarity-glow);
+
+  pointer-events:none;
+}
+
+/* レアリティは形を変えず色だけ */
+.layered-card.rarity-n{
+  --rarity-border:#5b9bd5;
+  --rarity-glow:rgba(91,155,213,.18);
+}
+
+.layered-card.rarity-r{
+  --rarity-border:#a96bdd;
+  --rarity-glow:rgba(169,107,221,.22);
+}
+
+.layered-card.rarity-sr{
+  --rarity-border:#d7e3ef;
+  --rarity-glow:rgba(215,227,239,.28);
+}
+
+.layered-card.rarity-ur{
+  --rarity-border:#e4ba49;
+  --rarity-glow:rgba(228,186,73,.34);
+}
+
+/* 以前のUR専用の内側縮小を無効化。全レア同じ形。 */
+.layered-card.rarity-ur .card-art-window{
+  left:3.5% !important;
+  right:3.5% !important;
+  top:3.5% !important;
+  bottom:8.5% !important;
+}
+
+/*
+  acquisition-modeは独自の全画面表示を使うので、
+  sizing / overlayはこれまで通り非表示。
+*/
+.result-card.acquisition-mode .card-frame-sizing,
+.result-card.acquisition-mode .card-frame-overlay{
+  display:none !important;
+}
+
+/* 図鑑も同じ色ルールへ */
+.collection-card.rarity-n{
+  border-color:rgba(91,155,213,.62) !important;
+}
+.collection-card.rarity-r{
+  border-color:rgba(169,107,221,.72) !important;
+}
+.collection-card.rarity-sr{
+  border-color:rgba(215,227,239,.82) !important;
+}
+.collection-card.rarity-ur{
+  border-color:rgba(228,186,73,.90) !important;
+}
+
+
+/* =========================================================
+   v12 12連最終結果だけのカード比率修正
+   ========================================================= */
+
+/*
+  12枚一覧ではフレーム画像を高さ基準にしない。
+  各カード自身を3:4へ固定して、4×3グリッド内で潰れないようにする。
+*/
+
+
+/*
+  12連では sizing 要素をレイアウト計算に使わない。
+  ten-layered-card 自身の aspect-ratio が高さを作る。
+*/
+
+
+/* キャラ表示領域をカード内へ確実に固定 */
+
+
+/* 12連一覧では画像比率を壊さない */
+
+
+/* CSS枠はカード全面に固定 */
+
+
+/* グリッド側でも縦横比を尊重 */
+
+
+/* スマホも同じ比率を維持 */
+
+
+
+/* =========================================================
+   v13 1枚取得表示サイズ調整
+   PCは最大サイズを制限、スマホも少し小さく
+   ========================================================= */
+
+/* ---------- PC ---------- */
+@media(min-width:821px){
+
+  .acquisition-reveal{
+    /*
+      画面いっぱいではなく、最大760px程度に制限。
+      高さが低い画面では従来通り安全領域に収める。
+    */
+    --acq-safe-height:
+      min(
+        76dvh,
+        760px
+      ) !important;
+
+    --acq-box-width:
+      min(
+        72vw,
+        calc(var(--acq-safe-height) * 3 / 4)
+      ) !important;
+  }
+
+  .acquisition-character{
+    width:var(--acq-box-width) !important;
+    height:var(--acq-safe-height) !important;
+
+    max-width:72vw !important;
+    max-height:760px !important;
+  }
+
+  /* 名前は画像のすぐ下へ */
+  .acquisition-card-name{
+    top:
+      calc(
+        50%
+        + (var(--acq-safe-height) / 2)
+        + 10px
+      ) !important;
+  }
+}
+
+
+/* ---------- スマホ ---------- */
+@media(max-width:820px){
+
+  .acquisition-reveal{
+    /*
+      今より少しだけ縮小。
+      横幅94vw、高さは約80dvh以内。
+    */
+    --acq-safe-height:
+      min(
+        80dvh,
+        calc(100dvh - 128px)
+      ) !important;
+
+    --acq-box-width:
+      min(
+        94vw,
+        calc(var(--acq-safe-height) * 3 / 4)
+      ) !important;
+  }
+
+  .acquisition-character{
+    width:var(--acq-box-width) !important;
+    height:var(--acq-safe-height) !important;
+
+    max-width:94vw !important;
+    max-height:80dvh !important;
+  }
+
+  .acquisition-card-name{
+    top:
+      calc(
+        50%
+        + (var(--acq-safe-height) / 2)
+        + 7px
+      ) !important;
+  }
+}
+
+
+/* ---------- 高さが低いスマホ ---------- */
+@media(max-width:820px) and (max-height:700px){
+
+  .acquisition-reveal{
+    --acq-safe-height:
+      min(
+        74dvh,
+        calc(100dvh - 112px)
+      ) !important;
+
+    --acq-box-width:
+      min(
+        92vw,
+        calc(var(--acq-safe-height) * 3 / 4)
+      ) !important;
+  }
+
+  .acquisition-character{
+    max-width:92vw !important;
+    max-height:74dvh !important;
+  }
+
+  .acquisition-card-name{
+    top:
+      calc(
+        50%
+        + (var(--acq-safe-height) / 2)
+        + 5px
+      ) !important;
+  }
+}
+
+
+/* =========================================================
+   v14 12連結果カード完全分離
+   layered-cardを使わず、12連専用DOM/CSSで表示
+   ========================================================= */
+
+/*
+  12連の親セル。
+  以前のaspect-ratio指定をここで一本化する。
+*/
+
+
+/* 12連結果専用カード */
+
+
+/* レアリティ色 */
+
+
+
+
+
+
+
+
+/* 画像領域 */
+
+
+/*
+  3:4キャラ画像を変形させない。
+  object-fit:cover/containだけで表示し、
+  width/heightを別比率にはしない。
+*/
+
+
+/* レア度ラベル */
+
+
+/* 名前 */
+
+
+/* スマホ */
+
+
+/* 高さが低いスマホ */
+
+
+
+/* =========================================================
+   v15 12連結果 決定版
+   低いPCウィンドウでもカードを潰さない
+   ========================================================= */
+
+/* 12連結果中は召喚画面上部UIを完全に隠す */
+
+
+/* 結果レイヤーを確実に最前面へ */
+
+
+/*
+  結果枠は画面内に必ず収める。
+  vh/dvhだけに依存せず inset で安全に確保。
+*/
+
+
+/* 12連エリアそのものを中央段いっぱいに使う */
+
+
+/* タイトルは固定高さ */
+
+
+/*
+  4列×3行を残り高さに均等分配。
+  ここが今回の本命。
+*/
+
+
+/*
+  親セルはグリッドセルいっぱい。
+  ここではaspect-ratioを使わない。
+*/
+
+
+/*
+  実カードの方だけ3:4。
+  高さをセルの92%にして、そこから幅を自動算出。
+  これなら横長・低いウィンドウでも絶対に潰れない。
+*/
+
+
+/* 画像領域 */
+
+
+
+
+/* 閉じるボタンは最下段 */
+
+
+/* 高さがかなり低いPC向け */
+
+
+/* スマホ */
+
+
+
+/* =========================================================
+   v18 12連結果 CLEAN
+   calcの除算を使わず、PC/スマホで安定したカードサイズにする
+   ========================================================= */
+
+.screen.twelve-result-open .top-selector-stack,
+.screen.twelve-result-open .collection-open-btn,
+.screen.twelve-result-open .mini-game-open-btn{
+  display:none !important;
+}
+
+.result-card.twelve-mode{
+  position:fixed !important;
+  z-index:1000 !important;
+  inset:0 !important;
+
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  padding:10px !important;
+  box-sizing:border-box !important;
+
+  background:rgba(0,0,0,.88) !important;
+}
+
+.result-card.twelve-mode .result-inner{
+  position:relative !important;
+
+  width:min(1180px, calc(100vw - 20px)) !important;
+  max-height:calc(100vh - 20px) !important;
+
+  padding:16px 18px 12px !important;
+  margin:0 !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+
+  overflow-y:auto !important;
+  overflow-x:hidden !important;
+
+  box-sizing:border-box !important;
+
+  background:
+    radial-gradient(circle at 50% 42%,rgba(33,73,123,.20),transparent 48%),
+    linear-gradient(180deg,rgba(11,18,29,.99),rgba(4,8,15,.995)) !important;
+
+  border:1px solid rgba(215,176,101,.75) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(80,140,210,.18),
+    0 0 50px rgba(0,0,0,.70) !important;
+}
+
+.result-card.twelve-mode .ten-result{
+  display:none !important;
+}
+
+.result-card.twelve-mode .ten-result.show{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  gap:10px !important;
+
+  width:100% !important;
+}
+
+.result-card.twelve-mode .ten-result-title{
+  margin:0 !important;
+  padding:0 !important;
+
+  color:#f4e3b1 !important;
+  font-size:clamp(22px,2.4vw,36px) !important;
+  line-height:1.1 !important;
+  letter-spacing:.08em !important;
+  text-align:center !important;
+
+  text-shadow:0 0 16px rgba(215,176,101,.28) !important;
+}
+
+/*
+  PC:
+  1枚 112〜150px程度。
+  viewport高さによる極端な縮小はしない。
+*/
+.result-card.twelve-mode .ten-card-grid{
+  display:grid !important;
+  grid-template-columns:repeat(4, minmax(112px, 150px)) !important;
+
+  gap:10px 12px !important;
+
+  width:max-content !important;
+  max-width:100% !important;
+
+  margin:0 auto !important;
+
+  align-items:start !important;
+  justify-content:center !important;
+}
+
+.result-card.twelve-mode .ten-card-item{
+  width:clamp(112px, 13vw, 150px) !important;
+  height:auto !important;
+
+  min-width:0 !important;
+  min-height:0 !important;
+
+  display:block !important;
+
+  opacity:0;
+  transform:translateY(10px) scale(.96);
+  animation:tenCardAppear .34s ease-out forwards;
+  animation-delay:calc(var(--card-index) * 38ms);
+}
+
+.result-card.twelve-mode .twelve-result-card{
+  --twelve-border:#5b9bd5;
+  --twelve-glow:rgba(91,155,213,.18);
+
+  position:relative !important;
+
+  width:100% !important;
+  height:auto !important;
+  aspect-ratio:3 / 4 !important;
+
+  overflow:hidden !important;
+  box-sizing:border-box !important;
+
+  border:2px solid var(--twelve-border) !important;
+  border-radius:8px !important;
+
+  background:#050a12 !important;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.40),
+    0 0 8px var(--twelve-glow) !important;
+}
+
+.result-card.twelve-mode .twelve-result-card.rarity-n{
+  --twelve-border:#5b9bd5;
+  --twelve-glow:rgba(91,155,213,.18);
+}
+.result-card.twelve-mode .twelve-result-card.rarity-r{
+  --twelve-border:#a96bdd;
+  --twelve-glow:rgba(169,107,221,.22);
+}
+.result-card.twelve-mode .twelve-result-card.rarity-sr{
+  --twelve-border:#d7e3ef;
+  --twelve-glow:rgba(215,227,239,.28);
+}
+.result-card.twelve-mode .twelve-result-card.rarity-ur{
+  --twelve-border:#e4ba49;
+  --twelve-glow:rgba(228,186,73,.34);
+}
+
+.result-card.twelve-mode .twelve-result-art{
+  position:absolute !important;
+  inset:3% 3% 14% !important;
+
+  overflow:hidden !important;
+  border-radius:5px !important;
+  background:#071022 !important;
+}
+
+.result-card.twelve-mode .twelve-result-art img{
+  display:block !important;
+
+  width:100% !important;
+  height:100% !important;
+
+  object-fit:cover !important;
+  object-position:center center !important;
+
+  transform:none !important;
+}
+
+.result-card.twelve-mode .twelve-result-rarity{
+  position:absolute !important;
+  z-index:3 !important;
+
+  top:4% !important;
+  right:5% !important;
+
+  min-width:2em !important;
+  padding:2px 4px !important;
+
+  border:1px solid var(--twelve-border) !important;
+  border-radius:999px !important;
+
+  background:rgba(2,7,15,.76) !important;
+  color:#fff !important;
+
+  font-size:clamp(7px,.72vw,10px) !important;
+  font-weight:800 !important;
+  line-height:1 !important;
+  text-align:center !important;
+}
+
+.result-card.twelve-mode .twelve-result-name{
+  position:absolute !important;
+  z-index:3 !important;
+
+  left:4% !important;
+  right:4% !important;
+  bottom:3.5% !important;
+
+  overflow:hidden !important;
+  white-space:nowrap !important;
+  text-overflow:ellipsis !important;
+
+  padding:2px 3px !important;
+
+  border-radius:4px !important;
+  background:rgba(2,7,15,.80) !important;
+
+  color:#f6f8fc !important;
+  font-size:clamp(7px,.64vw,9px) !important;
+  line-height:1.2 !important;
+  text-align:center !important;
+}
+
+.result-card.twelve-mode #closeResult{
+  position:relative !important;
+  z-index:5 !important;
+
+  margin:2px auto 0 !important;
+
+  min-width:140px !important;
+  padding:8px 22px !important;
+}
+
+/* 横幅が狭めのPC */
+@media(min-width:821px) and (max-width:1100px){
+  .result-card.twelve-mode .ten-card-grid{
+    grid-template-columns:repeat(4, minmax(105px, 132px)) !important;
+    gap:8px 10px !important;
+  }
+
+  .result-card.twelve-mode .ten-card-item{
+    width:clamp(105px, 13vw, 132px) !important;
+  }
+}
+
+/* スマホ */
+@media(max-width:820px){
+  .result-card.twelve-mode{
+    padding:4px !important;
+  }
+
+  .result-card.twelve-mode .result-inner{
+    width:calc(100vw - 8px) !important;
+    max-height:calc(100vh - 8px) !important;
+
+    padding:9px 6px 7px !important;
+    gap:6px !important;
+  }
+
+  .result-card.twelve-mode .ten-result.show{
+    gap:6px !important;
+  }
+
+  .result-card.twelve-mode .ten-result-title{
+    font-size:clamp(17px,5vw,22px) !important;
+  }
+
+  /*
+    4列固定。
+    division演算を使わず、24vw前後で収める。
+  */
+  .result-card.twelve-mode .ten-card-grid{
+    width:100% !important;
+
+    grid-template-columns:repeat(4, minmax(0,1fr)) !important;
+
+    gap:5px !important;
+  }
+
+  .result-card.twelve-mode .ten-card-item{
+    width:100% !important;
+  }
+
+  .result-card.twelve-mode .twelve-result-card{
+    width:100% !important;
+    aspect-ratio:3 / 4 !important;
+
+    border-width:1.5px !important;
+    border-radius:6px !important;
+  }
+
+  .result-card.twelve-mode .twelve-result-rarity{
+    top:3.5% !important;
+    right:4% !important;
+    font-size:clamp(5px,1.25vw,7px) !important;
+  }
+
+  .result-card.twelve-mode .twelve-result-name{
+    bottom:3% !important;
+    font-size:clamp(5px,1.15vw,7px) !important;
+  }
+
+  .result-card.twelve-mode #closeResult{
+    min-width:104px !important;
+    padding:6px 14px !important;
+    font-size:12px !important;
+  }
+}
+
+/* 高さが低い横長PCでは縮小せずスクロール */
+@media(min-width:821px) and (max-height:620px){
+  .result-card.twelve-mode .result-inner{
+    align-self:stretch !important;
+    max-height:calc(100vh - 12px) !important;
+    padding-top:8px !important;
+    padding-bottom:8px !important;
+  }
+
+  .result-card.twelve-mode .ten-result-title{
+    font-size:22px !important;
+  }
+}
+
+@keyframes tenCardAppear{
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+
+/* =========================================================
+   OVERLORD 5枚固定対戦
+   ========================================================= */
+.ovb-overlay{
+  position:fixed; z-index:1600; inset:0; display:none; padding:14px;
+  background:radial-gradient(circle at 50% 18%,rgba(34,89,145,.22),transparent 36%),rgba(1,5,11,.94);
+  color:#e9f2ff;
+}
+.ovb-overlay.show{display:block}
+.ovb-shell{
+  width:min(1240px,100%); height:min(94dvh,920px); margin:0 auto;
+  display:flex; flex-direction:column; overflow:hidden;
+  border:1px solid rgba(91,152,213,.52); border-radius:18px;
+  background:linear-gradient(180deg,rgba(8,20,36,.985),rgba(3,8,16,.99));
+  box-shadow:inset 0 0 0 1px rgba(217,187,115,.11),0 24px 80px rgba(0,0,0,.66);
+}
+.ovb-header{
+  flex:0 0 auto; min-height:76px; display:flex; align-items:center; justify-content:space-between;
+  gap:16px; padding:14px 20px; border-bottom:1px solid rgba(94,159,217,.26);
+  background:linear-gradient(90deg,rgba(19,40,68,.82),rgba(8,17,30,.60));
+}
+.ovb-kicker,.ovb-step,.ovb-result-kicker{color:#8fc9f3;font-size:11px;letter-spacing:.22em}
+.ovb-header h2,.ovb-section-head h3,.ovb-result h3{margin:4px 0 0;font-weight:700}
+.ovb-header h2{font-size:clamp(22px,2.4vw,34px)}
+.ovb-close{
+  width:42px;height:42px;border:1px solid rgba(139,194,237,.34);border-radius:50%;
+  background:rgba(4,10,18,.65);color:#ddebfa;font-size:26px;cursor:pointer
+}
+.ovb-body{flex:1 1 auto;min-height:0;overflow:auto}
+.ovb-screen{min-height:100%;padding:20px}
+.ovb-screen[hidden]{display:none!important}
+.ovb-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:16px}
+.ovb-section-head h3{font-size:clamp(20px,2vw,28px)}
+.ovb-section-head p{margin:7px 0 0;color:#9eafc3;line-height:1.6}
+.ovb-count{min-width:86px;padding:9px 12px;border:1px solid rgba(104,178,232,.34);border-radius:999px;text-align:center;color:#a9dbff}
+
+.ovb-select-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.ovb-select-card{
+  position:relative;min-width:0;padding:0;border:1px solid rgba(105,157,203,.22);
+  border-radius:12px;background:rgba(3,9,17,.66);color:inherit;cursor:pointer;overflow:hidden;text-align:left
+}
+.ovb-select-card:hover:not(:disabled){border-color:rgba(116,199,255,.72);transform:translateY(-1px)}
+.ovb-select-card.is-selected{border-color:#69c3ff;box-shadow:0 0 18px rgba(63,171,242,.25)}
+.ovb-select-card.is-disabled{cursor:not-allowed;opacity:.48;filter:saturate(.55)}
+
+.ovb-card{--ovb-type:#71849b;position:relative;display:grid;grid-template-rows:auto auto;min-width:0;overflow:hidden;background:linear-gradient(180deg,rgba(7,16,28,.92),rgba(3,8,15,.96))}
+.ovb-card.type-attacker{--ovb-type:#d77f72}
+.ovb-card.type-tank{--ovb-type:#72b2de}
+.ovb-card.type-magic{--ovb-type:#b28bea}
+.ovb-card.type-unset{--ovb-type:#66707c}
+.ovb-card-art{position:relative;aspect-ratio:3/4;overflow:hidden;border-bottom:2px solid var(--ovb-type);background:#050b14}
+.ovb-card-art img{width:100%;height:100%;object-fit:cover;object-position:center}
+.ovb-card-info{min-width:0;padding:8px}
+.ovb-card-topline{display:flex;align-items:center;gap:6px;min-width:0}
+.ovb-rarity{flex:0 0 auto;padding:2px 5px;border-radius:999px;background:rgba(255,255,255,.08);font-size:9px;font-weight:800}
+.ovb-rarity.rarity-n{color:#7fc3f1}.ovb-rarity.rarity-r{color:#ca8cef}.ovb-rarity.rarity-sr{color:#edf6ff}.ovb-rarity.rarity-ur{color:#f3cf6e}
+.ovb-type{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--ovb-type);font-size:10px}
+.ovb-card-name{margin-top:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:12px;font-weight:700}
+.ovb-ability{margin-top:5px;color:#e6c974;font-size:9px}
+.ovb-owned{padding:5px 8px 8px;color:#8798ab;font-size:9px}
+.ovb-disabled-note,.ovb-selected-mark{position:absolute;z-index:5;inset:auto 6px 6px auto;padding:4px 6px;border-radius:5px;font-size:8px;font-weight:800}
+.ovb-disabled-note{background:rgba(25,29,35,.92);color:#aeb5bd}.ovb-selected-mark{background:rgba(31,136,205,.92);color:#fff}
+
+.ovb-actions{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:18px}
+.ovb-actions.sticky{position:sticky;z-index:10;bottom:0;padding:12px 0 2px;background:linear-gradient(180deg,transparent,rgba(3,8,16,.97) 28%)}
+.ovb-primary,.ovb-secondary{min-height:42px;padding:9px 18px;border-radius:9px;font:inherit;font-size:12px;cursor:pointer}
+.ovb-primary{border:1px solid rgba(107,194,250,.72);background:linear-gradient(180deg,#194f78,#0d2d48);color:#edf9ff}
+.ovb-primary:disabled{opacity:.35;cursor:not-allowed}
+.ovb-secondary{border:1px solid rgba(130,152,176,.30);background:rgba(9,18,29,.72);color:#b9c7d6}
+
+.ovb-prep-layout{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.ovb-panel{min-width:0;padding:14px;border:1px solid rgba(82,137,185,.22);border-radius:13px;background:rgba(4,11,20,.55)}
+.ovb-panel h4{margin:0 0 12px;color:#bcd9ee;font-size:13px;letter-spacing:.07em}
+.ovb-cpu-preview{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.ovb-card.compact .ovb-card-info{padding:5px}.ovb-card.compact .ovb-card-name{font-size:10px}.ovb-card.compact .ovb-type,.ovb-card.compact .ovb-ability{font-size:8px}
+.ovb-player-order{display:grid;gap:7px}
+.ovb-order-row{display:grid;grid-template-columns:34px minmax(0,1fr) 40px;align-items:center;gap:8px;padding:6px;border:1px solid rgba(95,147,192,.22);border-radius:9px;background:rgba(2,8,15,.55)}
+.ovb-order-no{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(46,104,152,.30);color:#bfe2fb;font-weight:800}
+.ovb-order-card .ovb-card{grid-template-columns:62px minmax(0,1fr);grid-template-rows:auto}
+.ovb-order-card .ovb-card-art{aspect-ratio:auto;height:74px;border-bottom:0;border-right:2px solid var(--ovb-type)}
+.ovb-order-controls{display:grid;gap:4px}.ovb-order-controls button{width:36px;height:30px;border:1px solid rgba(105,170,216,.28);border-radius:6px;background:rgba(11,30,48,.85);color:#cae8fb}
+
+.ovb-screen[data-ovb-screen="battle"]{display:grid;place-items:center}
+.ovb-battle-stage{width:min(900px,100%);text-align:center}
+.ovb-round-no{color:#d5b96c;font-size:clamp(20px,2.5vw,32px);letter-spacing:.16em;margin-bottom:14px}
+.ovb-battle-pair{display:grid;grid-template-columns:minmax(0,1fr) 70px minmax(0,1fr);align-items:center;gap:14px}
+.ovb-battle-card{width:min(280px,100%);margin:auto}.ovb-battle-side-label{margin-bottom:7px;color:#87bde5;font-size:11px;letter-spacing:.14em}
+.ovb-vs{color:#718ca2;font-size:28px;font-weight:800}
+.ovb-battle-outcome{min-height:56px;margin-top:18px;font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:.08em}
+.ovb-battle-outcome.result-win{color:#78d8ff;text-shadow:0 0 20px rgba(74,188,242,.4)}
+.ovb-battle-outcome.result-lose{color:#e88787;text-shadow:0 0 20px rgba(224,91,91,.3)}
+.ovb-battle-outcome.result-draw{color:#d7d7d7}.ovb-battle-reason{min-height:24px;margin-top:7px;color:#9eafbf;font-size:12px}
+
+.ovb-result{width:min(900px,100%);margin:auto;text-align:center}.ovb-result h3{font-size:clamp(38px,6vw,72px);letter-spacing:.08em;color:#e9d28a}
+.ovb-score{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:min(560px,100%);margin:20px auto}
+.ovb-score>div{padding:12px;border:1px solid rgba(95,152,198,.22);border-radius:10px;background:rgba(5,13,23,.60)}
+.ovb-score span{display:block;color:#8ea1b5;font-size:10px}.ovb-score strong{display:block;margin-top:4px;font-size:28px}
+.ovb-result-rounds{display:grid;gap:6px;width:min(720px,100%);margin:0 auto}
+.ovb-round-summary{display:grid;grid-template-columns:42px minmax(0,1fr) 70px minmax(0,1fr);gap:8px;align-items:center;padding:8px 10px;border:1px solid rgba(90,139,181,.18);border-radius:8px;background:rgba(3,9,17,.52);font-size:11px}
+.ovb-round-summary.result-win strong{color:#73d4ff}.ovb-round-summary.result-lose strong{color:#e88484}.ovb-round-summary.result-draw strong{color:#d5d5d5}
+
+@media(max-width:820px){
+  .ovb-overlay{padding:5px}.ovb-shell{width:100%;height:calc(100dvh - 10px);border-radius:12px}
+  .ovb-header{min-height:60px;padding:9px 11px}.ovb-header h2{font-size:21px}.ovb-close{width:36px;height:36px;font-size:22px}
+  .ovb-screen{padding:12px 9px}.ovb-section-head{align-items:flex-start;margin-bottom:12px}.ovb-section-head h3{font-size:18px}.ovb-section-head p{font-size:11px}
+  .ovb-select-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  .ovb-card-info{padding:5px}.ovb-card-name{font-size:9px}.ovb-type,.ovb-ability,.ovb-owned{font-size:7px}
+  .ovb-prep-layout{grid-template-columns:1fr;gap:10px}.ovb-cpu-preview{grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}
+  .ovb-order-row{grid-template-columns:28px minmax(0,1fr) 36px;gap:5px}.ovb-order-no{width:26px;height:26px;font-size:11px}
+  .ovb-order-card .ovb-card{grid-template-columns:54px minmax(0,1fr)}.ovb-order-card .ovb-card-art{height:66px}
+  .ovb-order-controls button{width:32px;height:28px}
+  .ovb-battle-pair{grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);gap:6px}.ovb-vs{font-size:18px}
+  .ovb-battle-outcome{margin-top:12px;font-size:38px}.ovb-result h3{font-size:44px}
+  .ovb-score{gap:6px;margin:12px auto}.ovb-score strong{font-size:22px}
+  .ovb-round-summary{grid-template-columns:30px minmax(0,1fr) 52px minmax(0,1fr);gap:4px;padding:6px;font-size:8px}
+}
+@media(max-width:420px){
+  .ovb-select-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ovb-cpu-preview{overflow-x:auto;grid-template-columns:repeat(5,86px)}
+}
+
+
+/* =========================================================
+   v19 12連結果カード固定サイズ
+   自動サイズ計算をやめ、カードがこれ以下に潰れないようにする
+   ========================================================= */
+
+/* ---------- PC ---------- */
+.result-card.twelve-mode .ten-card-grid{
+  display:grid !important;
+  grid-template-columns:repeat(4, 140px) !important;
+  grid-auto-rows:187px !important;
+
+  gap:10px 12px !important;
+
+  width:max-content !important;
+  min-width:max-content !important;
+  max-width:none !important;
+
+  margin:0 auto !important;
+
+  align-items:center !important;
+  justify-items:center !important;
+}
+
+/* 親セルも固定 */
+.result-card.twelve-mode .ten-card-item{
+  width:140px !important;
+  height:187px !important;
+
+  min-width:140px !important;
+  min-height:187px !important;
+
+  max-width:140px !important;
+  max-height:187px !important;
+
+  flex:0 0 140px !important;
+
+  aspect-ratio:auto !important;
+
+  display:block !important;
+  box-sizing:border-box !important;
+}
+
+/* 実カードも固定。絶対に横線まで縮ませない */
+.result-card.twelve-mode .twelve-result-card{
+  width:140px !important;
+  height:187px !important;
+
+  min-width:140px !important;
+  min-height:187px !important;
+
+  max-width:140px !important;
+  max-height:187px !important;
+
+  aspect-ratio:auto !important;
+
+  display:block !important;
+  box-sizing:border-box !important;
+}
+
+/*
+  画面高さ・幅が足りない場合は
+  カードサイズを縮めず、結果パネルをスクロールする。
+*/
+.result-card.twelve-mode .result-inner{
+  overflow:auto !important;
+}
+
+.result-card.twelve-mode .ten-result.show{
+  min-width:max-content !important;
+}
+
+
+/* ---------- スマホ ---------- */
+@media(max-width:820px){
+
+  .result-card.twelve-mode .ten-card-grid{
+    grid-template-columns:repeat(4, 78px) !important;
+    grid-auto-rows:104px !important;
+
+    gap:6px !important;
+
+    width:max-content !important;
+    min-width:max-content !important;
+
+    margin-left:auto !important;
+    margin-right:auto !important;
+  }
+
+  .result-card.twelve-mode .ten-card-item{
+    width:78px !important;
+    height:104px !important;
+
+    min-width:78px !important;
+    min-height:104px !important;
+
+    max-width:78px !important;
+    max-height:104px !important;
+
+    flex:0 0 78px !important;
+  }
+
+  .result-card.twelve-mode .twelve-result-card{
+    width:78px !important;
+    height:104px !important;
+
+    min-width:78px !important;
+    min-height:104px !important;
+
+    max-width:78px !important;
+    max-height:104px !important;
+  }
+
+  .result-card.twelve-mode .result-inner{
+    overflow:auto !important;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .result-card.twelve-mode .ten-result.show{
+    min-width:max-content !important;
+  }
+}
+
+
+/* ---------- 小さいスマホ ---------- */
+@media(max-width:360px){
+
+  .result-card.twelve-mode .ten-card-grid{
+    grid-template-columns:repeat(4, 72px) !important;
+    grid-auto-rows:96px !important;
+
+    gap:5px !important;
+  }
+
+  .result-card.twelve-mode .ten-card-item{
+    width:72px !important;
+    height:96px !important;
+
+    min-width:72px !important;
+    min-height:96px !important;
+
+    max-width:72px !important;
+    max-height:96px !important;
+
+    flex-basis:72px !important;
+  }
+
+  .result-card.twelve-mode .twelve-result-card{
+    width:72px !important;
+    height:96px !important;
+
+    min-width:72px !important;
+    min-height:96px !important;
+
+    max-width:72px !important;
+    max-height:96px !important;
   }
 }
