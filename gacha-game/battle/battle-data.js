@@ -75,7 +75,13 @@
   }
 
   function getCpuPool() {
-    return getAllSeriesCards().filter(isBattleReady);
+    /*
+      CPUもプレイヤーと同じ「実際の所持カード」を使用する。
+      未所持カードはCPU候補に入れない。
+      同じカードIDは1種類として扱う。
+    */
+    return getOwnedCardsForSelection()
+      .filter(card => card.battleReady);
   }
 
   function shuffle(list) {
