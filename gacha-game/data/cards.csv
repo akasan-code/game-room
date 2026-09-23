@@ -153,7 +153,7 @@ collectionNo,id,name,rarity,image,gachas,weights,type,battleType,battleTags,batt
 007,ovarloard_007,コキュートス,UR,images/overloard/007_ur.png,series_003,,,tank,,
 008,ovarloard_008,パンドラズアクター,UR,images/overloard/008_ur.png,series_003,,,,,
 009,ovarloard_009,ガルガンチュア,R,images/overloard/009_r.png,series_003,,,tank,,
-010,ovarloard_010,ヴィクティム,R,images/overloard/010_r.png,series_003,,,,,
+010,ovarloard_010,ヴィクティム,R,images/overloard/010_r.png,series_003,,,noncombatant,,
 011,ovarloard_011,セバス・チャン,SR,images/overloard/011_sr.png,series_003,,,tank,,
 012,ovarloard_012,ユリ・アルファ,SR,images/overloard/012_sr.png,series_003,,,attacker,,
 013,ovarloard_013,ルプスレギナ・ベータ,SR,images/overloard/013_sr.png,series_003,,,magic,,
@@ -164,9 +164,9 @@ collectionNo,id,name,rarity,image,gachas,weights,type,battleType,battleTags,batt
 018,ovarloard_018,オーレオール・オメガ,SR,images/overloard/018_sr.png,series_003,,,attacker,,
 019,ovarloard_019,ヴァンパイア・ブライド,N,images/overloard/019_n.png,series_003,,,attacker,,
 020,ovarloard_020,エイトエッジアサシン,N,images/overloard/020_n.png,series_003,,,attacker,,
-021,ovarloard_021,エンリ・エモット,N,images/ovarloerd/021_n.png,series_003,,,,,
-022,ovarloard_022,ンフィーリア・バレアレ,N,images/overloard/022_n.png,series_003,,,,,
-023,ovarloard_023,ツアレ,N,images/overloard/023_n.png,series_003,,,,,
+021,ovarloard_021,エンリ・エモット,N,images/ovarloerd/021_n.png,series_003,,,noncombatant,,
+022,ovarloard_022,ンフィーリア・バレアレ,N,images/overloard/022_n.png,series_003,,,noncombatant,,
+023,ovarloard_023,ツアレ,N,images/overloard/023_n.png,series_003,,,noncombatant,,
 024,ovarloard_024,たっちみー,UR,images/overloard/024_ur.png,series_003,,,attacker,supreme_41,world_champion
 025,ovarloard_025,武人建御雷,UR,images/overloard/025_ur.png,series_003,,,attacker,,
 026,ovarloard_026,タブラ・スマラグディナ,UR,images/overloard/026_ur.png,series_003,,,,,
@@ -187,5 +187,6 @@ collectionNo,id,name,rarity,image,gachas,weights,type,battleType,battleTags,batt
 041,ovarloard_041,餡ころもっちもっち,UR,images/overloard/041_ur.png,series_003,,,tank,supreme_41,
 042,ovarloard_042,ホワイトブリム,UR,images/overloard/042_ur.png,series_003,,,attacker,supreme_41,
 043,ovarloard_043,エンショントワン,UR,images/overloard/043_ur.png,series_003,,,magic,supreme_41,
+044,ovarloard_044,ぷにっと萌え(変化),UR,images/overloard/044_ur.png,series_003,,,magic,supreme_41,
 
 

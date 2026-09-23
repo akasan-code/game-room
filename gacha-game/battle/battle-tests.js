@@ -4,7 +4,8 @@ window.OverlordBattleData = {
   TYPES: {
     attacker:{id:'attacker',name:'アタッカー',strongAgainst:['magic']},
     tank:{id:'tank',name:'タンク',strongAgainst:['attacker']},
-    magic:{id:'magic',name:'マジックキャスター',strongAgainst:['tank']}
+    magic:{id:'magic',name:'マジックキャスター',strongAgainst:['tank']},
+    noncombatant:{id:'noncombatant',name:'非戦闘員',strongAgainst:[]}
   }
 };
 require('./battle-logic.js');
@@ -30,5 +31,16 @@ eq(resolveBattle({battleType:'attacker'},{battleType:'attacker'}).resultA,'DRAW'
 eq(resolveBattle(touchme,{battleType:'tank'}).resultA,'WIN','touchme');
 eq(resolveBattle(momonga,touchme).resultA,'DRAW','momonga vs touchme');
 eq(resolveBattle(touchme,momonga).resultA,'DRAW','touchme vs momonga');
+
+
+const noncombatant = { battleType:'noncombatant' };
+
+eq(resolveBattle(noncombatant,{battleType:'attacker'}).resultA,'LOSE','noncombatant < attacker');
+eq(resolveBattle(noncombatant,{battleType:'tank'}).resultA,'LOSE','noncombatant < tank');
+eq(resolveBattle(noncombatant,{battleType:'magic'}).resultA,'LOSE','noncombatant < magic');
+eq(resolveBattle(noncombatant,noncombatant).resultA,'DRAW','noncombatant draw');
+
+eq(resolveBattle(noncombatant,touchme).resultA,'WIN','noncombatant beats touchme');
+eq(resolveBattle(touchme,noncombatant).resultA,'LOSE','touchme loses to noncombatant');
 
 console.log('battle tests: OK');

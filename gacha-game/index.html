@@ -262,11 +262,22 @@
             <div class="ovb-section-head">
               <div>
                 <div class="ovb-step">STEP 1</div>
-                <h3>使用カードを5枚選択</h3>
+                <h3>相手の公開3枚を見て、自分の5枚を選ぶ</h3>
                 <p id="ovbSelectHelp">所持カードを読み込み中…</p>
               </div>
               <div class="ovb-count" id="ovbSelectedCount">0 / 5</div>
             </div>
+
+            <div class="ovb-enemy-selection-preview">
+              <div class="ovb-subheading">
+                <span>CPU 公開カード</span>
+                <small>3枚公開 / 2枚非公開</small>
+              </div>
+              <div class="ovb-enemy-preview" id="ovbEnemyPreview"></div>
+            </div>
+
+            <div class="ovb-type-tabs" id="ovbTypeTabs"></div>
+
             <div class="ovb-select-grid" id="ovbSelectGrid"></div>
             <div class="ovb-actions sticky">
               <button type="button" class="ovb-primary" id="ovbToPrep" disabled>対戦準備へ</button>
@@ -285,7 +296,8 @@
             <div class="ovb-prep-layout">
               <div class="ovb-panel">
                 <h4>CPU 使用カード</h4>
-                <div class="ovb-cpu-preview" id="ovbCpuPreview"></div>
+                <div class="ovb-panel-note">公開3枚 / 残り2枚はバトル開始まで非公開</div>
+                <div class="ovb-cpu-preview ovb-enemy-preview" id="ovbCpuPreview"></div>
               </div>
               <div class="ovb-panel">
                 <h4>PLAYER 出撃順</h4>

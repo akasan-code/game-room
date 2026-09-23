@@ -33,6 +33,20 @@
       }
     }),
 
+    anti_world_champion: Object.freeze({
+      priority: 80,
+      resolve({ owner, opponent }) {
+        if (owner?.battleType === 'noncombatant' &&
+            opponent?.battleAbility === 'world_champion') {
+          return {
+            result: RESULTS.WIN,
+            reason: '非戦闘員：たっち・みーにだけ勝利'
+          };
+        }
+        return null;
+      }
+    }),
+
     world_champion: Object.freeze({
       priority: 50,
       resolve() {
@@ -47,9 +61,7 @@
   function collectAbilityEffects(cardA, cardB) {
     const effects = [];
 
-    const add = (owner, opponent, ownerSide) => {
-      const abilityId = owner?.battleAbility;
-      const handler = ABILITY_HANDLERS[abilityId];
+    const pushEffect = (abilityId, handler, owner, opponent, ownerSide) => {
       if (!handler) return;
 
       const effect = handler.resolve({ owner, opponent });
@@ -61,6 +73,28 @@
         resultA: ownerSide === 'A' ? effect.result : invert(effect.result),
         reason: effect.reason
       });
+    };
+
+    const add = (owner, opponent, ownerSide) => {
+      // 非戦闘員の「対ワールドチャンピオン」特効はタイプ固有ルール。
+      pushEffect(
+        'anti_world_champion',
+        ABILITY_HANDLERS.anti_world_champion,
+        owner,
+        opponent,
+        ownerSide
+      );
+
+      const abilityId = owner?.battleAbility;
+      if (!abilityId) return;
+
+      pushEffect(
+        abilityId,
+        ABILITY_HANDLERS[abilityId],
+        owner,
+        opponent,
+        ownerSide
+      );
     };
 
     add(cardA, cardB, 'A');
@@ -97,6 +131,35 @@
         resultB: RESULTS.DRAW,
         source: 'invalid',
         reason: '対戦タイプ未設定'
+      };
+    }
+
+    // 非戦闘員は通常タイプすべてに弱い。
+    // 非戦闘員同士だけDRAW。
+    if (typeA.id === 'noncombatant' || typeB.id === 'noncombatant') {
+      if (typeA.id === typeB.id) {
+        return {
+          resultA: RESULTS.DRAW,
+          resultB: RESULTS.DRAW,
+          source: 'type',
+          reason: '非戦闘員同士'
+        };
+      }
+
+      if (typeA.id === 'noncombatant') {
+        return {
+          resultA: RESULTS.LOSE,
+          resultB: RESULTS.WIN,
+          source: 'type',
+          reason: `非戦闘員 ＜ ${typeB.name}`
+        };
+      }
+
+      return {
+        resultA: RESULTS.WIN,
+        resultB: RESULTS.LOSE,
+        source: 'type',
+        reason: `${typeA.name} ＞ 非戦闘員`
       };
     }
 

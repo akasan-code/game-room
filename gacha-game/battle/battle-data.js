@@ -26,6 +26,11 @@
       id: 'magic',
       name: 'マジックキャスター',
       strongAgainst: Object.freeze(['tank'])
+    }),
+    noncombatant: Object.freeze({
+      id: 'noncombatant',
+      name: '非戦闘員',
+      strongAgainst: Object.freeze([])
     })
   });
 

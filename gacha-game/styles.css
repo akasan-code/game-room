@@ -6596,3 +6596,540 @@
     max-height:96px !important;
   }
 }
+
+
+/* =========================================================
+   v21 OVERLORD カード選択UI
+   CPU3枚公開 + 2枚非公開 / タイプ別タブ
+   ========================================================= */
+
+.ovb-enemy-selection-preview{
+  margin-bottom:16px;
+  padding:13px;
+  border:1px solid rgba(91,152,213,.28);
+  border-radius:13px;
+  background:linear-gradient(180deg,rgba(11,27,46,.68),rgba(4,12,22,.66));
+}
+
+.ovb-subheading{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.ovb-subheading span{
+  color:#c5e1f4;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.06em;
+}
+
+.ovb-subheading small,
+.ovb-panel-note{
+  color:#7f93a8;
+  font-size:10px;
+}
+
+.ovb-panel-note{
+  margin:-7px 0 10px;
+}
+
+.ovb-enemy-preview{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+}
+
+.ovb-enemy-hidden{
+  position:relative;
+  min-width:0;
+  aspect-ratio:3 / 4;
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:8px;
+  overflow:hidden;
+  border:1px solid rgba(100,157,207,.28);
+  border-radius:9px;
+  background:
+    radial-gradient(circle at 50% 46%,rgba(53,113,165,.17),transparent 38%),
+    linear-gradient(135deg,rgba(10,26,44,.96),rgba(3,9,17,.98));
+  box-shadow:inset 0 0 22px rgba(38,104,158,.08);
+}
+
+.ovb-enemy-hidden::before{
+  content:"";
+  position:absolute;
+  inset:7px;
+  border:1px solid rgba(130,183,222,.12);
+  border-radius:6px;
+  background:repeating-linear-gradient(45deg,transparent 0 8px,rgba(84,141,184,.04) 8px 9px);
+}
+
+.ovb-hidden-rune{
+  position:relative;
+  z-index:2;
+  color:#87bce2;
+  font-size:clamp(28px,4vw,52px);
+  font-weight:800;
+  text-shadow:0 0 16px rgba(77,170,232,.28);
+}
+
+.ovb-hidden-label{
+  position:relative;
+  z-index:2;
+  color:#637d92;
+  font-size:8px;
+  letter-spacing:.18em;
+}
+
+.ovb-type-tabs{
+  display:flex;
+  gap:7px;
+  margin:0 0 12px;
+  padding:4px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+
+.ovb-type-tabs::-webkit-scrollbar{
+  display:none;
+}
+
+.ovb-type-tab{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  min-height:34px;
+  padding:6px 11px;
+  border:1px solid rgba(104,150,190,.22);
+  border-radius:999px;
+  background:rgba(5,14,24,.72);
+  color:#91a5b8;
+  font:inherit;
+  font-size:10px;
+  cursor:pointer;
+}
+
+.ovb-type-tab span{
+  min-width:18px;
+  padding:2px 5px;
+  border-radius:999px;
+  background:rgba(255,255,255,.07);
+  color:#7f93a6;
+  font-size:8px;
+  text-align:center;
+}
+
+.ovb-type-tab.is-active{
+  border-color:rgba(102,192,248,.66);
+  background:linear-gradient(180deg,rgba(24,72,107,.88),rgba(10,35,55,.90));
+  color:#e7f7ff;
+  box-shadow:0 0 13px rgba(65,164,225,.14);
+}
+
+.ovb-type-tab.is-active span{
+  background:rgba(100,197,255,.17);
+  color:#bce7ff;
+}
+
+.ovb-empty-tab{
+  grid-column:1 / -1;
+  padding:24px;
+  border:1px dashed rgba(109,151,184,.20);
+  border-radius:10px;
+  color:#74899c;
+  text-align:center;
+  font-size:11px;
+}
+
+.ovb-enemy-preview .ovb-card-info{padding:5px}
+.ovb-enemy-preview .ovb-card-name{font-size:9px}
+.ovb-enemy-preview .ovb-type,
+.ovb-enemy-preview .ovb-ability{font-size:7px}
+
+@media(max-width:820px){
+  .ovb-enemy-selection-preview{
+    padding:9px;
+    margin-bottom:10px;
+  }
+
+  .ovb-subheading{margin-bottom:7px}
+  .ovb-subheading span{font-size:11px}
+  .ovb-subheading small{font-size:8px}
+
+  .ovb-enemy-preview{
+    grid-template-columns:repeat(5,90px);
+    gap:5px;
+    overflow-x:auto;
+    padding-bottom:3px;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .ovb-enemy-preview::-webkit-scrollbar{display:none}
+
+  .ovb-type-tabs{
+    gap:5px;
+    margin-bottom:8px;
+    padding:3px 0;
+  }
+
+  .ovb-type-tab{
+    min-height:31px;
+    padding:5px 9px;
+    font-size:9px;
+  }
+
+  .ovb-type-tab span{font-size:7px}
+}
+
+@media(max-width:420px){
+  .ovb-enemy-preview{
+    grid-template-columns:repeat(5,82px);
+  }
+}
+
+
+/* =========================================================
+   v22 非戦闘員タイプ + タイプアイコン
+   ========================================================= */
+
+.ovb-card.type-noncombatant{
+  --ovb-type:#9fb3bd;
+}
+
+.ovb-type{
+  display:inline-flex !important;
+  align-items:center;
+  gap:4px;
+}
+
+.ovb-type-icon{
+  flex:0 0 auto;
+  width:1.25em;
+  height:1.25em;
+  display:inline-grid;
+  place-items:center;
+  border:1px solid currentColor;
+  border-radius:50%;
+  font-size:.9em;
+  line-height:1;
+  background:rgba(255,255,255,.035);
+  box-shadow:0 0 8px rgba(255,255,255,.04);
+}
+
+.type-attacker .ovb-type-icon{
+  color:#ef9d8e;
+}
+
+.type-tank .ovb-type-icon{
+  color:#8bc9ef;
+}
+
+.type-magic .ovb-type-icon{
+  color:#c39af2;
+}
+
+.type-noncombatant .ovb-type-icon{
+  color:#c2d0d6;
+}
+
+.type-unset .ovb-type-icon{
+  color:#7f8790;
+}
+
+@media(max-width:820px){
+  .ovb-type{
+    gap:3px;
+  }
+
+  .ovb-type-icon{
+    width:1.15em;
+    height:1.15em;
+    font-size:.82em;
+  }
+}
+
+/* =========================================================
+   v23 実アイコン反映
+   ========================================================= */
+
+.ovb-card-art{
+  position:relative;
+}
+
+.ovb-card-badges{
+  position:absolute;
+  inset:8px 8px auto 8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:8px;
+  pointer-events:none;
+}
+
+.ovb-type-icon,
+.ovb-skill-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+}
+
+.ovb-type-icon img,
+.ovb-skill-badge img,
+.ovb-type-tab-icon{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.ovb-type-icon{
+  width:18px;
+  height:18px;
+  border:none !important;
+  background:none !important;
+  box-shadow:none !important;
+  border-radius:0 !important;
+  line-height:1;
+}
+
+.ovb-type-icon.ovb-type-badge{
+  width:34px;
+  height:34px;
+  padding:4px;
+  border-radius:12px !important;
+  background:rgba(5, 12, 22, 0.82) !important;
+  box-shadow:0 6px 18px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,255,255,0.08) !important;
+  backdrop-filter:blur(2px);
+}
+
+.ovb-skill-badge{
+  width:34px;
+  height:34px;
+  padding:4px;
+  border-radius:12px;
+  background:rgba(33, 22, 4, 0.85);
+  box-shadow:0 6px 18px rgba(0,0,0,0.35), inset 0 0 0 1px rgba(255,226,138,0.16);
+  backdrop-filter:blur(2px);
+}
+
+.ovb-type-icon-fallback{
+  font-size:12px;
+  font-weight:800;
+  color:#dbe5f3;
+}
+
+.ovb-type-icon-fallback.ovb-type-badge{
+  font-size:16px;
+}
+
+.ovb-card.compact .ovb-card-badges{
+  inset:4px 4px auto 4px;
+}
+
+.ovb-card.compact .ovb-type-icon.ovb-type-badge,
+.ovb-card.compact .ovb-skill-badge{
+  width:24px;
+  height:24px;
+  padding:3px;
+  border-radius:9px;
+}
+
+.ovb-card-topline{
+  justify-content:space-between;
+}
+
+.ovb-type{
+  display:inline-flex !important;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+}
+
+.ovb-card-name-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:5px;
+}
+
+.ovb-card-name-row .ovb-card-name{
+  margin-top:0;
+  flex:1 1 auto;
+  min-width:0;
+}
+
+.ovb-ability-inline{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  flex:0 0 auto;
+  color:#f2d98f;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.02em;
+  white-space:nowrap;
+}
+
+.ovb-ability-inline .ovb-skill-badge{
+  width:18px;
+  height:18px;
+  padding:2px;
+  border-radius:7px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.25), inset 0 0 0 1px rgba(255,226,138,0.12);
+}
+
+.ovb-type-tab{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+}
+
+.ovb-type-tab-icon{
+  width:18px;
+  height:18px;
+  flex:0 0 auto;
+}
+
+.ovb-type-tab-label{
+  white-space:nowrap;
+}
+
+.ovb-enemy-preview .ovb-type-icon.ovb-type-badge,
+.ovb-order-card .ovb-type-icon.ovb-type-badge,
+.ovb-battle-card .ovb-type-icon.ovb-type-badge{
+  width:26px;
+  height:26px;
+  padding:3px;
+  border-radius:10px;
+}
+
+.ovb-enemy-preview .ovb-skill-badge,
+.ovb-order-card .ovb-skill-badge,
+.ovb-battle-card .ovb-skill-badge{
+  width:26px;
+  height:26px;
+  padding:3px;
+  border-radius:10px;
+}
+
+@media(max-width:820px){
+  .ovb-type-icon{
+    width:16px;
+    height:16px;
+  }
+
+  .ovb-card-name-row{
+    gap:6px;
+  }
+
+  .ovb-ability-inline{
+    font-size:8px;
+  }
+
+  .ovb-ability-inline .ovb-skill-badge{
+    width:16px;
+    height:16px;
+    border-radius:6px;
+  }
+
+  .ovb-type-tab-icon{
+    width:16px;
+    height:16px;
+  }
+}
+
+@media(max-width:520px){
+  .ovb-card.compact .ovb-type-icon.ovb-type-badge,
+  .ovb-card.compact .ovb-skill-badge{
+    width:20px;
+    height:20px;
+    padding:2px;
+    border-radius:8px;
+  }
+
+  .ovb-ability-inline span{
+    display:none;
+  }
+}
+
+
+/* =========================================================
+   v24 カードアイコン整理
+   画像上のバッジだけで視認させる
+   ========================================================= */
+
+/* 左上のタイプアイコンを一回り大きく */
+.ovb-type-icon.ovb-type-badge{
+  width:46px !important;
+  height:46px !important;
+  padding:5px !important;
+  border-radius:14px !important;
+}
+
+/* 右上スキルマークも少し存在感を合わせる */
+.ovb-card-badges > .ovb-skill-badge{
+  width:38px !important;
+  height:38px !important;
+  padding:4px !important;
+  border-radius:12px !important;
+}
+
+/* compact表示では少し小さめ */
+.ovb-card.compact .ovb-type-icon.ovb-type-badge{
+  width:32px !important;
+  height:32px !important;
+  padding:3px !important;
+  border-radius:10px !important;
+}
+
+.ovb-card.compact .ovb-card-badges > .ovb-skill-badge{
+  width:28px !important;
+  height:28px !important;
+  padding:3px !important;
+  border-radius:9px !important;
+}
+
+/* 文字横のアイコンを撤去したため、情報欄はテキスト中心に */
+.ovb-type{
+  gap:0 !important;
+}
+
+.ovb-ability-inline{
+  gap:0 !important;
+}
+
+/* スマホ */
+@media(max-width:820px){
+  .ovb-type-icon.ovb-type-badge{
+    width:38px !important;
+    height:38px !important;
+    padding:4px !important;
+    border-radius:12px !important;
+  }
+
+  .ovb-card-badges > .ovb-skill-badge{
+    width:32px !important;
+    height:32px !important;
+    padding:3px !important;
+    border-radius:10px !important;
+  }
+
+  .ovb-card.compact .ovb-type-icon.ovb-type-badge{
+    width:28px !important;
+    height:28px !important;
+  }
+
+  .ovb-card.compact .ovb-card-badges > .ovb-skill-badge{
+    width:24px !important;
+    height:24px !important;
+  }
+}
