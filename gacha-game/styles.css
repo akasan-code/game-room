@@ -7133,3 +7133,36 @@
     height:24px !important;
   }
 }
+
+/* =========================================================
+   v25 スマホ図鑑ボタン タップ修正
+   top-selector-stack が図鑑ボタンを覆っていた問題を修正
+   ========================================================= */
+
+/* 図鑑ボタンをSeries/ミニゲームの2段UIより前面へ */
+.collection-open-btn{
+  z-index:132 !important;
+  pointer-events:auto !important;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:rgba(115,190,255,.18);
+}
+
+/* スマホで透明な親コンテナそのものがタップを奪わないようにする */
+@media(max-width:820px){
+  .top-selector-stack{
+    pointer-events:none !important;
+  }
+
+  /* 実際に押すSeries/ミニゲームの各ボタンだけタップ可能に戻す */
+  .top-selector-stack .series-tab,
+  .top-selector-stack .minigame-tab{
+    pointer-events:auto !important;
+    touch-action:manipulation;
+  }
+
+  .collection-open-btn{
+    z-index:132 !important;
+    pointer-events:auto !important;
+    touch-action:manipulation;
+  }
+}
