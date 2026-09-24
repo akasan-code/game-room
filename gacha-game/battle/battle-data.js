@@ -7,8 +7,11 @@
     SERIES_ID: 'series_003',
     TEAM_SIZE: 5,
     ALLOW_DUPLICATE_CARD_ID: false,
-    ROUND_REVEAL_MS: 650,
-    ROUND_RESULT_MS: 900
+    ROUND_REVEAL_MS: 180,
+    ROUND_RESULT_MS: 520,
+    CLASH_MS: 560,
+    LOSER_DROP_MS: 760,
+    DRAW_RECOIL_MS: 430
   });
 
   const TYPES = Object.freeze({

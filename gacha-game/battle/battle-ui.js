@@ -342,6 +342,77 @@
     return `<div class="ovb-battle-side-label">${label}</div>${cardHtml(card)}`;
   }
 
+  function resetBattleMotion() {
+    battlePlayer.classList.remove(
+      'is-clashing',
+      'is-impact',
+      'is-loser-fall',
+      'is-draw-recoil'
+    );
+
+    battleCpu.classList.remove(
+      'is-clashing',
+      'is-impact',
+      'is-loser-fall',
+      'is-draw-recoil'
+    );
+  }
+
+  async function playCardClash(token) {
+    resetBattleMotion();
+
+    // DOM描画後に1フレーム待ってから突進を開始。
+    await wait(Data.CONFIG.ROUND_REVEAL_MS);
+    if (token !== battleToken) return false;
+
+    battlePlayer.classList.add('is-clashing');
+    battleCpu.classList.add('is-clashing');
+
+    await wait(Data.CONFIG.CLASH_MS);
+    if (token !== battleToken) return false;
+
+    battlePlayer.classList.remove('is-clashing');
+    battleCpu.classList.remove('is-clashing');
+
+    battlePlayer.classList.add('is-impact');
+    battleCpu.classList.add('is-impact');
+
+    // 衝突の余韻を短く残す。
+    await wait(90);
+    if (token !== battleToken) return false;
+
+    battlePlayer.classList.remove('is-impact');
+    battleCpu.classList.remove('is-impact');
+
+    return true;
+  }
+
+  async function playRoundResultMotion(result, token) {
+    if (result.resultA === 'LOSE') {
+      battlePlayer.classList.add('is-loser-fall');
+
+      await wait(Data.CONFIG.LOSER_DROP_MS);
+      return token === battleToken;
+    }
+
+    if (result.resultA === 'WIN') {
+      battleCpu.classList.add('is-loser-fall');
+
+      await wait(Data.CONFIG.LOSER_DROP_MS);
+      return token === battleToken;
+    }
+
+    battlePlayer.classList.add('is-draw-recoil');
+    battleCpu.classList.add('is-draw-recoil');
+
+    await wait(Data.CONFIG.DRAW_RECOIL_MS);
+
+    battlePlayer.classList.remove('is-draw-recoil');
+    battleCpu.classList.remove('is-draw-recoil');
+
+    return token === battleToken;
+  }
+
   async function startBattle() {
     battleToken++;
     const token = battleToken;
@@ -358,6 +429,8 @@
       const cpu = cpuOrder[i];
       const result = Logic.resolveBattle(player, cpu);
 
+      resetBattleMotion();
+
       roundNo.textContent = `ROUND ${i + 1}`;
       battlePlayer.innerHTML = sideHtml(player, 'PLAYER');
       battleCpu.innerHTML = sideHtml(cpu, 'CPU');
@@ -365,8 +438,8 @@
       battleOutcome.className = 'ovb-battle-outcome';
       battleReason.textContent = 'VS';
 
-      await wait(Data.CONFIG.ROUND_REVEAL_MS);
-      if (token !== battleToken) return;
+      const clashed = await playCardClash(token);
+      if (!clashed) return;
 
       battleOutcome.textContent = result.resultA;
       battleOutcome.className = `ovb-battle-outcome result-${result.resultA.toLowerCase()}`;
@@ -375,6 +448,14 @@
       roundResults.push({ player, cpu, result });
 
       await wait(Data.CONFIG.ROUND_RESULT_MS);
+      if (token !== battleToken) return;
+
+      const motionDone = await playRoundResultMotion(result, token);
+      if (!motionDone) return;
+
+      // 次ROUND前に一度状態を戻す。
+      resetBattleMotion();
+      await wait(120);
     }
 
     if (token !== battleToken) return;
