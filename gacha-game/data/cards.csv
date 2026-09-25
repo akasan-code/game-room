@@ -1,192 +1,190 @@
-collectionNo,id,name,rarity,image,gachas,weights,type,battleType,battleTags,battleAbility
-1,oba_n_001,紀子,N,images/OBA/noriko.png,standard_001,human,,,,
-2,oba_n_002,秋彦,N,images/OBA/akihiko.png,standard_001,human,,,,
-3,oba_n_003,花子,N,images/OBA/hanako.png,standard_001,ghost,,,,
-4,oba_n_004,ぽんきち,N,images/OBA/ponkiti.png,standard_001,human,,,,
-5,oba_r_001,赤マント,R,images/OBA/akamant.png,standard_001,ghost,,,,
-6,oba_r_002,大ガマ,R,images/OBA/oogama.png,standard_001,ghost,,,,
-7,oba_r_003,青べえ,R,images/OBA/aobee.png,standard_001,ghost,,,,
-8,oba_r_004,赤べえ,R,images/OBA/akabee.png,standard_001,ghost,,,,
-9,oba_r_005,グリ,R,images/OBA/guri.png,standard_001,human,,,,
-10,oba_r_006,フーラン,R,images/OBA/fuuran.png,standard_001,ghost,,,,
-11,oba_sr_001,九郎,SR,images/OBA/kurou.png,standard_001,human,,,,
-12,oba_sr_002,はじめ,SR,images/OBA/hajime.png,standard_001,human,,,,
-13,oba_sr_003,青マント,SR,images/OBA/aomant.png,standard_001,ghost,,,,
-14,oba_sr_004,ガシャ,SR,images/OBA/gasya.png,standard_001,ghost,,,,
-15,oba_sr_005,アリサ,SR,images/OBA/arisa.png,standard_001,human,,,,
-16,oba_sr_006,アレス,SR,images/OBA/ares.png,standard_001,human,,,,
-17,oba_sr_007,メアリー,SR,images/OBA/meary.png,standard_001,human,,,,
-18,oba_sr_008,ルル,SR,images/OBA/lulu.png,standard_001,ghost,,,,
-19,oba_ur_001,メリーさん,UR,images/OBA/merry.png,standard_001,ghost,,,,
-20,oba_ur_002,ヤミ子さん,UR,images/OBA/yami.png,standard_001,ghost,,,,
-21,oba_ur_003,お雪,UR,images/OBA/oyuki.png,standard_001,ghost,,,,
-22,oba_ur_004,リジー,UR,images/OBA/lisy.png,standard_001,ghost,,,,
-23,oba_r_007,新アリサ,R,images/OBA/arisa2.png,standard_001,human,,,,
-24,oba_r_008,新アレス,R,images/OBA/ares2.png,standard_001,human,,,,
-25,oba_r_009,ツギハギ,R,images/OBA/tsugihagi.png,standard_001,ghost,,,,
-26,oba_r_010,ドラコ,R,images/OBA/dorako.png,standard_001,ghost,,,,
-27,oba_r_011,シャルル,R,images/OBA/syaruru.png,standard_001,human,,,,
-1,element_001,H 水素,UR,images/element/001_H_ur.png,series_002,,,,,
-2,element_002,He ヘリウム,SR,images/element/002_He_sr.png,series_002,,,,,
-3,element_003,Li リチウム,SR,images/element/003_Li_sr.png,series_002,,,,,
-4,element_004,Be ベリリウム,R,images/element/004_Be_r.png,series_002,,,,,
-5,element_005,B ホウ素,N,images/element/005_B_n.png,series_002,,,,,
-6,element_006,C 炭素,UR,images/element/006_C_ur.png,series_002,,,,,
-7,element_007,N 窒素,SR,images/element/007_N_sr.png,series_002,,,,,
-8,element_008,O 酸素,UR,images/element/008_O_ur.png,series_002,,,,,
-9,element_009,F フッ素,SR,images/element/009_F_sr.png,series_002,,,,,
-10,element_010,Ne ネオン,R,images/element/010_Ne_r.png,series_002,,,,,
-11,element_011,Na ナトリウム,SR,images/element/011_Na_sr.png,series_002,,,,,
-12,element_012,Mg マグネシウム,SR,images/element/012_Mg_sr.png,series_002,,,,,
-13,element_013,Al アルミニウム,R,images/element/013_Al_r.png,series_002,,,,,
-14,element_014,Si ケイ素,SR,images/element/014_Si_sr.png,series_002,,,,,
-15,element_015,P リン,R,images/element/015_P_r.png,series_002,,,,,
-16,element_016,S 硫黄,SR,images/element/016_S_sr.png,series_002,,,,,
-17,element_017,Cl 塩素,SR,images/element/017_Cl_sr.png,series_002,,,,,
-18,element_018,Ar アルゴン,R,images/element/018_Ar_r.png,series_002,,,,,
-19,element_019,K カリウム,R,images/element/019_K_r.png,series_002,,,,,
-20,element_020,Ca カルシウム,SR,images/element/020_Ca_sr.png,series_002,,,,,
-21,element_021,Sc スカンジウム,R,images/element/021_Sc_r.png,series_002,,,,,
-22,element_022,Ti チタン,SR,images/element/022_Ti_sr.png,series_002,,,,,
-23,element_023,V バナジウム,R,images/element/023_V_r.png,series_002,,,,,
-24,element_024,Cr クロム,SR,images/element/024_Cr_sr.png,series_002,,,,,
-25,element_025,Mn マンガン,N,images/element/025_Mn_n.png,series_002,,,,,
-26,element_026,Fe 鉄,UR,images/element/026_Fe_ur.png,series_002,,,,,
-27,element_027,Co コバルト,SR,images/element/027_Co_sr.png,series_002,,,,,
-28,element_028,Ni ニッケル,R,images/element/028_Ni_r.png,series_002,,,,,
-29,element_029,Cu 銅,R,images/element/029_Cu_r.png,series_002,,,,,
-30,element_030,Zn 亜鉛,R,images/element/030_Zn_r.png,series_002,,,,,
-31,element_031,Ga ガリウム,N,images/element/031_Ga_n.png,series_002,,,,,
-32,element_032,Ge ゲルマニウム,N,images/element/032_Ge_n.png,series_002,,,,,
-33,element_033,As ヒ素,R,images/element/033_As_r.png,series_002,,,,,
-34,element_034,Se セレン,N,images/element/034_Se_n.png,series_002,,,,,
-35,element_035,Br 臭素,SR,images/element/035_Br_sr.png,series_002,,,,,
-36,element_036,Kr クリプトン,SR,images/element/036_Kr_sr.png,series_002,,,,,
-37,element_037,Rb ルビジウム,N,images/element/037_Rb_n.png,series_002,,,,,
-38,element_038,Sr ストロンチウム,R,images/element/038_Sr_r.png,series_002,,,,,
-39,element_039,Y イットリウム,SR,images/element/039_Y_sr.png,series_002,,,,,
-40,element_040,Zr ジルコニウム,R,images/element/040_Zr_r.png,series_002,,,,,
-41,element_041,Nb ニオブ,N,images/element/041_Nb_n.png,series_002,,,,,
-42,element_042,Mo モリブデン,N,images/element/042_Mo_n.png,series_002,,,,,
-43,element_043,Tc テクネチウム,R,images/element/043_Tc_r.png,series_002,,,,,
-44,element_044,Ru ルテニウム,N,images/element/044_Ru_n.png,series_002,,,,,
-45,element_045,Rh ロジウム,R,images/element/045_Rh_r.png,series_002,,,,,
-46,element_046,Pd パラジウム,R,images/element/046_Pd_r.png,series_002,,,,,
-47,element_047,Ag 銀,UR,images/element/047_Ag_ur.png,series_002,,,,,
-48,element_048,Cd カドミウム,R,images/element/048_Cd_r.png,series_002,,,,,
-49,element_049,In インジウム,R,images/element/049_In_r.png,series_002,,,,,
-50,element_050,Sn スズ ,SR,images/element/050_Sn_sr.png,series_002,,,,,
-51,element_051,Sb アンチモン,R,images/element/051_Sb_r.png,series_002,,,,,
-52,element_052,Te テルル,N,images/element/052_Te_n.png,series_002,,,,,
-53,element_053,I ヨウ素,SR,images/element/053_I_sr.png,series_002,,,,,
-54,element_054,Xe キセノン,SR,images/element/054_Xe_sr.png,series_002,,,,,
-55,element_055,Cs セシウム,SR,images/element/055_Cs_sr.png,series_002,,,,,
-56,element_056,Ba バリウム,R,images/element/056_Ba_r.png,series_002,,,,,
-57,element_057,La ランタン,R,images/element/057_La_r.png,series_002,,,,,
-58,element_058,Ce セリウム,R,images/element/058_Ce_r.png,series_002,,,,,
-59,element_059,Pr プラセオジム,N,images/element/059_Pr_n.png,series_002,,,,,
-60,element_060,Nd ネオジム,SR,images/element/060_Nd_sr.png,series_002,,,,,
-61,element_061,Pm プロメチウム,N,images/element/061_Pm_n.png,series_002,,,,,
-62,element_062,Sm サマリウム,N,images/element/062_Sm_n.png,series_002,,,,,
-63,element_063,Eu ユウロピウム,R,images/element/063_Eu_r.png,series_002,,,,,
-64,element_064,Gd ガドリニウム,R,images/element/064_Gd_r.png,series_002,,,,,
-65,element_065,Tb テルビウム,N,images/element/065_Tb_n.png,series_002,,,,,
-66,element_066,Dy ジスプロシウム,R,images/element/066_Dy_r.png,series_002,,,,,
-67,element_067,Ho ホルミウム,N,images/element/067_Ho_n.png,series_002,,,,,
-68,element_068,Er エルビウム,N,images/element/068_Er_n.png,series_002,,,,,
-69,element_069,Tm ツリウム ,N,images/element/069_Tm_n.png,series_002,,,,,
-70,element_070,Yb イッテルビウム,N,images/element/070_Yb_n.png,series_002,,,,,
-71,element_071,Lu ルテチウム,N,images/element/071_Lu_n.png,series_002,,,,,
-72,element_072,Hf ハフニウム,N,images/element/072_Hf_n.png,series_002,,,,,
-73,element_073,Ta タンタル,R,images/element/073_Ta_r.png,series_002,,,,,
-74,element_074,W タングステン,SR,images/element/074_W_sr.png,series_002,,,,,
-75,element_075,Re レニウム ,N,images/element/075_Re_n.png,series_002,,,,,
-76,element_076,Os オスミウム,R,images/element/076_Os_r.png,series_002,,,,,
-77,element_077,Ir イリジウム,R,images/element/077_Ir_r.png,series_002,,,,,
-78,element_078,Pt 白金,UR,images/element/078_Pt_ur.png,series_002,,,,,
-79,element_079,Au 金,UR,images/element/079_Au_ur.png,series_002,,,,,
-80,element_080,Hg 水銀,SR,images/element/080_Hg_sr.png,series_002,,,,,
-81,element_081,Tl タリウム,N,images/element/081_Tl_n.png,series_002,,,,,
-82,element_082,Pb 鉛,SR,images/element/082_Pb_sr.png,series_002,,,,,
-83,element_083,Bi ビスマス,UR,images/element/083_Bi_ur.png,series_002,,,,,
-84,element_084,Po ポロニウム,N,images/element/084_Po_n.png,series_002,,,,,
-85,element_085,At アスタチン,N,images/element/085_At_n.png,series_002,,,,,
-86,element_086,Rn ラドン,R,images/element/086_Rn_r.png,series_002,,,,,
-87,element_087,Fr フランシウム,N,images/element/087_Fr_n.png,series_002,,,,,
-88,element_088,Ra ラジウム,SR,images/element/088_Ra_sr.png,series_002,,,,,
-89,element_089,Ac アクチニウム,N,images/element/089_Ac_n.png,series_002,,,,,
-90,element_090,Th トリウム,N,images/element/090_Th_n.png,series_002,,,,,
-91,element_091,Pa プロトアクチニウム,R,images/element/091_Pa_r.png,series_002,,,,,
-92,element_092,U ウラン,UR,images/element/092_U_ur.png,series_002,,,,,
-93,element_093,Np ネプツニウム,N,images/element/093_Np_n.png,series_002,,,,,
-94,element_094,Pu プルトニウム,UR,images/element/094_Pu_ur.png,series_002,,,,,
-95,element_095,Am アメリシウム,N,images/element/095_Am_n.png,series_002,,,,,
-96,element_096,Cm キュリウム,N,images/element/096_Cm_n.png,series_002,,,,,
-97,element_097,Bk バークリウム,N,images/element/097_Bk_n.png,series_002,,,,,
-98,element_098,Cf カリホルニウム,N,images/element/098_Cf_n.png,series_002,,,,,
-99,element_099,Es アインスタイニウム,N,images/element/099_Es_n.png,series_002,,,,,
-100,element_100,Fm フェルミウム,N,images/element/100_Fm_n.png,series_002,,,,,
-101,element_101,Md メンデレビウム,R,images/element/101_Md_r.png,series_002,,,,,
-102,element_102,No ノーベリウム ,N,images/element/102_No_n.png,series_002,,,,,
-103,element_103,Lr ローレンシウム,N,images/element/103_Lr_n.png,series_002,,,,,
-104,element_104,Rf ラザホージウム,N,images/element/104_Rf_n.png,series_002,,,,,
-105,element_105,Db ドブニウム,N,images/element/105_Db_n.png,series_002,,,,,
-106,element_106,Sg シーボーギウム,N,images/element/106_Sg_n.png,series_002,,,,,
-107,element_107,Bh ボーリウム,N,images/element/107_Bh_n.png,series_002,,,,,
-108,element_108,Hs ハッシウム,N,images/element/108_Hs_n.png,series_002,,,,,
-109,element_109,Mt マイトネリウム,N,images/element/109_Mt_n.png,series_002,,,,,
-110,element_110,Ds ダームスタチウム,N,images/element/110_Ds_n.png,series_002,,,,,
-111,element_111,Rg レントゲニウム,SR,images/element/111_Rg_sr.png,series_002,,,,,
-112,element_112,Cn コペルニシウム,R,images/element/112_Cn_r.png,series_002,,,,,
-113,element_113,Nh ニホニウム,UR,images/element/113_Nh_ur.png,series_002,,,,,
-114,element_114,Fl フレロビウム,N,images/element/114_Fl_n.png,series_002,,,,,
-115,element_115,Mc モスコビウム,N,images/element/115_Mc_n.png,series_002,,,,,
-116,element_116,Lv リバモリウム,N,images/element/116_Lv_n.png,series_002,,,,,
-117,element_117,Ts テネシン ,N,images/element/117_Ts_n.png,series_002,,,,,
-118,element_118,Og オガネソン,UR,images/element/118_Og_ur.png,series_002,,,,,
-001,ovarloard_001,モモンガ,UR,images/overloard/001_ur.png,series_003,,,magic,supreme_41,guild_master
-002,ovarloard_002,アルベド,UR,images/overloard/002_ur.png,series_003,,,tank,,
-003,ovarloard_003,シャルティア・ブラッドフォールン,UR,images/overloard/003_ur.png,series_003,,,attacker,,
-004,ovarloard_004,デミウルゴス,UR,images/overloard/004_ur.png,series_003,,,magic,,
-005,ovarloard_005,アウラ,UR,images/overloard/005_ur.png,series_003,,,attacker,,
-006,ovarloard_006,マーレ,UR,images/overloard/006_ur.png,series_003,,,magic,,
-007,ovarloard_007,コキュートス,UR,images/overloard/007_ur.png,series_003,,,tank,,
-008,ovarloard_008,パンドラズアクター,UR,images/overloard/008_ur.png,series_003,,,,,
-009,ovarloard_009,ガルガンチュア,R,images/overloard/009_r.png,series_003,,,tank,,
-010,ovarloard_010,ヴィクティム,R,images/overloard/010_r.png,series_003,,,noncombatant,,
-011,ovarloard_011,セバス・チャン,SR,images/overloard/011_sr.png,series_003,,,tank,,
-012,ovarloard_012,ユリ・アルファ,SR,images/overloard/012_sr.png,series_003,,,attacker,,
-013,ovarloard_013,ルプスレギナ・ベータ,SR,images/overloard/013_sr.png,series_003,,,magic,,
-014,ovarloard_014,ナーベラル・ガンマ,SR,images/overloard/014_sr.png,series_003,,,magic,,
-015,ovarloard_015,シズ・デルタ,SR,images/ovarloerd/015_sr.png,series_003,,,attacker,,
-016,ovarloard_016,ソリュシャン・イプシロン,SR,images/overloard/016_sr.png,series_003,,,attacker,,
-017,ovarloard_017,エントマ・ヴァシリッサ・ゼータ,SR,images/overloard/017_sr.png,series_003,,,magic,,
-018,ovarloard_018,オーレオール・オメガ,SR,images/overloard/018_sr.png,series_003,,,attacker,,
-019,ovarloard_019,ヴァンパイア・ブライド,N,images/overloard/019_n.png,series_003,,,attacker,,
-020,ovarloard_020,エイトエッジアサシン,N,images/overloard/020_n.png,series_003,,,attacker,,
-021,ovarloard_021,エンリ・エモット,N,images/ovarloerd/021_n.png,series_003,,,noncombatant,,
-022,ovarloard_022,ンフィーリア・バレアレ,N,images/overloard/022_n.png,series_003,,,noncombatant,,
-023,ovarloard_023,ツアレ,N,images/overloard/023_n.png,series_003,,,noncombatant,,
-024,ovarloard_024,たっちみー,UR,images/overloard/024_ur.png,series_003,,,attacker,supreme_41,world_champion
-025,ovarloard_025,武人建御雷,UR,images/overloard/025_ur.png,series_003,,,attacker,,
-026,ovarloard_026,タブラ・スマラグディナ,UR,images/overloard/026_ur.png,series_003,,,,,
-027,ovarloard_027,ニグレド,SR,images/overloard/027_ur.png,series_003,,,attacker,,
-028,ovarloard_028,ルベド(仮),SR,images/overloard/028_ur.png,series_003,,,attacker,,
-029,ovarloard_029,ウルベルト・アレイン・オードル,UR,images/overloard/029_ur.png,series_003,,,magic,,
-030,ovarloard_030,ペロロンチーノ,UR,images/overloard/030_ur.png,series_003,,,attacker,supreme_41,
-031,ovarloard_031,ぶくぶく茶釜,UR,images/overloard/031_ur.png,series_003,,,tank,supreme_41,
-032,ovarloard_032,やまいこ,UR,images/overloard/032_ur.png,series_003,,,attacker,supreme_41,
-033,ovarloard_033,獣王メコン川,UR,images/overloard/033_ur.png,series_003,,,attacker,supreme_41,
-034,ovarloard_034,弐式炎雷,UR,images/overloard/034_ur.png,series_003,,,attacker,supreme_41,
-035,ovarloard_035,ヘロヘロ,UR,images/overloard/035_ur.png,series_003,,,tank,supreme_41,
-036,ovarloard_036,ガーネット(仮),UR,images/overloard/036_ur.png,series_003,,,magic,supreme_41,
-037,ovarloard_037,あまのまひとつ,UR,images/overloard/037_ur.png,series_003,,,tank,supreme_41,
-038,ovarloard_038,ベルリバー,UR,images/overloard/038_ur.png,series_003,,,attacker,supreme_41,
-039,ovarloard_039,るし★ふぁー,UR,images/overloard/039_ur.png,series_003,,,magic,supreme_41,
-040,ovarloard_040,ばりあぶるたりすまん,UR,images/overloard/040_ur.png,series_003,,,tank,supreme_41,
-041,ovarloard_041,餡ころもっちもっち,UR,images/overloard/041_ur.png,series_003,,,tank,supreme_41,
-042,ovarloard_042,ホワイトブリム,UR,images/overloard/042_ur.png,series_003,,,attacker,supreme_41,
-043,ovarloard_043,エンショントワン,UR,images/overloard/043_ur.png,series_003,,,magic,supreme_41,
-044,ovarloard_044,ぷにっと萌え(変化),UR,images/overloard/044_ur.png,series_003,,,magic,supreme_41,
-
-
+﻿collectionNo,id,name,rarity,image,gachas,weights,type,battleType,battleTags,battleAbility,elementSymbol
+1,oba_n_001,紀子,N,images/OBA/noriko.png,standard_001,human,,,,,
+2,oba_n_002,秋彦,N,images/OBA/akihiko.png,standard_001,human,,,,,
+3,oba_n_003,花子,N,images/OBA/hanako.png,standard_001,ghost,,,,,
+4,oba_n_004,ぽんきち,N,images/OBA/ponkiti.png,standard_001,human,,,,,
+5,oba_r_001,赤マント,R,images/OBA/akamant.png,standard_001,ghost,,,,,
+6,oba_r_002,大ガマ,R,images/OBA/oogama.png,standard_001,ghost,,,,,
+7,oba_r_003,青べえ,R,images/OBA/aobee.png,standard_001,ghost,,,,,
+8,oba_r_004,赤べえ,R,images/OBA/akabee.png,standard_001,ghost,,,,,
+9,oba_r_005,グリ,R,images/OBA/guri.png,standard_001,human,,,,,
+10,oba_r_006,フーラン,R,images/OBA/fuuran.png,standard_001,ghost,,,,,
+11,oba_sr_001,九郎,SR,images/OBA/kurou.png,standard_001,human,,,,,
+12,oba_sr_002,はじめ,SR,images/OBA/hajime.png,standard_001,human,,,,,
+13,oba_sr_003,青マント,SR,images/OBA/aomant.png,standard_001,ghost,,,,,
+14,oba_sr_004,ガシャ,SR,images/OBA/gasya.png,standard_001,ghost,,,,,
+15,oba_sr_005,アリサ,SR,images/OBA/arisa.png,standard_001,human,,,,,
+16,oba_sr_006,アレス,SR,images/OBA/ares.png,standard_001,human,,,,,
+17,oba_sr_007,メアリー,SR,images/OBA/meary.png,standard_001,human,,,,,
+18,oba_sr_008,ルル,SR,images/OBA/lulu.png,standard_001,ghost,,,,,
+19,oba_ur_001,メリーさん,UR,images/OBA/merry.png,standard_001,ghost,,,,,
+20,oba_ur_002,ヤミ子さん,UR,images/OBA/yami.png,standard_001,ghost,,,,,
+21,oba_ur_003,お雪,UR,images/OBA/oyuki.png,standard_001,ghost,,,,,
+22,oba_ur_004,リジー,UR,images/OBA/lisy.png,standard_001,ghost,,,,,
+23,oba_r_007,新アリサ,R,images/OBA/arisa2.png,standard_001,human,,,,,
+24,oba_r_008,新アレス,R,images/OBA/ares2.png,standard_001,human,,,,,
+25,oba_r_009,ツギハギ,R,images/OBA/tsugihagi.png,standard_001,ghost,,,,,
+26,oba_r_010,ドラコ,R,images/OBA/dorako.png,standard_001,ghost,,,,,
+27,oba_r_011,シャルル,R,images/OBA/syaruru.png,standard_001,human,,,,,
+1,element_001,H 水素,UR,images/element/001_H_ur.png,series_002,,,,,,H
+2,element_002,He ヘリウム,SR,images/element/002_He_sr.png,series_002,,,,,,He
+3,element_003,Li リチウム,SR,images/element/003_Li_sr.png,series_002,,,,,,Li
+4,element_004,Be ベリリウム,R,images/element/004_Be_r.png,series_002,,,,,,Be
+5,element_005,B ホウ素,N,images/element/005_B_n.png,series_002,,,,,,B
+6,element_006,C 炭素,UR,images/element/006_C_ur.png,series_002,,,,,,C
+7,element_007,N 窒素,SR,images/element/007_N_sr.png,series_002,,,,,,N
+8,element_008,O 酸素,UR,images/element/008_O_ur.png,series_002,,,,,,O
+9,element_009,F フッ素,SR,images/element/009_F_sr.png,series_002,,,,,,F
+10,element_010,Ne ネオン,R,images/element/010_Ne_r.png,series_002,,,,,,Ne
+11,element_011,Na ナトリウム,SR,images/element/011_Na_sr.png,series_002,,,,,,Na
+12,element_012,Mg マグネシウム,SR,images/element/012_Mg_sr.png,series_002,,,,,,Mg
+13,element_013,Al アルミニウム,R,images/element/013_Al_r.png,series_002,,,,,,Al
+14,element_014,Si ケイ素,SR,images/element/014_Si_sr.png,series_002,,,,,,Si
+15,element_015,P リン,R,images/element/015_P_r.png,series_002,,,,,,P
+16,element_016,S 硫黄,SR,images/element/016_S_sr.png,series_002,,,,,,S
+17,element_017,Cl 塩素,SR,images/element/017_Cl_sr.png,series_002,,,,,,Cl
+18,element_018,Ar アルゴン,R,images/element/018_Ar_r.png,series_002,,,,,,Ar
+19,element_019,K カリウム,R,images/element/019_K_r.png,series_002,,,,,,K
+20,element_020,Ca カルシウム,SR,images/element/020_Ca_sr.png,series_002,,,,,,Ca
+21,element_021,Sc スカンジウム,R,images/element/021_Sc_r.png,series_002,,,,,,Sc
+22,element_022,Ti チタン,SR,images/element/022_Ti_sr.png,series_002,,,,,,Ti
+23,element_023,V バナジウム,R,images/element/023_V_r.png,series_002,,,,,,V
+24,element_024,Cr クロム,SR,images/element/024_Cr_sr.png,series_002,,,,,,Cr
+25,element_025,Mn マンガン,N,images/element/025_Mn_n.png,series_002,,,,,,Mn
+26,element_026,Fe 鉄,UR,images/element/026_Fe_ur.png,series_002,,,,,,Fe
+27,element_027,Co コバルト,SR,images/element/027_Co_sr.png,series_002,,,,,,Co
+28,element_028,Ni ニッケル,R,images/element/028_Ni_r.png,series_002,,,,,,Ni
+29,element_029,Cu 銅,R,images/element/029_Cu_r.png,series_002,,,,,,Cu
+30,element_030,Zn 亜鉛,R,images/element/030_Zn_r.png,series_002,,,,,,Zn
+31,element_031,Ga ガリウム,N,images/element/031_Ga_n.png,series_002,,,,,,Ga
+32,element_032,Ge ゲルマニウム,N,images/element/032_Ge_n.png,series_002,,,,,,Ge
+33,element_033,As ヒ素,R,images/element/033_As_r.png,series_002,,,,,,As
+34,element_034,Se セレン,N,images/element/034_Se_n.png,series_002,,,,,,Se
+35,element_035,Br 臭素,SR,images/element/035_Br_sr.png,series_002,,,,,,Br
+36,element_036,Kr クリプトン,SR,images/element/036_Kr_sr.png,series_002,,,,,,Kr
+37,element_037,Rb ルビジウム,N,images/element/037_Rb_n.png,series_002,,,,,,Rb
+38,element_038,Sr ストロンチウム,R,images/element/038_Sr_r.png,series_002,,,,,,Sr
+39,element_039,Y イットリウム,SR,images/element/039_Y_sr.png,series_002,,,,,,Y
+40,element_040,Zr ジルコニウム,R,images/element/040_Zr_r.png,series_002,,,,,,Zr
+41,element_041,Nb ニオブ,N,images/element/041_Nb_n.png,series_002,,,,,,Nb
+42,element_042,Mo モリブデン,N,images/element/042_Mo_n.png,series_002,,,,,,Mo
+43,element_043,Tc テクネチウム,R,images/element/043_Tc_r.png,series_002,,,,,,Tc
+44,element_044,Ru ルテニウム,N,images/element/044_Ru_n.png,series_002,,,,,,Ru
+45,element_045,Rh ロジウム,R,images/element/045_Rh_r.png,series_002,,,,,,Rh
+46,element_046,Pd パラジウム,R,images/element/046_Pd_r.png,series_002,,,,,,Pd
+47,element_047,Ag 銀,UR,images/element/047_Ag_ur.png,series_002,,,,,,Ag
+48,element_048,Cd カドミウム,R,images/element/048_Cd_r.png,series_002,,,,,,Cd
+49,element_049,In インジウム,R,images/element/049_In_r.png,series_002,,,,,,In
+50,element_050,Sn スズ ,SR,images/element/050_Sn_sr.png,series_002,,,,,,Sn
+51,element_051,Sb アンチモン,R,images/element/051_Sb_r.png,series_002,,,,,,Sb
+52,element_052,Te テルル,N,images/element/052_Te_n.png,series_002,,,,,,Te
+53,element_053,I ヨウ素,SR,images/element/053_I_sr.png,series_002,,,,,,I
+54,element_054,Xe キセノン,SR,images/element/054_Xe_sr.png,series_002,,,,,,Xe
+55,element_055,Cs セシウム,SR,images/element/055_Cs_sr.png,series_002,,,,,,Cs
+56,element_056,Ba バリウム,R,images/element/056_Ba_r.png,series_002,,,,,,Ba
+57,element_057,La ランタン,R,images/element/057_La_r.png,series_002,,,,,,La
+58,element_058,Ce セリウム,R,images/element/058_Ce_r.png,series_002,,,,,,Ce
+59,element_059,Pr プラセオジム,N,images/element/059_Pr_n.png,series_002,,,,,,Pr
+60,element_060,Nd ネオジム,SR,images/element/060_Nd_sr.png,series_002,,,,,,Nd
+61,element_061,Pm プロメチウム,N,images/element/061_Pm_n.png,series_002,,,,,,Pm
+62,element_062,Sm サマリウム,N,images/element/062_Sm_n.png,series_002,,,,,,Sm
+63,element_063,Eu ユウロピウム,R,images/element/063_Eu_r.png,series_002,,,,,,Eu
+64,element_064,Gd ガドリニウム,R,images/element/064_Gd_r.png,series_002,,,,,,Gd
+65,element_065,Tb テルビウム,N,images/element/065_Tb_n.png,series_002,,,,,,Tb
+66,element_066,Dy ジスプロシウム,R,images/element/066_Dy_r.png,series_002,,,,,,Dy
+67,element_067,Ho ホルミウム,N,images/element/067_Ho_n.png,series_002,,,,,,Ho
+68,element_068,Er エルビウム,N,images/element/068_Er_n.png,series_002,,,,,,Er
+69,element_069,Tm ツリウム ,N,images/element/069_Tm_n.png,series_002,,,,,,Tm
+70,element_070,Yb イッテルビウム,N,images/element/070_Yb_n.png,series_002,,,,,,Yb
+71,element_071,Lu ルテチウム,N,images/element/071_Lu_n.png,series_002,,,,,,Lu
+72,element_072,Hf ハフニウム,N,images/element/072_Hf_n.png,series_002,,,,,,Hf
+73,element_073,Ta タンタル,R,images/element/073_Ta_r.png,series_002,,,,,,Ta
+74,element_074,W タングステン,SR,images/element/074_W_sr.png,series_002,,,,,,W
+75,element_075,Re レニウム ,N,images/element/075_Re_n.png,series_002,,,,,,Re
+76,element_076,Os オスミウム,R,images/element/076_Os_r.png,series_002,,,,,,Os
+77,element_077,Ir イリジウム,R,images/element/077_Ir_r.png,series_002,,,,,,Ir
+78,element_078,Pt 白金,UR,images/element/078_Pt_ur.png,series_002,,,,,,Pt
+79,element_079,Au 金,UR,images/element/079_Au_ur.png,series_002,,,,,,Au
+80,element_080,Hg 水銀,SR,images/element/080_Hg_sr.png,series_002,,,,,,Hg
+81,element_081,Tl タリウム,N,images/element/081_Tl_n.png,series_002,,,,,,Tl
+82,element_082,Pb 鉛,SR,images/element/082_Pb_sr.png,series_002,,,,,,Pb
+83,element_083,Bi ビスマス,UR,images/element/083_Bi_ur.png,series_002,,,,,,Bi
+84,element_084,Po ポロニウム,N,images/element/084_Po_n.png,series_002,,,,,,Po
+85,element_085,At アスタチン,N,images/element/085_At_n.png,series_002,,,,,,At
+86,element_086,Rn ラドン,R,images/element/086_Rn_r.png,series_002,,,,,,Rn
+87,element_087,Fr フランシウム,N,images/element/087_Fr_n.png,series_002,,,,,,Fr
+88,element_088,Ra ラジウム,SR,images/element/088_Ra_sr.png,series_002,,,,,,Ra
+89,element_089,Ac アクチニウム,N,images/element/089_Ac_n.png,series_002,,,,,,Ac
+90,element_090,Th トリウム,N,images/element/090_Th_n.png,series_002,,,,,,Th
+91,element_091,Pa プロトアクチニウム,R,images/element/091_Pa_r.png,series_002,,,,,,Pa
+92,element_092,U ウラン,UR,images/element/092_U_ur.png,series_002,,,,,,U
+93,element_093,Np ネプツニウム,N,images/element/093_Np_n.png,series_002,,,,,,Np
+94,element_094,Pu プルトニウム,UR,images/element/094_Pu_ur.png,series_002,,,,,,Pu
+95,element_095,Am アメリシウム,N,images/element/095_Am_n.png,series_002,,,,,,Am
+96,element_096,Cm キュリウム,N,images/element/096_Cm_n.png,series_002,,,,,,Cm
+97,element_097,Bk バークリウム,N,images/element/097_Bk_n.png,series_002,,,,,,Bk
+98,element_098,Cf カリホルニウム,N,images/element/098_Cf_n.png,series_002,,,,,,Cf
+99,element_099,Es アインスタイニウム,N,images/element/099_Es_n.png,series_002,,,,,,Es
+100,element_100,Fm フェルミウム,N,images/element/100_Fm_n.png,series_002,,,,,,Fm
+101,element_101,Md メンデレビウム,R,images/element/101_Md_r.png,series_002,,,,,,Md
+102,element_102,No ノーベリウム ,N,images/element/102_No_n.png,series_002,,,,,,No
+103,element_103,Lr ローレンシウム,N,images/element/103_Lr_n.png,series_002,,,,,,Lr
+104,element_104,Rf ラザホージウム,N,images/element/104_Rf_n.png,series_002,,,,,,Rf
+105,element_105,Db ドブニウム,N,images/element/105_Db_n.png,series_002,,,,,,Db
+106,element_106,Sg シーボーギウム,N,images/element/106_Sg_n.png,series_002,,,,,,Sg
+107,element_107,Bh ボーリウム,N,images/element/107_Bh_n.png,series_002,,,,,,Bh
+108,element_108,Hs ハッシウム,N,images/element/108_Hs_n.png,series_002,,,,,,Hs
+109,element_109,Mt マイトネリウム,N,images/element/109_Mt_n.png,series_002,,,,,,Mt
+110,element_110,Ds ダームスタチウム,N,images/element/110_Ds_n.png,series_002,,,,,,Ds
+111,element_111,Rg レントゲニウム,SR,images/element/111_Rg_sr.png,series_002,,,,,,Rg
+112,element_112,Cn コペルニシウム,R,images/element/112_Cn_r.png,series_002,,,,,,Cn
+113,element_113,Nh ニホニウム,UR,images/element/113_Nh_ur.png,series_002,,,,,,Nh
+114,element_114,Fl フレロビウム,N,images/element/114_Fl_n.png,series_002,,,,,,Fl
+115,element_115,Mc モスコビウム,N,images/element/115_Mc_n.png,series_002,,,,,,Mc
+116,element_116,Lv リバモリウム,N,images/element/116_Lv_n.png,series_002,,,,,,Lv
+117,element_117,Ts テネシン ,N,images/element/117_Ts_n.png,series_002,,,,,,Ts
+118,element_118,Og オガネソン,UR,images/element/118_Og_ur.png,series_002,,,,,,Og
+001,ovarloard_001,モモンガ,UR,images/overloard/001_ur.png,series_003,,,magic,supreme_41,guild_master,
+002,ovarloard_002,アルベド,UR,images/overloard/002_ur.png,series_003,,,tank,,,
+003,ovarloard_003,シャルティア・ブラッドフォールン,UR,images/overloard/003_ur.png,series_003,,,attacker,,,
+004,ovarloard_004,デミウルゴス,UR,images/overloard/004_ur.png,series_003,,,magic,,,
+005,ovarloard_005,アウラ,UR,images/overloard/005_ur.png,series_003,,,attacker,,,
+006,ovarloard_006,マーレ,UR,images/overloard/006_ur.png,series_003,,,magic,,,
+007,ovarloard_007,コキュートス,UR,images/overloard/007_ur.png,series_003,,,tank,,,
+008,ovarloard_008,パンドラズアクター,UR,images/overloard/008_ur.png,series_003,,,,,,
+009,ovarloard_009,ガルガンチュア,R,images/overloard/009_r.png,series_003,,,tank,,,
+010,ovarloard_010,ヴィクティム,R,images/overloard/010_r.png,series_003,,,noncombatant,,,
+011,ovarloard_011,セバス・チャン,SR,images/overloard/011_sr.png,series_003,,,tank,,,
+012,ovarloard_012,ユリ・アルファ,SR,images/overloard/012_sr.png,series_003,,,attacker,,,
+013,ovarloard_013,ルプスレギナ・ベータ,SR,images/overloard/013_sr.png,series_003,,,magic,,,
+014,ovarloard_014,ナーベラル・ガンマ,SR,images/overloard/014_sr.png,series_003,,,magic,,,
+015,ovarloard_015,シズ・デルタ,SR,images/ovarloerd/015_sr.png,series_003,,,attacker,,,
+016,ovarloard_016,ソリュシャン・イプシロン,SR,images/overloard/016_sr.png,series_003,,,attacker,,,
+017,ovarloard_017,エントマ・ヴァシリッサ・ゼータ,SR,images/overloard/017_sr.png,series_003,,,magic,,,
+018,ovarloard_018,オーレオール・オメガ,SR,images/overloard/018_sr.png,series_003,,,attacker,,,
+019,ovarloard_019,ヴァンパイア・ブライド,N,images/overloard/019_n.png,series_003,,,attacker,,,
+020,ovarloard_020,エイトエッジアサシン,N,images/overloard/020_n.png,series_003,,,attacker,,,
+021,ovarloard_021,エンリ・エモット,N,images/ovarloerd/021_n.png,series_003,,,noncombatant,,,
+022,ovarloard_022,ンフィーリア・バレアレ,N,images/overloard/022_n.png,series_003,,,noncombatant,,,
+023,ovarloard_023,ツアレ,N,images/overloard/023_n.png,series_003,,,noncombatant,,,
+024,ovarloard_024,たっちみー,UR,images/overloard/024_ur.png,series_003,,,attacker,supreme_41,world_champion,
+025,ovarloard_025,武人建御雷,UR,images/overloard/025_ur.png,series_003,,,attacker,,,
+026,ovarloard_026,タブラ・スマラグディナ,UR,images/overloard/026_ur.png,series_003,,,,,,
+027,ovarloard_027,ニグレド,SR,images/overloard/027_ur.png,series_003,,,attacker,,,
+028,ovarloard_028,ルベド(仮),SR,images/overloard/028_ur.png,series_003,,,attacker,,,
+029,ovarloard_029,ウルベルト・アレイン・オードル,UR,images/overloard/029_ur.png,series_003,,,magic,,,
+030,ovarloard_030,ペロロンチーノ,UR,images/overloard/030_ur.png,series_003,,,attacker,supreme_41,,
+031,ovarloard_031,ぶくぶく茶釜,UR,images/overloard/031_ur.png,series_003,,,tank,supreme_41,,
+032,ovarloard_032,やまいこ,UR,images/overloard/032_ur.png,series_003,,,attacker,supreme_41,,
+033,ovarloard_033,獣王メコン川,UR,images/overloard/033_ur.png,series_003,,,attacker,supreme_41,,
+034,ovarloard_034,弐式炎雷,UR,images/overloard/034_ur.png,series_003,,,attacker,supreme_41,,
+035,ovarloard_035,ヘロヘロ,UR,images/overloard/035_ur.png,series_003,,,tank,supreme_41,,
+036,ovarloard_036,ガーネット(仮),UR,images/overloard/036_ur.png,series_003,,,magic,supreme_41,,
+037,ovarloard_037,あまのまひとつ,UR,images/overloard/037_ur.png,series_003,,,tank,supreme_41,,
+038,ovarloard_038,ベルリバー,UR,images/overloard/038_ur.png,series_003,,,attacker,supreme_41,,
+039,ovarloard_039,るし★ふぁー,UR,images/overloard/039_ur.png,series_003,,,magic,supreme_41,,
+040,ovarloard_040,ばりあぶるたりすまん,UR,images/overloard/040_ur.png,series_003,,,tank,supreme_41,,
+041,ovarloard_041,餡ころもっちもっち,UR,images/overloard/041_ur.png,series_003,,,tank,supreme_41,,
+042,ovarloard_042,ホワイトブリム,UR,images/overloard/042_ur.png,series_003,,,attacker,supreme_41,,
+043,ovarloard_043,エンショントワン,UR,images/overloard/043_ur.png,series_003,,,magic,supreme_41,,
+044,ovarloard_044,ぷにっと萌え(変化),UR,images/overloard/044_ur.png,series_003,,,magic,supreme_41,,

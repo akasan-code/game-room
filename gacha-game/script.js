@@ -579,6 +579,10 @@ function renderMiniGameSelector(gachas = getEnabledGachas()) {
       button.id = 'openObakeidoroGame';
       button.textContent = 'ミニゲーム';
       button.classList.add('available');
+    } else if (gacha.id === 'series_002') {
+      button.id = 'openElementPuzzle';
+      button.textContent = 'ミニゲーム';
+      button.classList.add('available');
     } else if (gacha.id === 'series_003') {
       button.id = 'openOverlordBattleGame';
       button.textContent = 'ミニゲーム';

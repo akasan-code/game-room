@@ -390,6 +390,111 @@
       </div>
     </div>
 
+
+    <!-- 元素マッチ3 ミニゲーム -->
+    <section class="elp-overlay" id="elpOverlay" aria-hidden="true">
+      <div class="elp-shell">
+        <header class="elp-header">
+          <div>
+            <div class="elp-kicker">ELEMENT CARD MINI GAME</div>
+            <h2>元素マッチ3</h2>
+          </div>
+          <button type="button" class="elp-close" data-elp-close aria-label="ミニゲームを閉じる">×</button>
+        </header>
+
+        <div class="elp-body">
+          <section class="elp-screen is-active" data-elp-screen="select">
+            <div class="elp-screen-heading">
+              <h3>元素カードを1枚選択</h3>
+              <p>実際に所持している「元素の人影」カードだけが使用できます。</p>
+            </div>
+
+            <div class="elp-selection-preview" id="elpSelectionPreview">
+              <span>使用する元素カードを1枚選択</span>
+            </div>
+
+            <div class="elp-card-grid" id="elpCardGrid"></div>
+            <div class="elp-card-empty" id="elpCardEmpty" hidden>
+              元素シリーズのカードをガチャで入手すると、ここから選べるようになります。
+            </div>
+
+            <div class="elp-actions">
+              <button type="button" class="elp-primary" id="elpStartButton" disabled>このカードで開始</button>
+            </div>
+          </section>
+
+          <section class="elp-screen" data-elp-screen="game" hidden>
+            <div class="elp-game-top">
+              <div class="elp-current-card">
+                <img id="elpGameCardImage" src="" alt="">
+                <div>
+                  <span class="elp-current-label">使用カード</span>
+                  <strong id="elpGameCardName">---</strong>
+                </div>
+                <b class="elp-current-symbol" id="elpGameElementSymbol">?</b>
+              </div>
+
+              <div class="elp-score-grid">
+                <div><span>SCORE</span><strong id="elpScore">0</strong></div>
+                <div><span>HIGH SCORE</span><strong id="elpHighScore">0</strong></div>
+              </div>
+            </div>
+
+            <div class="elp-skill-row">
+              <div class="elp-gauge-wrap">
+                <div class="elp-gauge-label">
+                  <span>SKILL GAUGE</span>
+                  <b id="elpGaugeText">0 / 20</b>
+                </div>
+                <div class="elp-gauge-track"><div class="elp-gauge-fill" id="elpGaugeFill"></div></div>
+              </div>
+              <button type="button" class="elp-skill-button" id="elpSkillButton" disabled>SKILL</button>
+            </div>
+
+            <div class="elp-board-wrap">
+              <div class="elp-chain" id="elpChain">1 CHAIN</div>
+              <div class="elp-board" id="elpBoard" aria-label="7×7 マッチ3盤面"></div>
+            </div>
+
+            <div class="elp-game-message" id="elpGameMessage" role="status" aria-live="polite"></div>
+          </section>
+
+          <section class="elp-screen" data-elp-screen="over" hidden>
+            <div class="elp-gameover">
+              <div class="elp-gameover-kicker">GAME OVER</div>
+              <h3>これ以上動かせません</h3>
+
+              <div class="elp-final-card" id="elpFinalCard"></div>
+
+              <div class="elp-final-score">
+                <div><span>FINAL SCORE</span><strong id="elpFinalScore">0</strong></div>
+                <div><span>HIGH SCORE</span><strong id="elpFinalHighScore">0</strong></div>
+              </div>
+
+              <div class="elp-actions split">
+                <button type="button" class="elp-primary" id="elpReplay">もう一度遊ぶ</button>
+                <button type="button" class="elp-secondary" id="elpBackSelect">元素カード選択へ戻る</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="elp-cutin" id="elpCutin" aria-hidden="true">
+        <div class="elp-cutin-dark"></div>
+        <div class="elp-cutin-runes">✦ ᚱ ✧ ᚨ ✦ ᛟ ✧</div>
+        <div class="elp-cutin-character">
+          <img id="elpCutinImage" src="" alt="">
+        </div>
+        <div class="elp-cutin-copy">
+          <span>ELEMENT SKILL</span>
+          <strong id="elpCutinName">---</strong>
+          <b id="elpCutinSymbol">?</b>
+        </div>
+        <div class="elp-cutin-flash"></div>
+      </div>
+    </section>
+
   </main>
   <script src="data/master.js"></script>
   <script src="data/card_loader.js"></script>

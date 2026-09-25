@@ -103,6 +103,8 @@
     const rarity = String(row.rarity || '').trim().toUpperCase();
     const image = String(row.image || '').trim();
     const gachas = parseGachas(row.gachas);
+    const type = String(row.type || '').trim().toLowerCase();
+    const elementSymbol = String(row.elementSymbol || '').trim();
     const battleType = String(row.battleType || '').trim().toLowerCase();
     const battleTags = parseBattleTags(row.battleTags);
     const battleAbility = String(row.battleAbility || '').trim().toLowerCase();
@@ -141,6 +143,8 @@
       gachas
     };
 
+    if (type) card.type = type;
+    if (elementSymbol) card.elementSymbol = elementSymbol;
     if (battleType) card.battleType = battleType;
     if (battleTags.length) card.battleTags = battleTags;
     if (battleAbility) card.battleAbility = battleAbility;
@@ -241,15 +245,19 @@
   }
 
   async function loadGameScripts() {
-    await loadScript('script.js?v=17');
+    await loadScript('script.js?v=27');
 
-    await loadScript('minigame/obakeidoro-data.js?v=17');
-    await loadScript('minigame/obakeidoro-game.js?v=17');
-    await loadScript('minigame/obakeidoro-ui.js?v=17');
+    await loadScript('minigame/obakeidoro-data.js?v=27');
+    await loadScript('minigame/obakeidoro-game.js?v=27');
+    await loadScript('minigame/obakeidoro-ui.js?v=27');
 
-    await loadScript('battle/battle-data.js?v=17');
-    await loadScript('battle/battle-logic.js?v=17');
-    await loadScript('battle/battle-ui.js?v=17');
+    await loadScript('battle/battle-data.js?v=27');
+    await loadScript('battle/battle-logic.js?v=27');
+    await loadScript('battle/battle-ui.js?v=27');
+
+    await loadScript('puzzle/element-puzzle-data.js?v=27');
+    await loadScript('puzzle/element-puzzle-core.js?v=27');
+    await loadScript('puzzle/element-puzzle-ui.js?v=27');
   }
 
   async function boot() {
